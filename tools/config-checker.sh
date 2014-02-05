@@ -204,17 +204,12 @@ config="CONFIG_ARCH_MVEBU"
 check_config_disable
 config="CONFIG_ARCH_HIGHBANK"
 check_config_disable
+config="CONFIG_ARCH_MXC"
+check_config_disable
 
 #fixes:
 echo "#Bugs:"
 config="CONFIG_XEN"
-check_config_disable
-
-config="CONFIG_SCSI_BFA_FC"
-check_config_disable
-config="CONFIG_NET_VENDOR_BROCADE"
-check_config_disable
-config="CONFIG_BNA"
 check_config_disable
 
 config="CONFIG_ATH9K_HW"
