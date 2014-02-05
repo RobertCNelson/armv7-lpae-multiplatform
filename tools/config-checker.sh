@@ -83,6 +83,7 @@ check_if_set_then_disable () {
 	fi
 }
 
+#Support for actual hardware:
 #
 # Kernel Performance Events And Counters
 #
@@ -194,6 +195,13 @@ check_config_module
 #
 config="CONFIG_EXT4_FS"
 check_config_builtin
+
+#Either no Hardware or not A7/A12/A15 with LPAE/etc..
+#
+# CPU Core family selection
+#
+config="CONFIG_ARCH_MVEBU"
+check_config_disable
 
 #fixes:
 echo "#Bugs:"
