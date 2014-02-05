@@ -202,6 +202,8 @@ check_config_builtin
 #
 config="CONFIG_ARCH_MVEBU"
 check_config_disable
+config="CONFIG_ARCH_HIGHBANK"
+check_config_disable
 
 #fixes:
 echo "#Bugs:"
