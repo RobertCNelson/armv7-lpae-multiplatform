@@ -95,6 +95,12 @@ config="CONFIG_CC_STACKPROTECTOR_REGULAR"
 check_config_builtin
 
 #
+# Kernel Features
+#
+config="CONFIG_THUMB2_KERNEL"
+check_config_builtin
+
+#
 # CPU Frequency scaling
 #
 config="CONFIG_CPU_FREQ_STAT"
@@ -188,10 +194,23 @@ check_config_builtin
 config="CONFIG_RTC_DRV_PALMAS"
 check_config_module
 
+config="CONFIG_MMC_UNSAFE_RESUME"
+check_config_builtin
+
 #
 # File systems
 #
 config="CONFIG_EXT4_FS"
+check_config_builtin
+
+#
+# DOS/FAT/NT Filesystems
+#
+config="CONFIG_FAT_FS"
+check_config_builtin
+config="CONFIG_MSDOS_FS"
+check_config_builtin
+config="CONFIG_VFAT_FS"
 check_config_builtin
 
 #Either no Hardware or not A7/A12/A15 with LPAE/etc..
