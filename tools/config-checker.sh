@@ -220,6 +220,10 @@ config="CONFIG_ARM_SMMU"
 check_config_disable
 config="CONFIG_ARCH_VIRT"
 check_config_disable
+config="CONFIG_ARCH_VT8500"
+check_config_disable
+config="CONFIG_ARCH_WM8850"
+check_config_disable
 
 #fixes:
 echo "#Bugs:"
