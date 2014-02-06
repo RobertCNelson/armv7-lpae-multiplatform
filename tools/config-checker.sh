@@ -214,7 +214,10 @@ config="CONFIG_ARCH_SOCFPGA"
 check_config_disable
 config="CONFIG_ARCH_SUNXI"
 check_config_disable
-
+config="CONFIG_ARCH_VEXPRESS"
+check_config_disable
+config="CONFIG_ARM_SMMU"
+check_config_disable
 
 #fixes:
 echo "#Bugs:"
