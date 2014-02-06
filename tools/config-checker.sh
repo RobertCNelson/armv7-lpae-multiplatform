@@ -212,6 +212,8 @@ config="CONFIG_SOC_AM33XX"
 check_config_disable
 config="CONFIG_ARCH_SOCFPGA"
 check_config_disable
+config="CONFIG_ARCH_SUNXI"
+check_config_disable
 
 
 #fixes:
