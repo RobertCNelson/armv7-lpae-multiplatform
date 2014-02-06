@@ -153,8 +153,6 @@ config="CONFIG_TI_SOC_THERMAL"
 check_config_builtin
 config="CONFIG_TI_THERMAL"
 check_config_builtin
-config="CONFIG_OMAP4_THERMAL"
-check_config_builtin
 config="CONFIG_OMAP5_THERMAL"
 check_config_builtin
 
@@ -206,6 +204,13 @@ config="CONFIG_ARCH_HIGHBANK"
 check_config_disable
 config="CONFIG_ARCH_MXC"
 check_config_disable
+config="CONFIG_ARCH_OMAP3"
+check_config_disable
+config="CONFIG_ARCH_OMAP4"
+check_config_disable
+config="CONFIG_SOC_AM33XX"
+check_config_disable
+
 
 #fixes:
 echo "#Bugs:"
