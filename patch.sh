@@ -50,4 +50,20 @@ cleanup () {
 	exit
 }
 
+usb () {
+	echo "dir: usb"
+	${git} "${DIR}/patches/usb/0001-mfd-omap-usb-host-Use-resource-managed-clk_get.patch"
+	${git} "${DIR}/patches/usb/0002-mfd-omap-usb-host-Get-clocks-based-on-hardware-revis.patch"
+	${git} "${DIR}/patches/usb/0003-mfd-omap-usb-host-Use-clock-names-as-per-function-fo.patch"
+	${git} "${DIR}/patches/usb/0004-mfd-omap-usb-host-Update-DT-clock-binding-informatio.patch"
+	${git} "${DIR}/patches/usb/0005-mfd-omap-usb-tll-Update-DT-clock-binding-information.patch"
+	${git} "${DIR}/patches/usb/0006-ARM-dts-omap4-Update-omap-usb-host-node.patch"
+	${git} "${DIR}/patches/usb/0007-ARM-dts-omap5-Update-omap-usb-host-node.patch"
+	${git} "${DIR}/patches/usb/0008-ARM-dts-omap4-panda-Provide-USB-PHY-clock.patch"
+	${git} "${DIR}/patches/usb/0009-ARM-dts-omap5-uevm-Provide-USB-PHY-clock.patch"
+	${git} "${DIR}/patches/usb/0010-ARM-OMAP2-Remove-legacy_init_ehci_clk.patch"
+}
+
+usb
+
 echo "patch.sh ran successful"

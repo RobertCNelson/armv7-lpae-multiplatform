@@ -131,6 +131,20 @@ config="CONFIG_KERNEL_MODE_NEON"
 check_config_builtin
 
 #
+# Generic fallback / legacy drivers
+#
+config="CONFIG_MII"
+check_config_builtin
+
+#
+# USB Network Adapters
+#
+config="CONFIG_USB_USBNET"
+check_config_builtin
+config="CONFIG_USB_NET_SMSC95XX"
+check_config_builtin
+
+#
 # Non-8250 serial port support
 #
 config="CONFIG_SERIAL_OMAP"
