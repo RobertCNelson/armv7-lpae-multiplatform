@@ -50,6 +50,17 @@ cleanup () {
 	exit
 }
 
+clock () {
+	echo "dir: clock"
+	${git} "${DIR}/patches/clock/0001-clk-ti-am335x-remove-unecessary-cpu0-clk-node.patch"
+	${git} "${DIR}/patches/clock/0002-ARM-dts-OMAP3-add-clock-nodes-for-CPU.patch"
+
+	${git} "${DIR}/patches/clock/0003-ARM-dts-OMAP36xx-Add-device-node-for-ABB.patch"
+	${git} "${DIR}/patches/clock/0004-ARM-dts-OMAP4-Add-device-nodes-for-ABB.patch"
+	${git} "${DIR}/patches/clock/0005-ARM-dts-OMAP5-Add-device-nodes-for-ABB.patch"
+	${git} "${DIR}/patches/clock/0006-ARM-dts-DRA7-Add-device-nodes-for-ABB.patch"
+}
+
 usb () {
 	echo "dir: usb"
 	${git} "${DIR}/patches/usb/0001-mfd-omap-usb-host-Use-resource-managed-clk_get.patch"
@@ -64,6 +75,7 @@ usb () {
 	${git} "${DIR}/patches/usb/0010-ARM-OMAP2-Remove-legacy_init_ehci_clk.patch"
 }
 
+clock
 usb
 
 echo "patch.sh ran successful"
