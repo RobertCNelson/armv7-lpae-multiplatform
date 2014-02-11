@@ -189,6 +189,30 @@ config="CONFIG_MMC_OMAP_HS"
 check_config_builtin
 
 #
+# LED drivers
+#
+config="CONFIG_LEDS_GPIO"
+check_config_builtin
+
+#
+# LED Triggers
+#
+config="CONFIG_LEDS_TRIGGER_TIMER"
+check_config_builtin
+config="CONFIG_LEDS_TRIGGER_ONESHOT"
+check_config_builtin
+config="CONFIG_LEDS_TRIGGER_HEARTBEAT"
+check_config_builtin
+config="CONFIG_LEDS_TRIGGER_BACKLIGHT"
+check_config_builtin
+config="CONFIG_LEDS_TRIGGER_CPU"
+check_config_builtin
+config="CONFIG_LEDS_TRIGGER_GPIO"
+check_config_builtin
+config="CONFIG_LEDS_TRIGGER_DEFAULT_ON"
+check_config_builtin
+
+#
 # I2C RTC drivers
 #
 config="CONFIG_RTC_DRV_PALMAS"
