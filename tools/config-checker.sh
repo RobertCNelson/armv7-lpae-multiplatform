@@ -98,7 +98,7 @@ check_config_builtin
 # Kernel Features
 #
 config="CONFIG_THUMB2_KERNEL"
-check_config_builtin
+check_config_disable
 
 #
 # CPU Frequency scaling
