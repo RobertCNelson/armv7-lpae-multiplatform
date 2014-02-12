@@ -1,7 +1,7 @@
-From 6cbaf8377712d7fc3d019eb6e95b6c79cc8c7119 Mon Sep 17 00:00:00 2001
+From f2feb106b9e8d99bf3ebd6f66e7a4cb266546335 Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:31 +0200
-Subject: [PATCH 10/10] ARM: OMAP2+: Remove legacy_init_ehci_clk()
+Date: Wed, 12 Feb 2014 12:18:51 +0200
+Subject: [PATCH 10/12] ARM: OMAP2+: Remove legacy_init_ehci_clk()
 
 The necessary clock phandle for the EHCI clock is now provided
 via device tree so we no longer need this legacy method.

@@ -1,7 +1,7 @@
-From 0052262dd2a8a0082a9ed8971b21fd1c63c5754f Mon Sep 17 00:00:00 2001
+From c29eafe9ad987da2fa9a74e670783bfe0539be07 Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:26 +0200
-Subject: [PATCH 05/10] mfd: omap-usb-tll: Update DT clock binding information
+Date: Wed, 12 Feb 2014 12:18:46 +0200
+Subject: [PATCH 05/12] mfd: omap-usb-tll: Update DT clock binding information
 
 The omap-usb-tll driver needs one clock for each TLL channel.
 Add this information to the DT binding document.

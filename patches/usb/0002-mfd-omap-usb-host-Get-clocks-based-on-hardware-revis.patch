@@ -1,7 +1,7 @@
-From bbde03bdde39a23bf33295bdb7d5ae2d5e5df19e Mon Sep 17 00:00:00 2001
+From 502ea88f99aed932be3190ca917c1cef8c4f3227 Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:23 +0200
-Subject: [PATCH 02/10] mfd: omap-usb-host: Get clocks based on hardware
+Date: Wed, 12 Feb 2014 12:18:43 +0200
+Subject: [PATCH 02/12] mfd: omap-usb-host: Get clocks based on hardware
  revision
 
 Not all revisions have all the clocks so get the necessary clocks

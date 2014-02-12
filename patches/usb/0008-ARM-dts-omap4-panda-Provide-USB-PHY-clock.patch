@@ -1,7 +1,7 @@
-From 23c09e8c3b71138d32e5ad061e19fee026107d73 Mon Sep 17 00:00:00 2001
+From 111104858a6e39a0a60db1460ac33645b18ec395 Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:29 +0200
-Subject: [PATCH 08/10] ARM: dts: omap4-panda: Provide USB PHY clock
+Date: Wed, 12 Feb 2014 12:18:49 +0200
+Subject: [PATCH 08/12] ARM: dts: omap4-panda: Provide USB PHY clock
 
 The USB PHY gets its clock from AUXCLK3. Provide this
 information.

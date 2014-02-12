@@ -1,7 +1,7 @@
-From 9ff3dc50594f9f21d6a85f596f177fa2143aa9e9 Mon Sep 17 00:00:00 2001
+From 21081e56911909048769a9b79bae76a1616b5a71 Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:25 +0200
-Subject: [PATCH 04/10] mfd: omap-usb-host: Update DT clock binding information
+Date: Wed, 12 Feb 2014 12:18:45 +0200
+Subject: [PATCH 04/12] mfd: omap-usb-host: Update DT clock binding information
 
 The omap-usb-host driver expects certained named clocks.
 Add this information to the DT binding document.

@@ -73,6 +73,8 @@ usb () {
 	${git} "${DIR}/patches/usb/0008-ARM-dts-omap4-panda-Provide-USB-PHY-clock.patch"
 	${git} "${DIR}/patches/usb/0009-ARM-dts-omap5-uevm-Provide-USB-PHY-clock.patch"
 	${git} "${DIR}/patches/usb/0010-ARM-OMAP2-Remove-legacy_init_ehci_clk.patch"
+	${git} "${DIR}/patches/usb/0011-ARM-dts-OMAP2-Get-rid-of-incompatible-ids-for-USB-ho.patch"
+	${git} "${DIR}/patches/usb/0012-usb-omap-dts-Update-DT-binding-example-usage.patch"
 }
 
 clock

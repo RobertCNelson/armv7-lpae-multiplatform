@@ -1,7 +1,7 @@
-From db76b59a8b2b1d531d9b52c9c1197b03de13b46e Mon Sep 17 00:00:00 2001
+From 37b8ebcc55e1fe970d47fc0f0d1cf0120b85c03a Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:22 +0200
-Subject: [PATCH 01/10] mfd: omap-usb-host: Use resource managed clk_get()
+Date: Wed, 12 Feb 2014 12:18:42 +0200
+Subject: [PATCH 01/12] mfd: omap-usb-host: Use resource managed clk_get()
 
 Use devm_clk_get() instead of clk_get().
 

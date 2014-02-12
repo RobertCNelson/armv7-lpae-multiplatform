@@ -1,7 +1,7 @@
-From ea2037a6ab331beb5dc13f6be0ad860bb1542e98 Mon Sep 17 00:00:00 2001
+From 733cb1a4589ed3e7f04aecf6ed3cb68fcc6ed5bc Mon Sep 17 00:00:00 2001
 From: Roger Quadros <rogerq@ti.com>
-Date: Mon, 20 Jan 2014 16:11:30 +0200
-Subject: [PATCH 09/10] ARM: dts: omap5-uevm: Provide USB PHY clock
+Date: Wed, 12 Feb 2014 12:18:50 +0200
+Subject: [PATCH 09/12] ARM: dts: omap5-uevm: Provide USB PHY clock
 
 The HS USB 2 PHY gets its clock from AUXCLK1. Provide this
 information.
