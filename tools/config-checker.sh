@@ -99,6 +99,8 @@ check_config_builtin
 #
 config="CONFIG_THUMB2_KERNEL"
 check_config_disable
+config="CONFIG_OABI_COMPAT"
+check_config_disable
 
 #
 # CPU Frequency scaling
@@ -240,7 +242,8 @@ check_config_builtin
 #
 config="CONFIG_EXT4_FS"
 check_config_builtin
-
+config="CONFIG_BTRFS_FS"
+check_config_builtin
 #
 # DOS/FAT/NT Filesystems
 #
@@ -249,6 +252,20 @@ check_config_builtin
 config="CONFIG_MSDOS_FS"
 check_config_builtin
 config="CONFIG_VFAT_FS"
+check_config_builtin
+config="CONFIG_FAT_DEFAULT_IOCHARSET"
+value=\"iso8859-1\"
+check_config_value
+
+#
+# Pseudo filesystems
+#
+config="CONFIG_NLS_DEFAULT"
+value=\"iso8859-1\"
+check_config_value
+config="CONFIG_NLS_CODEPAGE_437"
+check_config_builtin
+config="CONFIG_NLS_ISO8859_1"
 check_config_builtin
 
 #Either no Hardware or not A7/A12/A15 with LPAE/etc..
