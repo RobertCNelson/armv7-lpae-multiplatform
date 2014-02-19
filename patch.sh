@@ -77,7 +77,13 @@ usb () {
 	${git} "${DIR}/patches/usb/0012-usb-omap-dts-Update-DT-binding-example-usage.patch"
 }
 
+fixes () {
+	echo "dir: fixes"
+	${git} "${DIR}/patches/fixes/0001-ARM-OMAP5-Fix-reboot-handling.patch"
+}
+
 clock
 usb
+fixes
 
 echo "patch.sh ran successful"

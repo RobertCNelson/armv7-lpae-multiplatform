@@ -243,7 +243,8 @@ check_config_builtin
 config="CONFIG_EXT4_FS"
 check_config_builtin
 config="CONFIG_BTRFS_FS"
-check_config_builtin
+check_config_disable
+
 #
 # DOS/FAT/NT Filesystems
 #
