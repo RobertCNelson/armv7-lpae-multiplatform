@@ -79,7 +79,7 @@ usb () {
 
 fixes () {
 	echo "dir: fixes"
-	${git} "${DIR}/patches/fixes/0001-ARM-OMAP5-Fix-reboot-handling.patch"
+#	${git} "${DIR}/patches/fixes/0001-ARM-OMAP5-Fix-reboot-handling.patch"
 }
 
 clock
