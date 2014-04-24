@@ -1,0 +1,40 @@
+From b31e52bfe8a0b05c696b047132eabd818ddf2770 Mon Sep 17 00:00:00 2001
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Date: Wed, 16 Apr 2014 13:16:43 +0300
+Subject: [PATCH 17/27] OMAPDSS: DSS & DISPC DT support for OMAP5
+
+Add omap5 entries to dispc's and dss's of_device_id tables.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ drivers/video/fbdev/omap2/dss/dispc.c | 1 +
+ drivers/video/fbdev/omap2/dss/dss.c   | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/video/fbdev/omap2/dss/dispc.c b/drivers/video/fbdev/omap2/dss/dispc.c
+index f18397c..82a6ee9 100644
+--- a/drivers/video/fbdev/omap2/dss/dispc.c
++++ b/drivers/video/fbdev/omap2/dss/dispc.c
+@@ -3829,6 +3829,7 @@ static const struct of_device_id dispc_of_match[] = {
+ 	{ .compatible = "ti,omap2-dispc", },
+ 	{ .compatible = "ti,omap3-dispc", },
+ 	{ .compatible = "ti,omap4-dispc", },
++	{ .compatible = "ti,omap5-dispc", },
+ 	{},
+ };
+ 
+diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/fbdev/omap2/dss/dss.c
+index d55266c..ae870a5 100644
+--- a/drivers/video/fbdev/omap2/dss/dss.c
++++ b/drivers/video/fbdev/omap2/dss/dss.c
+@@ -946,6 +946,7 @@ static const struct of_device_id dss_of_match[] = {
+ 	{ .compatible = "ti,omap2-dss", },
+ 	{ .compatible = "ti,omap3-dss", },
+ 	{ .compatible = "ti,omap4-dss", },
++	{ .compatible = "ti,omap5-dss", },
+ 	{},
+ };
+ 
+-- 
+1.9.2
+

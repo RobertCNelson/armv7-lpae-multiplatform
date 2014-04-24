@@ -1,0 +1,72 @@
+From 8bea29917369497d97196d5209d98e6b325e21df Mon Sep 17 00:00:00 2001
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Date: Fri, 7 Mar 2014 12:45:14 +0200
+Subject: [PATCH 10/27] ARM: OMAP: add OMAP5 DSI muxing
+
+Add support to set OMAP5 DSI pin muxing.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm/mach-omap2/display.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
+index 16d33d8..9744614 100644
+--- a/arch/arm/mach-omap2/display.c
++++ b/arch/arm/mach-omap2/display.c
+@@ -137,11 +137,42 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
+ 	return 0;
+ }
+ 
++#define CONTROL_PAD_BASE	0x4A002800
++#define CONTROL_DSIPHY		0x614
++
++static int omap5_dsi_mux_pads(int dsi_id, unsigned lanes)
++{
++	u32 enable_mask, enable_shift, reg;
++	void __iomem *ctrl_pad_base = NULL;
++
++	ctrl_pad_base = ioremap(CONTROL_PAD_BASE, SZ_4K);
++	if (!ctrl_pad_base)
++		return -ENXIO;
++
++	if (dsi_id == 0) {
++		enable_mask = OMAP4_DSI1_LANEENABLE_MASK;
++		enable_shift = OMAP4_DSI1_LANEENABLE_SHIFT;
++	} else if (dsi_id == 1) {
++		enable_mask = OMAP4_DSI2_LANEENABLE_MASK;
++		enable_shift = OMAP4_DSI2_LANEENABLE_SHIFT;
++	} else {
++		return -ENODEV;
++	}
++
++	reg = __raw_readl(ctrl_pad_base + CONTROL_DSIPHY);
++	reg &= ~enable_mask;
++	reg |= (lanes << enable_shift) & enable_mask;
++	__raw_writel(reg, ctrl_pad_base + CONTROL_DSIPHY);
++
++	return 0;
++}
++
+ static int omap_dsi_enable_pads(int dsi_id, unsigned lane_mask)
+ {
+ 	if (cpu_is_omap44xx())
+ 		return omap4_dsi_mux_pads(dsi_id, lane_mask);
+-
++	else if (soc_is_omap54xx())
++		return omap5_dsi_mux_pads(dsi_id, lane_mask);
+ 	return 0;
+ }
+ 
+@@ -149,6 +180,8 @@ static void omap_dsi_disable_pads(int dsi_id, unsigned lane_mask)
+ {
+ 	if (cpu_is_omap44xx())
+ 		omap4_dsi_mux_pads(dsi_id, 0);
++	else if (soc_is_omap54xx())
++		omap5_dsi_mux_pads(dsi_id, 0);
+ }
+ 
+ static int omap_dss_set_min_bus_tput(struct device *dev, unsigned long tput)
+-- 
+1.9.2
+

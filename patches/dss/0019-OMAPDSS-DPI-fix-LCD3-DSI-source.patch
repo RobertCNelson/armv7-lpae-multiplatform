@@ -1,0 +1,31 @@
+From e43e5771bd3df8c2c7f38cdb34b2bc4f4861f197 Mon Sep 17 00:00:00 2001
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Date: Thu, 17 Apr 2014 13:57:21 +0300
+Subject: [PATCH 19/27] OMAPDSS: DPI: fix LCD3 DSI source
+
+At the moment the dpi driver does not handle LCD3 clock source at all.
+
+LCD3 channel gets the DSI PLL clock from DSI2 instance. Add support for
+LCD3's clock source in the dpi driver.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ drivers/video/fbdev/omap2/dss/dpi.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/video/fbdev/omap2/dss/dpi.c b/drivers/video/fbdev/omap2/dss/dpi.c
+index 157921d..8e097fb 100644
+--- a/drivers/video/fbdev/omap2/dss/dpi.c
++++ b/drivers/video/fbdev/omap2/dss/dpi.c
+@@ -103,6 +103,8 @@ static enum omap_dss_clk_source dpi_get_alt_clk_src(enum omap_channel channel)
+ 		return OMAP_DSS_CLK_SRC_DSI_PLL_HSDIV_DISPC;
+ 	case OMAP_DSS_CHANNEL_LCD2:
+ 		return OMAP_DSS_CLK_SRC_DSI2_PLL_HSDIV_DISPC;
++	case OMAP_DSS_CHANNEL_LCD3:
++		return OMAP_DSS_CLK_SRC_DSI2_PLL_HSDIV_DISPC;
+ 	default:
+ 		/* this shouldn't happen */
+ 		WARN_ON(1);
+-- 
+1.9.2
+

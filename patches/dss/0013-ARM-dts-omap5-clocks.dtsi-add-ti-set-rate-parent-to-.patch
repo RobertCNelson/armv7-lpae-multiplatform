@@ -1,0 +1,29 @@
+From 70ccdab1f5a382e3f0891cc455b44e533c232d39 Mon Sep 17 00:00:00 2001
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Date: Thu, 17 Apr 2014 13:48:12 +0300
+Subject: [PATCH 13/27] ARM: dts: omap5-clocks.dtsi: add ti,set-rate-parent to
+ dss_dss_clk
+
+Add ti,set-rate-parent to dss_dss_clk so that the DSS driver can
+set the rate.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+---
+ arch/arm/boot/dts/omap54xx-clocks.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+index 26c02f9..b53ca88 100644
+--- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
++++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+@@ -859,6 +859,7 @@
+ 		clocks = <&dpll_per_h12x2_ck>;
+ 		ti,bit-shift = <8>;
+ 		reg = <0x1420>;
++		ti,set-rate-parent;
+ 	};
+ 
+ 	dss_sys_clk: dss_sys_clk {
+-- 
+1.9.2
+
