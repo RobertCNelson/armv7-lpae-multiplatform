@@ -81,11 +81,20 @@ dss () {
 	${git} "${DIR}/patches/dss/0027-Doc-DT-Add-OMAP5-DSS-DT-bindings.patch"
 }
 
+sata () {
+	echo "dir: sata"
+	${git} "${DIR}/patches/sata/0001-ARM-OMAP5-hwmod-Add-ocp2scp3-and-sata-hwmods.patch"
+	${git} "${DIR}/patches/sata/0002-ARM-dts-omap5-add-sata-node.patch"
+	${git} "${DIR}/patches/sata/0003-ARM-DRA7-hwmod-Add-ocp2scp3-and-sata-hwmods.patch"
+	${git} "${DIR}/patches/sata/0004-ARM-dts-dra7-add-OCP2SCP3-and-SATA-nodes.patch"
+}
+
 fixes () {
 	echo "dir: fixes"
 #	${git} "${DIR}/patches/fixes/0001-ARM-OMAP5-Fix-reboot-handling.patch"
 }
 
 dss
+sata
 
 echo "patch.sh ran successful"
