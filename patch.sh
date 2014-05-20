@@ -117,8 +117,14 @@ sata () {
 	${git} "${DIR}/patches/sata/0004-ARM-dts-dra7-add-OCP2SCP3-and-SATA-nodes.patch"
 }
 
+fixes () {
+	echo "dir: fixes"
+	${git} "${DIR}/patches/fixes/0002-saucy-error-variable-ilace-set-but-not-used-Werror-u.patch"
+}
+
 tegra_next
 dss
 sata
+fixes
 
 echo "patch.sh ran successful"
