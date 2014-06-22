@@ -50,6 +50,23 @@ cleanup () {
 	exit
 }
 
+omap_next () {
+	echo "dir: omap_next"
+	#from: https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
+	#git pull --no-edit git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.13/dts
+
+	${git} "${DIR}/patches/omap_next/0001-ARM-OMAP2-hwmod-Change-hardreset-soc_ops-for-AM43XX.patch"
+	${git} "${DIR}/patches/omap_next/0002-ARM-OMAP5-hwmod-Add-ocp2scp3-and-sata-hwmods.patch"
+	${git} "${DIR}/patches/omap_next/0003-ARM-dts-Enable-twl4030-off-idle-configuration-for-se.patch"
+	${git} "${DIR}/patches/omap_next/0004-ARM-DRA722-add-detection-of-SoC-information.patch"
+	${git} "${DIR}/patches/omap_next/0005-ARM-dts-omap5-Update-CPU-OPP-table-as-per-final-prod.patch"
+	${git} "${DIR}/patches/omap_next/0006-ARM-dts-am43x-epos-evm-Add-Missing-cpsw-phy-sel-for-.patch"
+	${git} "${DIR}/patches/omap_next/0007-ARM-OMAP2-drop-unused-function.patch"
+	${git} "${DIR}/patches/omap_next/0008-ARM-DTS-dra7-dra7xx-clocks-ATL-related-changes.patch"
+	${git} "${DIR}/patches/omap_next/0009-ARM-OMAP2-Fix-parser-bug-in-platform-muxing-code.patch"
+	${git} "${DIR}/patches/omap_next/0010-ARM-dts-dra7-evm-remove-interrupt-binding.patch"
+}
+
 tegra_next () {
 	echo "dir: tegra_next"
 	#From: https://git.kernel.org/cgit/linux/kernel/git/tegra/linux.git/log/?h=for-next
@@ -69,6 +86,7 @@ fixes () {
 	${git} "${DIR}/patches/fixes/0001-saucy-error-variable-ilace-set-but-not-used-Werror-u.patch"
 }
 
+omap_next
 fixes
 
 echo "patch.sh ran successful"
