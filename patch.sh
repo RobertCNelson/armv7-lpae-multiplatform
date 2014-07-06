@@ -64,6 +64,9 @@ local_patch () {
 	${git} "${DIR}/patches/dir/0001-patch.patch"
 }
 
+#external_git
+#local_patch
+
 omap_next () {
 	echo "dir: omap_next"
 	#from: https://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.13/dts
@@ -103,4 +106,19 @@ fixes () {
 omap_next
 fixes
 
+packaging_setup () {
+	cp -v "${DIR}/3rdparty/packaging/builddeb" "${DIR}/KERNEL/scripts/package"
+	git commit -a -m 'packaging: sync with mainline' -s
+
+	git format-patch -1 -o "${DIR}/patches/packaging"
+}
+
+packaging () {
+	echo "dir: packaging"
+	${git} "${DIR}/patches/packaging/0001-packaging-sync-with-mainline.patch"
+	${git} "${DIR}/patches/packaging/0002-deb-pkg-install-dtbs-in-linux-image-package.patch"
+}
+
+#packaging_setup
+#packaging
 echo "patch.sh ran successful"
