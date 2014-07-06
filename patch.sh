@@ -103,7 +103,7 @@ fixes () {
 	${git} "${DIR}/patches/fixes/0001-saucy-error-variable-ilace-set-but-not-used-Werror-u.patch"
 }
 
-omap_next
+#omap_next
 fixes
 
 packaging_setup () {
@@ -115,10 +115,10 @@ packaging_setup () {
 
 packaging () {
 	echo "dir: packaging"
-	${git} "${DIR}/patches/packaging/0001-packaging-sync-with-mainline.patch"
+	#${git} "${DIR}/patches/packaging/0001-packaging-sync-with-mainline.patch"
 	${git} "${DIR}/patches/packaging/0002-deb-pkg-install-dtbs-in-linux-image-package.patch"
 }
 
 #packaging_setup
-#packaging
+packaging
 echo "patch.sh ran successful"
