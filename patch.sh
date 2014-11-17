@@ -117,10 +117,16 @@ dts () {
 	echo "dir: dts"
 }
 
+fixes () {
+	echo "dir: fixes"
+	${git} "${DIR}/patches/fixes/0001-trusty-gcc-4.8-4.8.2-19ubuntu1-has-fix.patch"
+}
+
 x15
 #omap_next
 #tegra_next
 dts
+fixes
 
 packaging_setup () {
 	cp -v "${DIR}/3rdparty/packaging/builddeb" "${DIR}/KERNEL/scripts/package"
