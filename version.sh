@@ -25,6 +25,7 @@ KERNEL_TAG=${KERNEL_REL}-rc6
 BUILD=armv7-lpae-x0
 
 #v3.X-rcX + upto SHA
+#prev_KERNEL_SHA=""
 #KERNEL_SHA=""
 
 #git branch
