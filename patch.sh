@@ -75,13 +75,9 @@ fixes () {
 	fi
 
 	${git} "${DIR}/patches/fixes/0001-trusty-gcc-4.8-4.8.2-19ubuntu1-has-fix.patch"
-	${git} "${DIR}/patches/fixes/0002-ARM-dts-am57xx-beagle-x15-Add-GPIO-controlled-fan-no.patch"
-	${git} "${DIR}/patches/fixes/0003-tty-serial-8250-omap-add-ttySx-console-if-the-user-d.patch"
-	${git} "${DIR}/patches/fixes/0004-ARM-dts-am57xx-beagle-x15-Add-dual-ethernet.patch"
-	${git} "${DIR}/patches/fixes/0005-gpio-fan-Add-thermal-control-hooks.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
-		number=5
+		number=1
 		cleanup
 	fi
 
@@ -94,6 +90,7 @@ packaging_setup () {
 	git commit -a -m 'packaging: sync with mainline' -s
 
 	git format-patch -1 -o "${DIR}/patches/packaging"
+	exit 2
 }
 
 packaging () {
