@@ -80,7 +80,6 @@ fixes () {
 		number=1
 		cleanup
 	fi
-
 }
 
 fixes
