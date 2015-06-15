@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.1.0-rc7 Kernel Configuration
+# Linux/arm 4.1.0-rc8 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -1649,7 +1649,6 @@ CONFIG_OF_MTD=y
 CONFIG_OF_RESERVED_MEM=y
 CONFIG_OF_RESOLVE=y
 CONFIG_OF_OVERLAY=y
-CONFIG_OF_CONFIGFS=y
 CONFIG_ARCH_MIGHT_HAVE_PC_PARPORT=y
 # CONFIG_PARPORT is not set
 CONFIG_BLK_DEV=y
@@ -1700,7 +1699,6 @@ CONFIG_TI_DAC7512=m
 # CONFIG_USB_SWITCH_FSA9480 is not set
 # CONFIG_LATTICE_ECP3_CONFIG is not set
 CONFIG_SRAM=y
-CONFIG_BONE_CAPEMGR=y
 CONFIG_C2PORT=m
 
 #
@@ -1737,11 +1735,6 @@ CONFIG_ALTERA_STAPL=m
 #
 # Intel MIC Card Driver
 #
-
-#
-# Argus cape driver for beaglebone black
-#
-# CONFIG_CAPE_BONE_ARGUS is not set
 # CONFIG_ECHO is not set
 # CONFIG_CXL_BASE is not set
 
@@ -4843,7 +4836,6 @@ CONFIG_ION=y
 # CONFIG_GS_FPGABOOT is not set
 # CONFIG_COMMON_CLK_XLNX_CLKWZRD is not set
 # CONFIG_FB_TFT is not set
-# CONFIG_DRM_ETNAVIV is not set
 # CONFIG_CHROME_PLATFORMS is not set
 CONFIG_CLKDEV_LOOKUP=y
 CONFIG_HAVE_CLK_PREPARE=y
