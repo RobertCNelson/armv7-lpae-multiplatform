@@ -74,6 +74,24 @@ local_patch () {
 #external_git
 #local_patch
 
+backports () {
+	echo "dir: backports"
+	echo "dir: backports/mediatek"
+
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	#careful around: https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/mediatek?id=30686bf7f5b3c30831761e188a6e3cb33580fa48
+	${git} "${DIR}/patches/backports/mediatek/0001-backport-mediatek-mt7601u-from-v4.2-rc3.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		number=1
+		cleanup
+	fi
+}
+
 fixes () {
 	echo "dir: fixes"
 	#regenerate="enable"
@@ -89,7 +107,25 @@ fixes () {
 	fi
 }
 
+quieter () {
+	echo "dir: quieter"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	${git} "${DIR}/patches/quieter/0001-quiet-8250_omap.c-use-pr_info-over-pr_err.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		number=1
+		cleanup
+	fi
+}
+
+###
+backports
 fixes
+quieter
 
 packaging () {
 	echo "dir: packaging"
