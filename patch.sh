@@ -99,8 +99,6 @@ fixes () {
 		start_cleanup
 	fi
 
-	${git} "${DIR}/patches/fixes/0001-trusty-gcc-4.8-4.8.2-19ubuntu1-has-fix.patch"
-
 	if [ "x${regenerate}" = "xenable" ] ; then
 		number=1
 		cleanup
@@ -124,7 +122,7 @@ quieter () {
 
 ###
 backports
-fixes
+#fixes
 quieter
 
 packaging () {
