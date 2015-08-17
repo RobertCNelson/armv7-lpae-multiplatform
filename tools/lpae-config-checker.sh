@@ -29,8 +29,8 @@ config_module () {
 config_string () {
 	ret=$(./scripts/config --state ${config})
 	if [ ! "x${ret}" = "x${option}" ] ; then
-		echo "Setting: ${config}=${option}"
-		./scripts/config --set-str ${config} ${option}
+		echo "Setting: ${config}=\"${option}\""
+		./scripts/config --set-str ${config} "${option}"
 	fi
 }
 
@@ -100,6 +100,28 @@ config="CONFIG_MACH_SUN5I" ; config_disable
 config="CONFIG_ARM_ERRATA_430973" ; config_disable
 
 #
+# Bus support
+#
+config="CONFIG_PCI" ; config_enable
+
+#
+# PCI host controller drivers
+#
+config="CONFIG_PCI_DRA7XX" ; config_enable
+config="CONFIG_PCI_TEGRA" ; config_enable
+
+#
+# Generic Driver Options
+#
+config="CONFIG_FIRMWARE_IN_KERNEL" ; config_disable
+config="CONFIG_EXTRA_FIRMWARE" ; option="" ; config_string
+
+#
+# Distributed Switch Architecture drivers
+#
+config="CONFIG_R8169" ; config_enable
+
+#
 # Serial drivers
 #
 config="CONFIG_SERIAL_8250_OMAP" ; config_enable
@@ -114,7 +136,6 @@ config="CONFIG_SERIAL_OMAP" ; config_disable
 # Argus cape driver for beaglebone black
 #
 config="CONFIG_CAPE_BONE_ARGUS" ; config_disable
-config="CONFIG_BEAGLEBONE_PINMUX_HELPER" ; config_disable
 
 #
 # Graphics support
@@ -123,6 +144,5 @@ config="CONFIG_IMX_IPUV3_CORE" ; config_disable
 
 config="CONFIG_DRM_TILCDC" ; config_disable
 config="CONFIG_DRM_IMX" ; config_disable
-config="CONFIG_DRM_ETNAVIV" ; config_disable
 
 #
