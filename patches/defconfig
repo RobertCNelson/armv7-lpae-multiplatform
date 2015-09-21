@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.3.0-rc1 Kernel Configuration
+# Linux/arm 4.3.0-rc2 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -6715,4 +6715,3 @@ CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y
 CONFIG_VIRTUALIZATION=y
 CONFIG_KVM=y
 CONFIG_KVM_ARM_HOST=y
-CONFIG_KVM_ARM_MAX_VCPUS=4
