@@ -167,7 +167,7 @@ fixes () {
 		start_cleanup
 	fi
 
-	${git} "${DIR}/patches/dts/0011-dts-am57xx-beagle-x15-make-sure-vdd_sd-is-on-fixex-v.patch"
+	${git} "${DIR}/patches/dts/0009-dts-am57xx-beagle-x15-make-sure-vdd_sd-is-on-fixex-v.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
 		number=0
