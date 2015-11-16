@@ -168,7 +168,7 @@ fixes () {
 	fi
 
 	if [ "x${regenerate}" = "xenable" ] ; then
-		number=0
+		number=1
 		cleanup
 	fi
 }
