@@ -60,11 +60,11 @@ cleanup () {
 	exit 2
 }
 
-pick () {
-	if [ ! -d ../patches/${pick_dir} ] ; then
-		mkdir -p ../patches/${pick_dir}
+cherrypick () {
+	if [ ! -d ../patches/${cherrypick_dir} ] ; then
+		mkdir -p ../patches/${cherrypick_dir}
 	fi
-	git format-patch -1 ${SHA} --start-number ${num} -o ../patches/${pick_dir}
+	git format-patch -1 ${SHA} --start-number ${num} -o ../patches/${cherrypick_dir}
 	num=$(($num+1))
 }
 
@@ -180,6 +180,7 @@ quieter () {
 		start_cleanup
 	fi
 
+	#quiet some hide obvious things...
 	${git} "${DIR}/patches/quieter/0001-quiet-8250_omap.c-use-pr_info-over-pr_err.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
