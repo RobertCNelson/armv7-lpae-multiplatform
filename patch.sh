@@ -44,6 +44,11 @@ fi
 
 echo "Starting patch.sh"
 
+#merged_in_4_5="enable"
+unset merged_in_4_5
+#merged_in_4_6="enable"
+unset merged_in_4_6
+
 git_add () {
 	git add .
 	git commit -a -m 'testing patchset'
@@ -72,6 +77,64 @@ external_git () {
 	git_tag=""
 	echo "pulling: ${git_tag}"
 	git pull ${git_opts} ${git_patchset} ${git_tag}
+}
+
+aufs_fail () {
+	echo "aufs4 failed"
+	exit 2
+}
+
+aufs4 () {
+	echo "dir: aufs4"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		wget https://raw.githubusercontent.com/sfjro/aufs4-standalone/aufs${KERNEL_REL}/aufs4-kbuild.patch
+		patch -p1 < aufs4-kbuild.patch || aufs_fail
+		rm -rf aufs4-kbuild.patch
+		git add .
+		git commit -a -m 'merge: aufs4-kbuild' -s
+
+		wget https://raw.githubusercontent.com/sfjro/aufs4-standalone/aufs${KERNEL_REL}/aufs4-base.patch
+		patch -p1 < aufs4-base.patch || aufs_fail
+		rm -rf aufs4-base.patch
+		git add .
+		git commit -a -m 'merge: aufs4-base' -s
+
+		wget https://raw.githubusercontent.com/sfjro/aufs4-standalone/aufs${KERNEL_REL}/aufs4-mmap.patch
+		patch -p1 < aufs4-mmap.patch || aufs_fail
+		rm -rf aufs4-mmap.patch
+		git add .
+		git commit -a -m 'merge: aufs4-mmap' -s
+
+		wget https://raw.githubusercontent.com/sfjro/aufs4-standalone/aufs${KERNEL_REL}/aufs4-standalone.patch
+		patch -p1 < aufs4-standalone.patch || aufs_fail
+		rm -rf aufs4-standalone.patch
+		git add .
+		git commit -a -m 'merge: aufs4-standalone' -s
+
+		git format-patch -4 -o ../patches/aufs4/
+		exit 2
+	fi
+
+	${git} "${DIR}/patches/aufs4/0001-merge-aufs4-kbuild.patch"
+	${git} "${DIR}/patches/aufs4/0002-merge-aufs4-base.patch"
+	${git} "${DIR}/patches/aufs4/0003-merge-aufs4-mmap.patch"
+	${git} "${DIR}/patches/aufs4/0004-merge-aufs4-standalone.patch"
+
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	#patch -p1 < "${DIR}/patches/aufs4/0005-aufs-why-this-isnt-a-patch.patch"
+	#exit 2
+
+	${git} "${DIR}/patches/aufs4/0005-aufs-why-this-isnt-a-patch.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		number=5
+		cleanup
+	fi
 }
 
 rt_cleanup () {
@@ -104,6 +167,7 @@ local_patch () {
 }
 
 #external_git
+#aufs4
 #rt
 #local_patch
 
@@ -120,23 +184,33 @@ lts44_backports () {
 		SHA="6604c6556db9e41c85f2839f66bd9d617bcf9f87" ; num="1" ; cherrypick
 		SHA="074726402b82f14ca377da0b4a4767674c3d1ff8" ; cherrypick
 		SHA="20437f79f6627a31752f422688a6047c25cefcf1" ; cherrypick
-
+		SHA="f8caa792261c0edded20eba2b8fcc899a1b91819" ; cherrypick
+		SHA="cd378881426379a62a7fe67f34b8cbe738302022" ; cherrypick
+		SHA="7b0883f33809ff0aeca9848193c31629a752bb77" ; cherrypick
+		SHA="922201d129c8f9d0c3207dca90ea6ffd8e2242f0" ; cherrypick
 		exit 2
 	fi
 
-	#is_44="enable"
-	if [ "x${is_44}" = "xenable" ] ; then
-		echo "dir: lts44_backports/fixes"
+	echo "dir: lts44_backports/fixes"
+	if [ "x${merged_in_4_5}" = "xenable" ] ; then
 		#4.5.0-rc0
 		${git} "${DIR}/patches/lts44_backports/fixes/0001-dmaengine-edma-Fix-paRAM-slot-allocation-for-entry-c.patch"
+	fi
 
-		echo "dir: lts44_backports/dmtimer"
+	echo "dir: lts44_backports/dmtimer"
+	if [ "x${merged_in_4_5}" = "xenable" ] ; then
 		#4.5.0-rc0
 		${git} "${DIR}/patches/lts44_backports/dmtimer/0001-pwm-Add-PWM-driver-for-OMAP-using-dual-mode-timers.patch"
 		${git} "${DIR}/patches/lts44_backports/dmtimer/0002-pwm-omap-dmtimer-Potential-NULL-dereference-on-error.patch"
 		${git} "${DIR}/patches/lts44_backports/dmtimer/0003-ARM-OMAP-Add-PWM-dmtimer-platform-data-quirks.patch"
 	fi
-	unset is_44
+	if [ "x${merged_in_4_6}" = "xenable" ] ; then
+		#4.6.0-rc0
+		${git} "${DIR}/patches/lts44_backports/dmtimer/0004-pwm-omap-dmtimer-Fix-inaccurate-period-and-duty-cycl.patch"
+		${git} "${DIR}/patches/lts44_backports/dmtimer/0005-pwm-omap-dmtimer-Add-sanity-checking-for-load-and-ma.patch"
+		${git} "${DIR}/patches/lts44_backports/dmtimer/0006-pwm-omap-dmtimer-Round-load-and-match-values-rather-.patch"
+		${git} "${DIR}/patches/lts44_backports/dmtimer/0007-pwm-omap-dmtimer-Add-debug-message-for-effective-per.patch"
+	fi
 }
 
 reverts () {
@@ -168,19 +242,24 @@ fixes () {
 }
 
 ti () {
-	echo "dir: ti/iodelay/"
-	#regenerate="enable"
-	if [ "x${regenerate}" = "xenable" ] ; then
-		start_cleanup
-	fi
+	is_mainline="enable"
+	if [ "x${is_mainline}" = "xenable" ] ; then
+		echo "dir: ti/iodelay/"
+		#regenerate="enable"
+		if [ "x${regenerate}" = "xenable" ] ; then
+			start_cleanup
+		fi
 
-	${git} "${DIR}/patches/ti/iodelay/0001-pinctrl-bindings-pinctrl-Add-support-for-TI-s-IODela.patch"
-	${git} "${DIR}/patches/ti/iodelay/0002-pinctrl-Introduce-TI-IOdelay-configuration-driver.patch"
+		${git} "${DIR}/patches/ti/iodelay/0001-pinctrl-bindings-pinctrl-Add-support-for-TI-s-IODela.patch"
+		${git} "${DIR}/patches/ti/iodelay/0002-pinctrl-Introduce-TI-IOdelay-configuration-driver.patch"
+		${git} "${DIR}/patches/ti/iodelay/0003-ARM-dts-dra7-Add-iodelay-module.patch"
 
-	if [ "x${regenerate}" = "xenable" ] ; then
-		number=2
-		cleanup
+		if [ "x${regenerate}" = "xenable" ] ; then
+			number=3
+			cleanup
+		fi
 	fi
+	unset is_mainline
 }
 
 exynos () {
