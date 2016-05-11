@@ -44,6 +44,10 @@ fi
 
 echo "Starting patch.sh"
 
+unset merged_in_4_5
+merged_in_4_6="enable"
+#unset merged_in_4_6
+
 git_add () {
 	git add .
 	git commit -a -m 'testing patchset'
@@ -195,38 +199,6 @@ local_patch () {
 #rt
 #local_patch
 
-lts44_backports () {
-	echo "dir: lts44_backports"
-	#regenerate="enable"
-	if [ "x${regenerate}" = "xenable" ] ; then
-		echo "dir: lts44_backports/fixes"
-		cherrypick_dir="lts44_backports/fixes"
-		SHA="d20313b2c407a90fb60eca99d73c47a75bb42e08" ; num="1" ; cherrypick
-
-		echo "dir: lts44_backports/dmtimer"
-		cherrypick_dir="lts44_backports/dmtimer"
-		SHA="6604c6556db9e41c85f2839f66bd9d617bcf9f87" ; num="1" ; cherrypick
-		SHA="074726402b82f14ca377da0b4a4767674c3d1ff8" ; cherrypick
-		SHA="20437f79f6627a31752f422688a6047c25cefcf1" ; cherrypick
-
-		exit 2
-	fi
-
-	#is_44="enable"
-	if [ "x${is_44}" = "xenable" ] ; then
-		echo "dir: lts44_backports/fixes"
-		#4.5.0-rc0
-		${git} "${DIR}/patches/lts44_backports/fixes/0001-dmaengine-edma-Fix-paRAM-slot-allocation-for-entry-c.patch"
-
-		echo "dir: lts44_backports/dmtimer"
-		#4.5.0-rc0
-		${git} "${DIR}/patches/lts44_backports/dmtimer/0001-pwm-Add-PWM-driver-for-OMAP-using-dual-mode-timers.patch"
-		${git} "${DIR}/patches/lts44_backports/dmtimer/0002-pwm-omap-dmtimer-Potential-NULL-dereference-on-error.patch"
-		${git} "${DIR}/patches/lts44_backports/dmtimer/0003-ARM-OMAP-Add-PWM-dmtimer-platform-data-quirks.patch"
-	fi
-	unset is_44
-}
-
 reverts () {
 	echo "dir: reverts"
 	#regenerate="enable"
@@ -328,7 +300,6 @@ quieter () {
 }
 
 ###
-lts44_backports
 reverts
 #fixes
 ti
