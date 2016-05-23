@@ -291,11 +291,28 @@ quieter () {
 	fi
 }
 
+gcc6 () {
+	echo "dir: gcc6"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	${git} "${DIR}/patches/gcc6/0001-net-davinci_cpdma-use-dma_addr_t-for-DMA-address.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		wdir="gcc6"
+		number=1
+		cleanup
+	fi
+}
+
 ###
 lts44_backports
 reverts
 ti
 quieter
+gcc6
 
 packaging () {
 	echo "dir: packaging"
