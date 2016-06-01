@@ -159,9 +159,10 @@ aufs4 () {
 	fi
 
 	${git} "${DIR}/patches/aufs4/0005-merge-aufs4.patch"
+	${git} "${DIR}/patches/aufs4/0006-aufs-call-mutex.owner-only-when-DEBUG_MUTEXES-or-MUT.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
-		git format-patch -5 -o ../patches/aufs4/
+		git format-patch -6 -o ../patches/aufs4/
 		exit 2
 	fi
 }
@@ -196,8 +197,8 @@ local_patch () {
 }
 
 #external_git
-#aufs4
-#rt
+aufs4
+rt
 #local_patch
 
 reverts () {
