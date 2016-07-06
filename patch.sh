@@ -290,10 +290,26 @@ quieter () {
 	fi
 }
 
+exynos () {
+	echo "dir: exynos"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	${git} "${DIR}/patches/exynos/0001-exynos5422-artik10.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		number=1
+		cleanup
+	fi
+}
+
 ###
 reverts
 #fixes
 ti
+exynos
 quieter
 
 packaging () {
