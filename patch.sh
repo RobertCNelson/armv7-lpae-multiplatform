@@ -169,6 +169,10 @@ rt_cleanup () {
 
 rt () {
 	echo "dir: rt"
+
+	#v4.4.16
+	git revert --no-edit edc185a40251e4727ba729ccb478d39cf76bfc54
+
 	rt_patch="${KERNEL_REL}${kernel_rt}"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
