@@ -256,18 +256,10 @@ ti () {
 
 		${git} "${DIR}/patches/ti/ticpufreq/0001-Documentation-dt-add-bindings-for-ti-cpufreq.patch"
 		${git} "${DIR}/patches/ti/ticpufreq/0002-cpufreq-ti-Add-cpufreq-driver-to-determine-available.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0003-ARM-dts-am335x-Update-MPU-regulator-range-for-TI-boa.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0004-ARM-dts-am33xx-Move-to-operating-points-v2-table-and.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0005-ARM-dts-am335x-boneblack-Enable-1GHz-OPP-for-cpu.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0006-ARM-dts-am4372-Add-operating-points-v2-table.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0007-ARM-dts-am437x-gp-evm-Hook-dcdc2-as-the-cpu0-supply.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0008-ARM-dts-dra7-Add-dt-node-for-the-syscon-control-modu.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0009-ARM-dts-dra7-Move-cpus-node-to-parent-dts-for-dra74x.patch"
-		${git} "${DIR}/patches/ti/ticpufreq/0010-ARM-dts-dra7-Move-to-operating-points-v2-table.patch"
 
 		if [ "x${regenerate}" = "xenable" ] ; then
 			wdir="ti/ticpufreq"
-			number=10
+			number=2
 			cleanup
 		fi
 	fi
@@ -283,6 +275,21 @@ quieter () {
 
 	#quiet some hide obvious things...
 	${git} "${DIR}/patches/quieter/0001-quiet-8250_omap.c-use-pr_info-over-pr_err.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		number=1
+		cleanup
+	fi
+}
+
+more_fixes () {
+	echo "dir: more_fixes"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	${git} "${DIR}/patches/more_fixes/0001-slab-gcc5-fixes.patch"
 
 	if [ "x${regenerate}" = "xenable" ] ; then
 		number=1
@@ -309,8 +316,9 @@ exynos () {
 reverts
 #fixes
 ti
-exynos
 quieter
+more_fixes
+exynos
 
 packaging () {
 	echo "dir: packaging"

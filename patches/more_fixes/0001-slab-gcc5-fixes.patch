@@ -1,0 +1,44 @@
+From 6d7e3fdacdedc632bfea465393185d94f65f5512 Mon Sep 17 00:00:00 2001
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Mon, 8 Aug 2016 09:23:10 -0500
+Subject: [PATCH] slab/gcc5 fixes
+
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+---
+ arch/arm/Makefile  | 7 ++++++-
+ include/linux/of.h | 1 +
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 56ea5c60b..568efaae 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -13,7 +13,12 @@
+ # Ensure linker flags are correct
+ LDFLAGS		:=
+ 
+-LDFLAGS_vmlinux	:=-p --no-undefined -X --pic-veneer
++GCCVERSIONISGTE5 := $(shell expr `$(HOSTCC) -dumpversion | cut -f1 -d.` \>= 5)
++ifeq  "$(GCCVERSIONISGTE5)" "1"
++LDFLAGS_vmlinux :=-p --no-undefined -X
++else
++LDFLAGS_vmlinux :=-p --no-undefined -X --pic-veneer
++endif
+ ifeq ($(CONFIG_CPU_ENDIAN_BE8),y)
+ LDFLAGS_vmlinux	+= --be8
+ LDFLAGS_MODULE	+= --be8
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3d9ff8e..437aed9 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -23,6 +23,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/topology.h>
+ #include <linux/notifier.h>
++#include <linux/slab.h>
+ #include <linux/property.h>
+ #include <linux/list.h>
+ 
+-- 
+2.8.1
+
