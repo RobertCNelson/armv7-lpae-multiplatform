@@ -328,6 +328,27 @@ quieter () {
 	fi
 }
 
+sunxi () {
+	echo "dir: more_fixes"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		start_cleanup
+	fi
+
+	${git} "${DIR}/patches/sunxi/0001-ethernet-add-sun8i-emac-driver.patch"
+	${git} "${DIR}/patches/sunxi/0002-MAINTAINERS-Add-myself-as-maintainers-of-sun8i-emac.patch"
+	${git} "${DIR}/patches/sunxi/0003-ARM-sun8i-dt-Add-DT-bindings-documentation-for-Allwi.patch"
+	${git} "${DIR}/patches/sunxi/0004-ARM-dts-sun8i-h3-add-sun8i-emac-ethernet-driver.patch"
+	${git} "${DIR}/patches/sunxi/0005-ARM-dts-sun8i-Enable-sun8i-emac-on-the-Orange-PI-PC.patch"
+	${git} "${DIR}/patches/sunxi/0006-ARM-dts-sun8i-Enable-sun8i-emac-on-the-Orange-PI-One.patch"
+	${git} "${DIR}/patches/sunxi/0007-ARM-dts-sun8i-Add-ethernet0-alias-for-h3-emac.patch"
+
+	if [ "x${regenerate}" = "xenable" ] ; then
+		number=1
+		cleanup
+	fi
+}
+
 more_fixes () {
 	echo "dir: more_fixes"
 	#regenerate="enable"
@@ -364,6 +385,7 @@ reverts
 #fixes
 ti
 quieter
+sunxi
 more_fixes
 exynos
 
