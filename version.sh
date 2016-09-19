@@ -8,6 +8,7 @@ build_prefix="-armv7-lpae-x"
 branch_prefix="v"
 branch_postfix=".x"
 
+#
 #arm
 KERNEL_ARCH=arm
 #toolchain="gcc_linaro_eabi_4_8"
