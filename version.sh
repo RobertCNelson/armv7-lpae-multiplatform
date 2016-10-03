@@ -8,7 +8,6 @@ build_prefix="-armv7-lpae-x"
 branch_prefix="v"
 branch_postfix=".x"
 
-#
 #arm
 KERNEL_ARCH=arm
 #toolchain="gcc_linaro_eabi_4_8"
@@ -28,7 +27,7 @@ toolchain="gcc_linaro_gnueabihf_6"
 
 #Kernel/Build
 KERNEL_REL=4.8
-KERNEL_TAG=${KERNEL_REL}-rc8
+KERNEL_TAG=${KERNEL_REL}
 BUILD=${build_prefix}1
 kernel_rt=".X-rtY"
 
