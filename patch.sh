@@ -164,6 +164,8 @@ aufs4 () {
 		${git_bin} commit -a -m 'merge: aufs4' -s
 		${git_bin} format-patch -5 -o ../patches/aufs4/
 
+		rm -rf ../aufs4-standalone || true
+
 		exit 2
 	fi
 
@@ -193,10 +195,6 @@ rt_cleanup () {
 
 rt () {
 	echo "dir: rt"
-
-	${git_bin} revert --no-edit 147117cf23c0ba452f80409aec9c0be978232698
-	${git_bin} revert --no-edit f740b5cc39dd4f3dd301a2b60afe8b70e45554da
-
 	rt_patch="${KERNEL_REL}${kernel_rt}"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
