@@ -1,4 +1,4 @@
-From ddddee7ba8ee7aac849f0f1c8e3b3f04881099a9 Mon Sep 17 00:00:00 2001
+From dffccd45310b384315c5e97985a4230670e4516c Mon Sep 17 00:00:00 2001
 From: Rob Herring <robh@kernel.org>
 Date: Thu, 24 Mar 2016 10:52:42 -0500
 Subject: [PATCH 2/3] dtc: turn off dtc unit address warnings by default
