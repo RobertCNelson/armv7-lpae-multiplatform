@@ -1,4 +1,4 @@
-From 2d5ea83dde9d4b8ed0cd5eaa21ffbeb422e0697c Mon Sep 17 00:00:00 2001
+From 439f50ee9117f21d7049508cef367c4e83fc2397 Mon Sep 17 00:00:00 2001
 From: Rob Herring <robh@kernel.org>
 Date: Thu, 11 Feb 2016 16:59:12 -0600
 Subject: [PATCH 3/3] ARM: boot: Add an implementation of strnlen for libfdt
