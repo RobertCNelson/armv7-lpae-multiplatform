@@ -1,6 +1,6 @@
-From 4ba9b5dac7a81a5bd8271688d3e2eb6d795c5da3 Mon Sep 17 00:00:00 2001
+From c458e0d4646c9e8356218157c83e7148372ad203 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Sun, 26 Mar 2017 20:46:14 -0500
+Date: Thu, 30 Mar 2017 08:48:17 -0500
 Subject: [PATCH] scripts/dtc: Update to upstream version overlays
 
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
