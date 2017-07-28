@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.4.78 Kernel Configuration
+# Linux/arm 4.4.79 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -3950,7 +3950,6 @@ CONFIG_FB_UDL=m
 # CONFIG_FB_IBM_GXT4500 is not set
 # CONFIG_FB_VIRTUAL is not set
 # CONFIG_FB_METRONOME is not set
-# CONFIG_FB_MB862XX_PCI_GDC is not set
 # CONFIG_FB_BROADSHEET is not set
 # CONFIG_FB_AUO_K190X is not set
 CONFIG_FB_SIMPLE=y
