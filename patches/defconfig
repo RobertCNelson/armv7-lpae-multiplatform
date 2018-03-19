@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.14.19 Kernel Configuration
+# Linux/arm 4.14.28 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -5155,6 +5155,7 @@ CONFIG_DRM_DW_HDMI=m
 # CONFIG_DRM_DW_HDMI_CEC is not set
 # CONFIG_DRM_STI is not set
 CONFIG_DRM_ETNAVIV=y
+CONFIG_DRM_ETNAVIV_THERMAL=y
 # CONFIG_DRM_ETNAVIV_REGISTER_LOGGING is not set
 # CONFIG_DRM_ARCPGU is not set
 # CONFIG_DRM_HISI_HIBMC is not set
