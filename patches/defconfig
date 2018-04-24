@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.16.3 Kernel Configuration
+# Linux/arm 4.16.4 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -2800,7 +2800,7 @@ CONFIG_SWPHY=y
 #
 CONFIG_AMD_PHY=m
 CONFIG_AQUANTIA_PHY=m
-CONFIG_AT803X_PHY=m
+CONFIG_AT803X_PHY=y
 CONFIG_BCM7XXX_PHY=m
 CONFIG_BCM87XX_PHY=m
 CONFIG_BCM_NET_PHYLIB=m
