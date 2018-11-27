@@ -344,10 +344,21 @@ backports () {
 		cp -v ~/linux-src/include/linux/remoteproc.h ./include/linux/remoteproc.h
 
 		post_backports
-		exit 2
 	else
 		patch_backports
 	fi
+
+#	subsystem="am335xdts"
+#	if [ "x${regenerate}" = "xenable" ] ; then
+#		pre_backports
+#
+#		cp -v ~/linux-src/arch/arm/boot/dts/am335x-* ./arch/arm/boot/dts/
+#
+#		post_backports
+#		exit 2
+#	else
+#		patch_backports
+#	fi
 }
 
 reverts () {
@@ -370,7 +381,6 @@ reverts () {
 }
 
 drivers () {
-#	dir 'drivers/android'
 	dir 'drivers/ar1021_i2c'
 #	dir 'drivers/btrfs'
 	dir 'drivers/pwm'
@@ -403,18 +413,20 @@ drivers () {
 
 soc () {
 	dir 'soc/exynos'
-	dir 'soc/imx/udoo'
-	dir 'soc/imx/wandboard'
-	dir 'soc/imx'
-	dir 'soc/ti'
-	dir 'soc/ti/bone_common'
-	dir 'soc/ti/uboot'
-	dir 'soc/ti/blue'
-	dir 'soc/ti/abbbi'
-	dir 'soc/ti/am335x_olimex_som'
-	dir 'soc/ti/beaglebone_capes'
-	dir 'soc/ti/pocketbeagle'
-	dir 'soc/ti/uboot_univ'
+#	dir 'soc/imx/udoo'
+#	dir 'soc/imx/wandboard'
+#	dir 'soc/imx/imx6'
+
+#	dir 'soc/ti/omap3'
+#	dir 'soc/ti/omap4'
+#	dir 'soc/ti/am335x'
+
+#	dir 'soc/ti/blue'
+#	dir 'soc/ti/abbbi'
+#	dir 'soc/ti/am335x_olimex_som'
+#	dir 'soc/ti/pocketbeagle'
+#	dir 'soc/ti/beaglebone_capes'
+#	dir 'soc/ti/uboot'
 }
 
 dtb_makefile_append () {
@@ -483,7 +495,7 @@ backports
 #reverts
 drivers
 soc
-beaglebone
+#beaglebone
 
 packaging () {
 	echo "dir: packaging"
