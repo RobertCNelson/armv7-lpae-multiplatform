@@ -191,8 +191,8 @@ rt () {
 	echo "dir: rt"
 	rt_patch="${KERNEL_REL}${kernel_rt}"
 
-	#v4.19.1
-	${git_bin} revert --no-edit 3252b60cf810aec6460f4777a7730bfc70448729
+	#v4.19.x
+	#${git_bin} revert --no-edit xyz
 
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -348,17 +348,6 @@ backports () {
 		patch_backports
 	fi
 
-#	subsystem="am335xdts"
-#	if [ "x${regenerate}" = "xenable" ] ; then
-#		pre_backports
-#
-#		cp -v ~/linux-src/arch/arm/boot/dts/am335x-* ./arch/arm/boot/dts/
-#
-#		post_backports
-#		exit 2
-#	else
-#		patch_backports
-#	fi
 }
 
 reverts () {
