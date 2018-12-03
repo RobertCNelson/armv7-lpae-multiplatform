@@ -1,10 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.20.0-rc4 Kernel Configuration
+# Linux/arm 4.20.0-rc5 Kernel Configuration
 #
 
 #
-# Compiler: arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture 8.2-2018-08 (arm-rel-8.23)) 8.2.1 20180802
+# Compiler: arm-linux-gnueabihf-gcc (GNU Toolchain for the A-profile Architecture 8.2-2018.11 (arm-rel-8.26)) 8.2.1 20180802
 #
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=80201
@@ -19,7 +19,7 @@ CONFIG_INIT_ENV_ARG_LIMIT=32
 # CONFIG_COMPILE_TEST is not set
 CONFIG_LOCALVERSION=""
 # CONFIG_LOCALVERSION_AUTO is not set
-CONFIG_BUILD_SALT="4.20-rc4-armv7-lpae-x0"
+CONFIG_BUILD_SALT="4.20-rc5-armv7-lpae-x0"
 CONFIG_HAVE_KERNEL_GZIP=y
 CONFIG_HAVE_KERNEL_LZMA=y
 CONFIG_HAVE_KERNEL_XZ=y
@@ -2125,7 +2125,6 @@ CONFIG_SRAM=y
 CONFIG_SRAM_EXEC=y
 # CONFIG_PCI_ENDPOINT_TEST is not set
 CONFIG_MISC_RTSX=m
-CONFIG_UDOO_ARD=y
 # CONFIG_C2PORT is not set
 
 #
@@ -3915,8 +3914,6 @@ CONFIG_CHARGER_BQ2415X=m
 # CONFIG_CHARGER_TPS65217 is not set
 # CONFIG_BATTERY_GAUGE_LTC2941 is not set
 # CONFIG_CHARGER_RT9455 is not set
-CONFIG_POWER_SEQUENCE=y
-# CONFIG_PWRSEQ_GENERIC is not set
 CONFIG_HWMON=y
 CONFIG_HWMON_VID=m
 # CONFIG_HWMON_DEBUG_CHIP is not set
@@ -5055,7 +5052,6 @@ CONFIG_DRM_SCHED=y
 #
 # I2C encoder or helper chips
 #
-# CONFIG_DRM_I2C_ADIHDMI is not set
 # CONFIG_DRM_I2C_CH7006 is not set
 # CONFIG_DRM_I2C_SIL164 is not set
 CONFIG_DRM_I2C_NXP_TDA998X=m
