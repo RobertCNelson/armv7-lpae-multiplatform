@@ -485,7 +485,7 @@ beaglebone () {
 #reverts
 drivers
 soc
-beaglebone
+#beaglebone
 
 packaging () {
 	echo "dir: packaging"
