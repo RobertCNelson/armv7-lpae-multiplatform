@@ -333,7 +333,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v4.20-rc6"
+	backport_tag="v4.20-rc7"
 
 	subsystem="remoteproc"
 	#regenerate="enable"
@@ -347,7 +347,6 @@ backports () {
 	else
 		patch_backports
 	fi
-
 }
 
 reverts () {
