@@ -32,10 +32,10 @@ toolchain="gcc_linaro_gnueabihf_7"
 
 #Kernel
 KERNEL_REL=4.14
-KERNEL_TAG=${KERNEL_REL}.78
-kernel_rt=".78-rt47"
+KERNEL_TAG=${KERNEL_REL}.87
+kernel_rt=".87-rt49"
 #Kernel Build
-BUILD=${build_prefix}12
+BUILD=${build_prefix}13
 
 #v4.X-rcX + upto SHA
 #prev_KERNEL_SHA=""
@@ -44,6 +44,6 @@ BUILD=${build_prefix}12
 #git branch
 BRANCH="${branch_prefix}${KERNEL_REL}${branch_postfix}"
 
-DISTRO=cross
+DISTRO=xross
 DEBARCH=armhf
 #
