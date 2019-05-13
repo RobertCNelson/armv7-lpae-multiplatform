@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.14.109 Kernel Configuration
+# Linux/arm 4.14.115 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -539,7 +539,6 @@ CONFIG_PLAT_SAMSUNG=y
 #
 # Power management
 #
-# CONFIG_SAMSUNG_PM_CHECK is not set
 # CONFIG_ARCH_RENESAS is not set
 CONFIG_ARCH_SUNXI=y
 # CONFIG_MACH_SUN4I is not set
@@ -3361,6 +3360,7 @@ CONFIG_UNIX98_PTYS=y
 CONFIG_NOZOMI=m
 CONFIG_N_GSM=m
 # CONFIG_TRACE_SINK is not set
+CONFIG_LDISC_AUTOLOAD=y
 CONFIG_DEVMEM=y
 CONFIG_DEVKMEM=y
 
@@ -3437,7 +3437,6 @@ CONFIG_HW_RANDOM_VIRTIO=y
 CONFIG_HW_RANDOM_IMX_RNGC=y
 CONFIG_HW_RANDOM_TPM=y
 # CONFIG_NVRAM is not set
-# CONFIG_R3964 is not set
 # CONFIG_APPLICOM is not set
 # CONFIG_RAW_DRIVER is not set
 CONFIG_TCG_TPM=y
