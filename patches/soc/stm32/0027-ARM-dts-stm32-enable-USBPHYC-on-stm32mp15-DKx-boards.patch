@@ -1,0 +1,45 @@
+From c06f0333661b249d17f6c3ae666664a93b7d77bf Mon Sep 17 00:00:00 2001
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Date: Mon, 9 Dec 2019 15:15:09 +0100
+Subject: [PATCH 27/33] ARM: dts: stm32: enable USBPHYC on stm32mp15 DKx boards
+
+This patch enables USBPHYC (USB PHY Controller on stm32mp15 DKx boards.
+This enables the two usbphyc usb2 ports, which require 3 supplies:
+3v3, 1v1 and 1v8.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index 24d798d503d4..3a12e61ede92 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -589,6 +589,22 @@ &uart4 {
+ 	status = "okay";
+ };
+ 
++&usbphyc {
++	status = "okay";
++};
++
++&usbphyc_port0 {
++	phy-supply = <&vdd_usb>;
++	vdda1v1-supply = <&reg11>;
++	vdda1v8-supply = <&reg18>;
++};
++
++&usbphyc_port1 {
++	phy-supply = <&vdd_usb>;
++	vdda1v1-supply = <&reg11>;
++	vdda1v8-supply = <&reg18>;
++};
++
+ &vrefbuf {
+ 	regulator-min-microvolt = <2500000>;
+ 	regulator-max-microvolt = <2500000>;
+-- 
+2.24.0
+

@@ -1,0 +1,29 @@
+From ac4533a816e06cb630d2f9c9b83e246c06fdef66 Mon Sep 17 00:00:00 2001
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Date: Fri, 15 Nov 2019 11:06:51 +0100
+Subject: [PATCH 12/33] ARM: dts: stm32: remove unused rng interrupt on
+ stm32f429
+
+Interrupt has never be used in rng driver so remove it from DT.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index 5c8a826b3195..196817da0c1d 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -789,7 +789,6 @@ dcmi: dcmi@50050000 {
+ 		rng: rng@50060800 {
+ 			compatible = "st,stm32-rng";
+ 			reg = <0x50060800 0x400>;
+-			interrupts = <80>;
+ 			clocks = <&rcc 0 STM32F4_AHB2_CLOCK(RNG)>;
+ 
+ 		};
+-- 
+2.24.0
+

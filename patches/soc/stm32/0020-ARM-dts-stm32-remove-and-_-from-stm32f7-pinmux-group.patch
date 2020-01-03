@@ -1,0 +1,121 @@
+From 49a58ba196036f6993f8bee7c9a9509463ccf81b Mon Sep 17 00:00:00 2001
+From: Benjamin Gaignard <benjamin.gaignard@st.com>
+Date: Wed, 4 Dec 2019 16:53:00 +0100
+Subject: [PATCH 20/33] ARM: dts: stm32: remove "@" and "_" from stm32f7 pinmux
+ groups
+
+Replace all "@" and "_" by "-" in pinmux groups for stm32f7 family.
+This avoid errors when using yaml to check the bindings.
+
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+index 9314128df185..fe4cfda72a47 100644
+--- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+@@ -127,7 +127,7 @@ gpiok: gpio@40022800 {
+ 				st,bank-name = "GPIOK";
+ 			};
+ 
+-			cec_pins_a: cec@0 {
++			cec_pins_a: cec-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 15, AF4)>; /* HDMI CEC */
+ 					slew-rate = <0>;
+@@ -136,7 +136,7 @@ pins {
+ 				};
+ 			};
+ 
+-			usart1_pins_a: usart1@0 {
++			usart1_pins_a: usart1-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+ 					bias-disable;
+@@ -149,7 +149,7 @@ pins2 {
+ 				};
+ 			};
+ 
+-			usart1_pins_b: usart1@1 {
++			usart1_pins_b: usart1-1 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('A', 9, AF7)>; /* USART1_TX */
+ 					bias-disable;
+@@ -162,7 +162,7 @@ pins2 {
+ 				};
+ 			};
+ 
+-			i2c1_pins_b: i2c1@0 {
++			i2c1_pins_b: i2c1-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('B', 9, AF4)>, /* I2C1 SDA */
+ 						 <STM32_PINMUX('B', 8, AF4)>; /* I2C1 SCL */
+@@ -172,7 +172,7 @@ pins {
+ 				};
+ 			};
+ 
+-			usbotg_hs_pins_a: usbotg-hs@0 {
++			usbotg_hs_pins_a: usbotg-hs-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
+ 						 <STM32_PINMUX('I', 11, AF10)>, /* OTG_HS_ULPI_DIR */
+@@ -192,7 +192,7 @@ pins {
+ 				};
+ 			};
+ 
+-			usbotg_hs_pins_b: usbotg-hs@1 {
++			usbotg_hs_pins_b: usbotg-hs-1 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('H', 4, AF10)>, /* OTG_HS_ULPI_NXT */
+ 						 <STM32_PINMUX('C', 2, AF10)>, /* OTG_HS_ULPI_DIR */
+@@ -212,7 +212,7 @@ pins {
+ 				};
+ 			};
+ 
+-			usbotg_fs_pins_a: usbotg-fs@0 {
++			usbotg_fs_pins_a: usbotg-fs-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('A', 10, AF10)>, /* OTG_FS_ID */
+ 						 <STM32_PINMUX('A', 11, AF10)>, /* OTG_FS_DM */
+@@ -223,7 +223,7 @@ pins {
+ 				};
+ 			};
+ 
+-			sdio_pins_a: sdio_pins_a@0 {
++			sdio_pins_a: sdio-pins-a-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+@@ -236,7 +236,7 @@ pins {
+ 				};
+ 			};
+ 
+-			sdio_pins_od_a: sdio_pins_od_a@0 {
++			sdio_pins_od_a: sdio-pins-od-a-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+@@ -254,7 +254,7 @@ pins2 {
+ 				};
+ 			};
+ 
+-			sdio_pins_b: sdio_pins_b@0 {
++			sdio_pins_b: sdio-pins-b-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+ 						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+@@ -267,7 +267,7 @@ pins {
+ 				};
+ 			};
+ 
+-			sdio_pins_od_b: sdio_pins_od_b@0 {
++			sdio_pins_od_b: sdio-pins-od-b-0 {
+ 				pins1 {
+ 					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+ 						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+-- 
+2.24.0
+

@@ -1,0 +1,36 @@
+From fa88b20c3d629ed917c30f5c86b40fa90907d5e6 Mon Sep 17 00:00:00 2001
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Date: Mon, 9 Dec 2019 15:17:26 +0100
+Subject: [PATCH 28/33] ARM: dts: stm32: enable USB Host (USBH) EHCI controller
+ on stm32mp15 DKx
+
+This patch enables USB Host (USBH) EHCI controller on stm32mp15 dk boards.
+As a hub is used between USBH and USB connectors, no need to enable
+USBH OHCI controller: all low- and full-speed traffic is managed by the
+hub.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index 3a12e61ede92..71c781b85deb 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -589,6 +589,11 @@ &uart4 {
+ 	status = "okay";
+ };
+ 
++&usbh_ehci {
++	phys = <&usbphyc_port0>;
++	status = "okay";
++};
++
+ &usbphyc {
+ 	status = "okay";
+ };
+-- 
+2.24.0
+

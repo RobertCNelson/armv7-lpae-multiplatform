@@ -1,0 +1,61 @@
+From f7a3b40baf77721601d97b9e1cd55dec36f8ff87 Mon Sep 17 00:00:00 2001
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Date: Tue, 5 Nov 2019 13:52:18 +0100
+Subject: [PATCH 01/33] ARM: dts: stm32: add pwm sleep pin muxing for
+ stm32mp157c-ev1
+
+Add PWM pinctrl definitions used in low-power (sleep) mode on
+stm32mp157c-ev1.
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index 3d1ecb408b03..144632811015 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -596,6 +596,12 @@ pins {
+ 				};
+ 			};
+ 
++			pwm2_sleep_pins_a: pwm2-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('A', 3, ANALOG)>; /* TIM2_CH4 */
++				};
++			};
++
+ 			pwm8_pins_a: pwm8-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('I', 2, AF3)>; /* TIM8_CH4 */
+@@ -605,6 +611,12 @@ pins {
+ 				};
+ 			};
+ 
++			pwm8_sleep_pins_a: pwm8-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('I', 2, ANALOG)>; /* TIM8_CH4 */
++				};
++			};
++
+ 			pwm12_pins_a: pwm12-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('H', 6, AF2)>; /* TIM12_CH1 */
+@@ -614,6 +626,12 @@ pins {
+ 				};
+ 			};
+ 
++			pwm12_sleep_pins_a: pwm12-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('H', 6, ANALOG)>; /* TIM12_CH1 */
++				};
++			};
++
+ 			qspi_clk_pins_a: qspi-clk-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('F', 10, AF9)>; /* QSPI_CLK */
+-- 
+2.24.0
+

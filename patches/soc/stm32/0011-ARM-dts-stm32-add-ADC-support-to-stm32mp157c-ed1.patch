@@ -1,0 +1,52 @@
+From 91ad4af4b29709462a2185c770ac1de9bd2e2c09 Mon Sep 17 00:00:00 2001
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Date: Fri, 8 Nov 2019 17:37:39 +0100
+Subject: [PATCH 11/33] ARM: dts: stm32: add ADC support to stm32mp157c-ed1
+
+Add ADC support to stm32mp157c-ed1 board.
+Following ADC signals are dedicated for analog and routed to connectors:
+- ADC1/2 in0 (ANA0)
+- ADC1/2 in1 (ANA1)
+- ADC1 in6 (PF12)
+Configure ADC1 with these signals. But keep it disabled by default, so
+PF12 can be used as gpio by default.
+Add VDD and VDDA supplies to ADC on stm32mp157c-ed1 board. This allows to
+get full ADC analog performances in case VDDA is below 2.7V (not the case
+by default).
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 207146c98154..341fb6064447 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -89,6 +89,22 @@ sd_switch: regulator-sd_switch {
+ 	};
+ };
+ 
++&adc {
++	/* ANA0, ANA1 are dedicated pins and don't need pinctrl: only in6. */
++	pinctrl-0 = <&adc1_in6_pins_a>;
++	pinctrl-names = "default";
++	vdd-supply = <&vdd>;
++	vdda-supply = <&vdda>;
++	vref-supply = <&vdda>;
++	status = "disabled";
++	adc1: adc@0 {
++		st,adc-channels = <0 1 6>;
++		/* 16.5 ck_cycles sampling time */
++		st,min-sample-time-nsecs = <400>;
++		status = "okay";
++	};
++};
++
+ &dac {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&dac_ch1_pins_a &dac_ch2_pins_a>;
+-- 
+2.24.0
+

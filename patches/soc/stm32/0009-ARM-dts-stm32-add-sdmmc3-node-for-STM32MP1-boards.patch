@@ -1,0 +1,132 @@
+From 7e5d83981911f66fd0e6c110ea6a21a4f771b924 Mon Sep 17 00:00:00 2001
+From: Yann Gautier <yann.gautier@st.com>
+Date: Fri, 15 Nov 2019 11:44:51 +0100
+Subject: [PATCH 09/33] ARM: dts: stm32: add sdmmc3 node for STM32MP1 boards
+
+On STM32MP1 EVAL and DISCOVERY boards, the SDMMC3 internal peripheral
+can be used through the GPIO extension connector. The sdmmc3 node is then
+added in the boards DT files, and the required pins are also added.
+The node status is disabled as there is no device connected by default.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Yann Gautier <yann.gautier@st.com>
+---
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 54 +++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157a-dk1.dts     | 12 +++++
+ arch/arm/boot/dts/stm32mp157c-ev1.dts     | 12 +++++
+ 3 files changed, 78 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index bdd4113f473e..2b6d4474faef 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -1053,6 +1053,60 @@ pins {
+ 				};
+ 			};
+ 
++			sdmmc3_b4_pins_a: sdmmc3-b4-0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
++						 <STM32_PINMUX('F', 4, AF9)>, /* SDMMC3_D1 */
++						 <STM32_PINMUX('F', 5, AF9)>, /* SDMMC3_D2 */
++						 <STM32_PINMUX('D', 7, AF10)>, /* SDMMC3_D3 */
++						 <STM32_PINMUX('F', 1, AF9)>; /* SDMMC3_CMD */
++					slew-rate = <1>;
++					drive-push-pull;
++					bias-pull-up;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('G', 15, AF10)>; /* SDMMC3_CK */
++					slew-rate = <2>;
++					drive-push-pull;
++					bias-pull-up;
++				};
++			};
++
++			sdmmc3_b4_od_pins_a: sdmmc3-b4-od-0 {
++				pins1 {
++					pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
++						 <STM32_PINMUX('F', 4, AF9)>, /* SDMMC3_D1 */
++						 <STM32_PINMUX('F', 5, AF9)>, /* SDMMC3_D2 */
++						 <STM32_PINMUX('D', 7, AF10)>; /* SDMMC3_D3 */
++					slew-rate = <1>;
++					drive-push-pull;
++					bias-pull-up;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('G', 15, AF10)>; /* SDMMC3_CK */
++					slew-rate = <2>;
++					drive-push-pull;
++					bias-pull-up;
++				};
++				pins3 {
++					pinmux = <STM32_PINMUX('F', 1, AF9)>; /* SDMMC2_CMD */
++					slew-rate = <1>;
++					drive-open-drain;
++					bias-pull-up;
++				};
++			};
++
++			sdmmc3_b4_sleep_pins_a: sdmmc3-b4-sleep-0 {
++				pins {
++					pinmux = <STM32_PINMUX('F', 0, ANALOG)>, /* SDMMC3_D0 */
++						 <STM32_PINMUX('F', 4, ANALOG)>, /* SDMMC3_D1 */
++						 <STM32_PINMUX('F', 5, ANALOG)>, /* SDMMC3_D2 */
++						 <STM32_PINMUX('D', 7, ANALOG)>, /* SDMMC3_D3 */
++						 <STM32_PINMUX('G', 15, ANALOG)>, /* SDMMC3_CK */
++						 <STM32_PINMUX('F', 1, ANALOG)>; /* SDMMC3_CMD */
++				};
++			};
++
+ 			spdifrx_pins_a: spdifrx-0 {
+ 				pins {
+ 					pinmux = <STM32_PINMUX('G', 12, AF8)>; /* SPDIF_IN1 */
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index d4e37ab0752a..2f9f8cf94b02 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -502,6 +502,18 @@ &sdmmc1 {
+ 	status = "okay";
+ };
+ 
++&sdmmc3 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc3_b4_pins_a>;
++	pinctrl-1 = <&sdmmc3_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc3_b4_sleep_pins_a>;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "disabled";
++};
++
+ &timers1 {
+ 	/* spare dmas for other usage */
+ 	/delete-property/dmas;
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index a27db4e3f1ce..2010f6292a77 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -283,6 +283,18 @@ flash1: mx66l51235l@1 {
+ 	};
+ };
+ 
++&sdmmc3 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc3_b4_pins_a>;
++	pinctrl-1 = <&sdmmc3_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc3_b4_sleep_pins_a>;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "disabled";
++};
++
+ &spi1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&spi1_pins_a>;
+-- 
+2.24.0
+

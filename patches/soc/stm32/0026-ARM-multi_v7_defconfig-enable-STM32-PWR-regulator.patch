@@ -1,0 +1,28 @@
+From 0a0639e87cd8a63cb722e72c9509cf08c3882299 Mon Sep 17 00:00:00 2001
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Date: Thu, 21 Nov 2019 17:12:00 +0100
+Subject: [PATCH 26/33] ARM: multi_v7_defconfig: enable STM32 PWR regulator
+
+This enables the driver for STM32 PWR regulators found on stm32mp1.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/configs/multi_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 3f1b96dc7faa..8539da92f60a 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -591,6 +591,7 @@ CONFIG_REGULATOR_S2MPS11=y
+ CONFIG_REGULATOR_S5M8767=y
+ CONFIG_REGULATOR_STM32_BOOSTER=m
+ CONFIG_REGULATOR_STM32_VREFBUF=m
++CONFIG_REGULATOR_STM32_PWR=y
+ CONFIG_REGULATOR_STPMIC1=y
+ CONFIG_REGULATOR_TI_ABB=y
+ CONFIG_REGULATOR_TPS51632=y
+-- 
+2.24.0
+

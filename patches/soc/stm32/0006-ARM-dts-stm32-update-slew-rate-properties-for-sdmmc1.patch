@@ -1,0 +1,80 @@
+From 0a1732cf6cdcd347528ff1e2ac31fa7b51427f06 Mon Sep 17 00:00:00 2001
+From: Yann Gautier <yann.gautier@st.com>
+Date: Wed, 6 Nov 2019 11:09:35 +0100
+Subject: [PATCH 06/33] ARM: dts: stm32: update slew-rate properties for sdmmc1
+ on stm32mp157
+
+Relax sdmmc1 pins slew-rate to minimize peak currents.
+
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+Signed-off-by: Yann Gautier <yann.gautier@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi | 28 +++++++++++++++--------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+index e3a9e3a2f1a8..e186b8499a2b 100644
+--- a/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
+@@ -858,14 +858,19 @@ pins {
+ 			};
+ 
+ 			sdmmc1_b4_pins_a: sdmmc1-b4-0 {
+-				pins {
++				pins1 {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+ 						 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+ 						 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
+-						 <STM32_PINMUX('C', 12, AF12)>, /* SDMMC1_CK */
+ 						 <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+-					slew-rate = <3>;
++					slew-rate = <1>;
++					drive-push-pull;
++					bias-disable;
++				};
++				pins2 {
++					pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
++					slew-rate = <2>;
+ 					drive-push-pull;
+ 					bias-disable;
+ 				};
+@@ -876,15 +881,20 @@ pins1 {
+ 					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
+ 						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
+ 						 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
+-						 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1_D3 */
+-						 <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
+-					slew-rate = <3>;
++						 <STM32_PINMUX('C', 11, AF12)>; /* SDMMC1_D3 */
++					slew-rate = <1>;
+ 					drive-push-pull;
+ 					bias-disable;
+ 				};
+-				pins2{
++				pins2 {
++					pinmux = <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1_CK */
++					slew-rate = <2>;
++					drive-push-pull;
++					bias-disable;
++				};
++				pins3 {
+ 					pinmux = <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1_CMD */
+-					slew-rate = <3>;
++					slew-rate = <1>;
+ 					drive-open-drain;
+ 					bias-disable;
+ 				};
+@@ -906,7 +916,7 @@ pins1 {
+ 					pinmux = <STM32_PINMUX('F', 2, AF11)>, /* SDMMC1_D0DIR */
+ 						 <STM32_PINMUX('C', 7, AF8)>, /* SDMMC1_D123DIR */
+ 						 <STM32_PINMUX('B', 9, AF11)>; /* SDMMC1_CDIR */
+-					slew-rate = <3>;
++					slew-rate = <1>;
+ 					drive-push-pull;
+ 					bias-pull-up;
+ 				};
+-- 
+2.24.0
+

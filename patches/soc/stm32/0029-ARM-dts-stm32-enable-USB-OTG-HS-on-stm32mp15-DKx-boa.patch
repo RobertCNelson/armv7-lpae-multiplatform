@@ -1,0 +1,35 @@
+From 565104baf1558b5b2a5fd32de7211a8266cf141e Mon Sep 17 00:00:00 2001
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Date: Mon, 9 Dec 2019 15:23:22 +0100
+Subject: [PATCH 29/33] ARM: dts: stm32: enable USB OTG HS on stm32mp15 DKx
+ boards
+
+This patch enables USB OTG HS on stm32mp15 dkx in Peripheral mode.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index 71c781b85deb..f6672e87aef3 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -594,6 +594,13 @@ &usbh_ehci {
+ 	status = "okay";
+ };
+ 
++&usbotg_hs {
++	dr_mode = "peripheral";
++	phys = <&usbphyc_port1 0>;
++	phy-names = "usb2-phy";
++	status = "okay";
++};
++
+ &usbphyc {
+ 	status = "okay";
+ };
+-- 
+2.24.0
+

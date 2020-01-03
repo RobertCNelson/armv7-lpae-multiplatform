@@ -1,0 +1,29 @@
+From bf848759fb7877203d0be92b1243dccd447af662 Mon Sep 17 00:00:00 2001
+From: Christophe Roullier <christophe.roullier@st.com>
+Date: Mon, 9 Dec 2019 14:58:17 +0100
+Subject: [PATCH 23/33] ARM: dts: stm32: Enable MAC TX clock gating during TX
+ low-power mode on stm32mp15
+
+When there is no activity on ethernet phy link, the ETH_GTX_CLK is cut.
+
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index facfc0b884d7..b0f3fa564967 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1377,6 +1377,7 @@ ethernet0: ethernet@5800a000 {
+ 			st,syscon = <&syscfg 0x4>;
+ 			snps,mixed-burst;
+ 			snps,pbl = <2>;
++			snps,en-tx-lpi-clockgating;
+ 			snps,axi-config = <&stmmac_axi_config_0>;
+ 			snps,tso;
+ 			status = "disabled";
+-- 
+2.24.0
+
