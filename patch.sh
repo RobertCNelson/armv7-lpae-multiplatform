@@ -469,7 +469,7 @@ soc () {
 #	dir 'soc/imx/wandboard'
 	dir 'soc/imx/imx7'
 
-	dir 'soc/ti/panda'
+#	dir 'soc/ti/panda'
 }
 
 ###

@@ -69,7 +69,7 @@ cd ${DIR}/KERNEL/
 #
 # General setup
 #
-config="CONFIG_BUILD_SALT" ; option="5.4-rc4-armv7-devel-r0" ; config_string
+config="CONFIG_BUILD_SALT" ; option="" ; config_string
 config="CONFIG_KERNEL_LZO" ; config_enable
 
 #
@@ -220,6 +220,7 @@ config="CONFIG_CRYPTO_NHPOLY1305_NEON" ; config_module
 ##
 ## GCOV-based kernel profiling
 ##
+config="CONFIG_MODULE_SIG" ; config_disable
 config="CONFIG_MODULE_COMPRESS" ; config_enable
 config="CONFIG_MODULE_COMPRESS_GZIP" ; config_disable
 config="CONFIG_MODULE_COMPRESS_XZ" ; config_enable
@@ -236,11 +237,7 @@ config="CONFIG_NETLABEL" ; config_enable
 #
 # DCCP Kernel Hacking
 #
-config="CONFIG_NET_DSA_TAG_BRCM" ; config_disable
-config="CONFIG_NET_DSA_TAG_BRCM_PREPEND" ; config_disable
-config="CONFIG_NET_DSA_TAG_DSA" ; config_disable
-config="CONFIG_NET_DSA_TAG_EDSA" ; config_disable
-config="CONFIG_NET_DSA_TAG_TRAILER" ; config_disable
+config="CONFIG_NET_DSA" ; config_disable
 
 # end of AX.25 network device drivers
 config="CONFIG_CAN_J1939" ; config_module
@@ -310,6 +307,11 @@ config="CONFIG_VEXPRESS_CONFIG" ; config_disable
 
 # end of Bus devices
 config="CONFIG_GNSS_MTK_SERIAL" ; config_module
+
+#
+# Raw/parallel NAND flash controllers
+#
+config="CONFIG_MTD_NAND_STM32_FMC2" ; config_enable
 
 #
 # LPDDR & LPDDR2 PCM memory drivers
@@ -441,6 +443,7 @@ config="CONFIG_STMMAC_PLATFORM" ; config_enable
 config="CONFIG_DWMAC_DWC_QOS_ETH" ; config_enable
 config="CONFIG_DWMAC_GENERIC" ; config_enable
 config="CONFIG_DWMAC_ROCKCHIP" ; config_enable
+config="CONFIG_DWMAC_STM32" ; config_enable
 config="CONFIG_DWMAC_SUNXI" ; config_enable
 config="CONFIG_DWMAC_SUN8I" ; config_enable
 
@@ -564,6 +567,7 @@ config="CONFIG_HW_RANDOM" ; config_enable
 config="CONFIG_HW_RANDOM_OMAP" ; config_enable
 config="CONFIG_HW_RANDOM_OMAP3_ROM" ; config_enable
 config="CONFIG_HW_RANDOM_IMX_RNGC" ; config_enable
+config="CONFIG_HW_RANDOM_STM32" ; config_enable
 config="CONFIG_HW_RANDOM_TPM" ; config_enable
 config="CONFIG_TCG_TPM" ; config_enable
 config="CONFIG_TCG_TIS_I2C_ATMEL" ; config_enable
@@ -813,10 +817,12 @@ config="CONFIG_ROCKCHIP_THERMAL" ; config_enable
 #
 config="CONFIG_TI_SOC_THERMAL" ; config_enable
 
+# end of Texas Instruments thermal drivers
+config="CONFIG_GENERIC_ADC_THERMAL" ; config_module
+
 #
 # Watchdog Device Drivers
 #
-config="CONFIG_GENERIC_ADC_THERMAL" ; config_module
 config="CONFIG_DW_WATCHDOG" ; config_enable
 config="CONFIG_IMX2_WDT" ; config_enable
 config="CONFIG_IMX7ULP_WDT" ; config_enable
@@ -932,8 +938,12 @@ config="CONFIG_DRM_MSM" ; config_disable
 #
 # Display Panels
 #
-config="CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN" ; config_disable
+config="CONFIG_DRM_PANEL_SIMPLE" ; config_enable
 config="CONFIG_DRM_PANEL_ORISETECH_OTM8009A" ; config_enable
+config="CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN" ; config_disable
+config="CONFIG_DRM_PANEL_SONY_ACX565AKM" ; config_enable
+config="CONFIG_DRM_PANEL_TPO_TD028TTEC1" ; config_enable
+config="CONFIG_DRM_PANEL_TPO_TD043MTEA1" ; config_enable
 
 #
 # Display Interface Bridges
@@ -1138,6 +1148,11 @@ config="CONFIG_USB_GADGET_VBUS_DRAW" ; option="500" ; config_value
 #
 # USB Peripheral Controller
 #
+config="CONFIG_USB_DUMMY_HCD" ; config_module
+
+#
+# USB Peripheral Controller
+#
 config="CONFIG_USB_ZERO" ; config_module
 config="CONFIG_USB_AUDIO" ; config_module
 
@@ -1158,6 +1173,7 @@ config="CONFIG_USB_G_DBGP" ; config_module
 #
 # MMC/SD/SDIO Host Controller Drivers
 #
+config="CONFIG_MMC_ARMMMCI" ; config_enable
 config="CONFIG_MMC_SDHCI" ; config_enable
 config="CONFIG_MMC_SDHCI_PLTFM" ; config_enable
 config="CONFIG_MMC_SDHCI_OF_ARASAN" ; config_enable
@@ -1966,6 +1982,8 @@ config="CONFIG_TSYS01" ; config_module
 config="CONFIG_TSYS02D" ; config_module
 config="CONFIG_MAX31856" ; config_module
 
+#exit
+
 # end of Temperature sensors
 config="CONFIG_PWM_PCA9685" ; config_module
 config="CONFIG_PWM_STM32" ; config_module
@@ -2040,7 +2058,6 @@ config="CONFIG_OVERLAY_FS" ; config_enable
 config="CONFIG_FAT_FS" ; config_enable
 config="CONFIG_MSDOS_FS" ; config_enable
 config="CONFIG_VFAT_FS" ; config_enable
-config="CONFIG_NTFS_FS" ; config_module
 
 #
 # Pseudo filesystems
@@ -2069,6 +2086,7 @@ config="CONFIG_QNX6FS_FS" ; config_disable
 
 config="CONFIG_SYSV_FS" ; config_disable
 config="CONFIG_UFS_FS" ; config_disable
+config="CONFIG_EROFS_FS" ; config_disable
 
 config="CONFIG_NFS_FS" ; config_enable
 config="CONFIG_NFS_V2" ; config_enable
@@ -2085,6 +2103,7 @@ config="CONFIG_NLS_UTF8" ; config_enable
 #
 config="CONFIG_KEY_DH_OPERATIONS" ; config_disable
 config="CONFIG_SECURITY_DMESG_RESTRICT" ; config_disable
+config="CONFIG_SECURITY_LOCKDOWN_LSM" ; config_disable
 
 #
 # Crypto core or helper
