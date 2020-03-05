@@ -1,6 +1,6 @@
 #!/bin/sh -e
 #
-# Copyright (c) 2009-2019 Robert Nelson <robertcnelson@gmail.com>
+# Copyright (c) 2009-2020 Robert Nelson <robertcnelson@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ mkdir -p "${DIR}/deploy/"
 
 config_patch_build_salt () {
 	sed -i -e 's:CONFIG_BUILD_SALT:#CONFIG_BUILD_SALT:g' .config
-	echo "CONFIG_BUILD_SALT=\"${KERNEL_TAG}${BUILD}\"" >> .config
+	echo "CONFIG_BUILD_SALT=\"\"" >> .config
 }
 
 config_use_lzo_if_no_lz4 () {
@@ -254,8 +254,10 @@ if [  -f "${DIR}/.yakbuild" ] ; then
 	BUILD=$(echo ${kernel_tag} | sed 's/[^-]*//'|| true)
 fi
 make_kernel
-make_modules_pkg
-make_dtbs_pkg
+if [ ! "${AUTO_BUILD_DONT_PKG}" ] ; then
+	make_modules_pkg
+	make_dtbs_pkg
+fi
 echo "-----------------------------"
 echo "Script Complete"
 echo "${KERNEL_UTS}" > kernel_version
