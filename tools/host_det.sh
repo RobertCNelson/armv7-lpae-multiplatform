@@ -319,6 +319,10 @@ debian_regs () {
 			#LMDE 3 https://linuxmint.com/rel_cindy.php
 			deb_distro="stretch"
 			;;
+		debbie)
+			#LMDE 4
+			deb_distro="buster"
+			;;
 		debian)
 			deb_distro="jessie"
 			;;
@@ -405,6 +409,11 @@ debian_regs () {
 			#https://blog.linuxmint.com/?p=3736
 			deb_distro="bionic"
 			;;
+		tricia)
+			#19.3
+			#http://packages.linuxmint.com/index.php
+			deb_distro="bionic"
+			;;
 		esac
 
 		#Future Debian Code names:
@@ -433,12 +442,17 @@ debian_regs () {
 			warn_eol_distro=1
 			stop_pkg_search=1
 			;;
-		bionic|cosmic|disco|eoan)
-			#18.04 bionic: (EOL: April 2023) lts: bionic -> xyz
-			#18.10 cosmic: (EOL: July 2019)
-			#19.04 disco: (EOL: )
-			#19.10 eoan: (EOL: )
+		bionic|eoan|focal)
+			#18.04 bionic: (EOL: April 2023) lts: bionic -> focal
+			#19.10 eoan: (EOL: July, 2020)
+			#20.04 focal: (EOL: 2030) lts: focal -> xyz
 			unset warn_eol_distro
+			;;
+		cosmic|disco)
+			#18.10 cosmic: (EOL: July 18, 2019)
+			#19.04 disco: (EOL: January 23, 2020)
+			warn_eol_distro=1
+			stop_pkg_search=1
 			;;
 		yakkety|zesty|artful)
 			#16.10 yakkety: (EOL: July 20, 2017)
@@ -533,7 +547,7 @@ debian_regs () {
 	if [ "${error_unknown_deb_distro}" ] ; then
 		echo "Unrecognized deb based system:"
 		echo "-----------------------------"
-		echo "Please cut, paste and email to: bugs@rcn-ee.com"
+		echo "Please cut, paste and email to: robertcnelson+bugs@gmail.com"
 		echo "-----------------------------"
 		echo "git: [$(${git_bin} rev-parse HEAD)]"
 		echo "git: [$(cat .git/config | grep url | sed 's/\t//g' | sed 's/ //g')]"
@@ -590,6 +604,9 @@ if [ "x${ARCH}" = "xx86_64" ] ; then
 		ignore_32bit="true"
 		;;
 	gcc_arm_eabi_8|gcc_arm_gnueabihf_8|gcc_arm_aarch64_gnu_8)
+		ignore_32bit="true"
+		;;
+	gcc_arm_eabi_9|gcc_arm_gnueabihf_9|gcc_arm_aarch64_gnu_9)
 		ignore_32bit="true"
 		;;
 	*)
