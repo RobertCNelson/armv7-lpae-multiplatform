@@ -442,6 +442,7 @@ soc () {
 	dir 'soc/ti/panda'
 	dir 'soc/stm32'
 	dir 'soc/stm32_wifi'
+	dir 'bootup_hacks'
 }
 
 ###
