@@ -1,21 +1,21 @@
-From d6771e751b097f8ad43e9b1a6df7c1d083e52214 Mon Sep 17 00:00:00 2001
+From 4625543cf82b61751aa5cc10912200ebf35b54dd Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 6 Apr 2020 12:56:13 -0500
+Date: Mon, 6 Apr 2020 14:35:28 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.4.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.4.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/457583ecf2bdc288ec3b88cfd7f085889114dd5e
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/e45c8fe1416e83a7de9d2d958a762451fdddefad
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1185 +++++++++++++++++
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1191 +++++++++++++++++
  .../dts/{stm32mp157c.dtsi => stm32mp151.dtsi} |  332 ++++-
  arch/arm/boot/dts/stm32mp153.dtsi             |   46 +
  arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  925 -------------
  arch/arm/boot/dts/stm32mp157.dtsi             |   31 +
  arch/arm/boot/dts/stm32mp157a-avenger96.dts   |   24 +-
  arch/arm/boot/dts/stm32mp157a-dk1.dts         |  433 +-----
- arch/arm/boot/dts/stm32mp157c-dk2.dts         |   32 +-
+ arch/arm/boot/dts/stm32mp157c-dk2.dts         |   65 +-
  arch/arm/boot/dts/stm32mp157c-ed1.dts         |   93 +-
  arch/arm/boot/dts/stm32mp157c-ev1.dts         |   36 +-
  arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi  |   90 --
@@ -28,8 +28,9 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi  |   57 +
  arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi  |   73 +
  arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi  |   57 +
+ include/dt-bindings/rtc/rtc-stm32.h           |   13 +
  include/uapi/linux/input-event-codes.h        |   77 ++
- 21 files changed, 2650 insertions(+), 1771 deletions(-)
+ 22 files changed, 2702 insertions(+), 1771 deletions(-)
  create mode 100644 arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
  rename arch/arm/boot/dts/{stm32mp157c.dtsi => stm32mp151.dtsi} (85%)
  create mode 100644 arch/arm/boot/dts/stm32mp153.dtsi
@@ -45,13 +46,14 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  create mode 100644 arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi
  create mode 100644 arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi
  create mode 100644 arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi
+ create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 new file mode 100644
-index 000000000000..73c07f0dfad2
+index 000000000000..dc4cc23d3fb0
 --- /dev/null
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -0,0 +1,1185 @@
+@@ -0,0 +1,1191 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
 +/*
 + * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
@@ -749,6 +751,12 @@ index 000000000000..73c07f0dfad2
 +				 <STM32_PINMUX('G', 10, ANALOG)>, /* QSPI_BK2_IO2 */
 +				 <STM32_PINMUX('G', 7, ANALOG)>, /* QSPI_BK2_IO3 */
 +				 <STM32_PINMUX('C', 0, ANALOG)>; /* QSPI_BK2_NCS */
++		};
++	};
++
++	rtc_out2_rmp_pins_a: rtc-out2-rmp-pins@0 {
++		pins {
++			pinmux = <STM32_PINMUX('I', 8, ANALOG)>; /* RTC_OUT2_RMP */
 +		};
 +	};
 +
@@ -3343,10 +3351,10 @@ index 0615d1c8a6fc..d03d4cd2606a 100644
 -	status = "okay";
  };
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 20ea601a546d..7985b80967ca 100644
+index 20ea601a546d..8b0d6c4b3c21 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-@@ -6,18 +6,23 @@
+@@ -6,18 +6,29 @@
  
  /dts-v1/;
  
@@ -3356,6 +3364,7 @@ index 20ea601a546d..7985b80967ca 100644
 +#include "stm32mp15-pinctrl.dtsi"
 +#include "stm32mp15xxac-pinctrl.dtsi"
 +#include "stm32mp15xx-dkx.dtsi"
++#include <dt-bindings/rtc/rtc-stm32.h>
  
  / {
  	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
@@ -3374,10 +3383,15 @@ index 20ea601a546d..7985b80967ca 100644
 +
 +	chosen {
 +		stdout-path = "serial0:115200n8";
++	};
++
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpioh 4 GPIO_ACTIVE_LOW>;
  	};
  };
  
-@@ -61,6 +66,19 @@
+@@ -61,6 +72,19 @@
  	};
  };
  
@@ -3397,6 +3411,37 @@ index 20ea601a546d..7985b80967ca 100644
  &ltdc {
  	status = "okay";
  
+@@ -74,3 +98,30 @@
+ 		};
+ 	};
+ };
++
++&rtc {
++	st,lsco = <RTC_OUT2_RMP>;
++	pinctrl-0 = <&rtc_out2_rmp_pins_a>;
++	pinctrl-names = "default";
++};
++
++&sdmmc2 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc2_b4_pins_b>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_b>;
++	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
++	non-removable;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	keep-power-in-suspend;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
 diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
 index 1d426ea8bdaf..9d2592db630c 100644
 --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
@@ -4964,6 +5009,25 @@ index 000000000000..b63e207de216
 +		gpio-ranges = <&pinctrl 0 112 2>;
 +	};
 +};
+diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
+new file mode 100644
+index 000000000000..4373c4dea587
+--- /dev/null
++++ b/include/dt-bindings/rtc/rtc-stm32.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for STM32_RTC bindings.
++ */
++
++#ifndef _DT_BINDINGS_RTC_RTC_STM32_H
++#define _DT_BINDINGS_RTC_RTC_STM32_H
++
++#define RTC_OUT1	0
++#define RTC_OUT2	1
++#define RTC_OUT2_RMP	2
++
++#endif
 diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
 index 85387c76c24f..0f1db1cccc3f 100644
 --- a/include/uapi/linux/input-event-codes.h
