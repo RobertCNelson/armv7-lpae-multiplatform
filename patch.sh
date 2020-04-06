@@ -334,6 +334,55 @@ beagleboard_dtbs () {
 	dir 'soc/ti/beagleboard_dtbs'
 }
 
+stm32_dtbs () {
+	branch="v5.5.x"
+	https_repo="https://github.com/RobertCNelson/stm32-DeviceTrees"
+	work_dir="stm32-DeviceTrees"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		cd ../
+		if [ ! -d ./${work_dir} ] ; then
+			${git_bin} clone -b ${branch} ${https_repo} --depth=1
+			cd ./${work_dir}
+				git_hash=$(git rev-parse HEAD)
+			cd -
+		else
+			rm -rf ./${work_dir} || true
+			${git_bin} clone -b ${branch} ${https_repo} --depth=1
+			cd ./${work_dir}
+				git_hash=$(git rev-parse HEAD)
+			cd -
+		fi
+		cd ./KERNEL/
+
+		#stm32 renamed a bunch...
+		rm -rfv ./arch/arm/boot/dts/stm32mp*
+
+		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
+		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
+
+		${git_bin} add -f arch/arm/boot/dts/
+		${git_bin} add -f include/dt-bindings/
+		${git_bin} commit -a -m "Add stm32 DTBS: $branch" -m "${https_repo}/tree/${branch}" -m "${https_repo}/commit/${git_hash}" -s
+		${git_bin} format-patch -1 -o ../patches/soc/stm32_dtbs/
+		echo "STM32DTBS: ${https_repo}/commit/${git_hash}" > ../patches/git/STM32DTBS
+
+		rm -rf ../${work_dir}/ || true
+
+		${git_bin} reset --hard HEAD^
+
+		start_cleanup
+
+		${git} "${DIR}/patches/soc/stm32_dtbs/0001-Add-stm32-DTBS-$branch.patch"
+
+		wdir="soc/stm32_dtbs"
+		number=1
+		cleanup
+	fi
+
+	dir 'soc/stm32_dtbs'
+}
+
 local_patch () {
 	echo "dir: dir"
 	${git} "${DIR}/patches/dir/0001-patch.patch"
@@ -345,6 +394,7 @@ can_isotp
 wireguard
 ti_pm_firmware
 beagleboard_dtbs
+stm32_dtbs
 #local_patch
 
 pre_backports () {
@@ -381,21 +431,25 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v4.x-y"
+	backport_tag="v5.4.18"
 
-	subsystem="xyz"
+	subsystem="brcm80211"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		pre_backports
 
-		mkdir -p ./x/
-		cp -v ~/linux-src/x/* ./x/
+		cp -rv ~/linux-src/drivers/net/wireless/broadcom/brcm80211/* ./drivers/net/wireless/broadcom/brcm80211/
+		#cp -v ~/linux-src/include/linux/mmc/sdio_ids.h ./include/linux/mmc/sdio_ids.h
+		#cp -v ~/linux-src/include/linux/firmware.h ./include/linux/firmware.h
 
 		post_backports
 		exit 2
 	else
 		patch_backports
 	fi
+
+	#regenerate="enable"
+	dir 'cypress/brcmfmac'
 }
 
 reverts () {
@@ -421,17 +475,18 @@ drivers () {
 	dir 'drivers/ar1021_i2c'
 	dir 'drivers/pwm'
 	dir 'drivers/spi'
-#	dir 'drivers/ssd1306'
 	dir 'drivers/tps65217'
 
 	dir 'drivers/ti/overlays'
 	dir 'drivers/ti/cpsw'
-#	dir 'drivers/ti/eqep'
 	dir 'drivers/ti/rpmsg'
 	dir 'drivers/ti/serial'
 	dir 'drivers/ti/tsc'
 	dir 'drivers/ti/gpio'
 	dir 'drivers/greybus'
+
+	dir 'drivers/mmci'
+	dir 'drivers/stm32-rtc'
 }
 
 soc () {
@@ -440,13 +495,11 @@ soc () {
 	dir 'soc/imx/imx7'
 
 	dir 'soc/ti/panda'
-	dir 'soc/stm32'
-	dir 'soc/stm32_wifi'
 	dir 'bootup_hacks'
 }
 
 ###
-#backports
+backports
 #reverts
 drivers
 soc
