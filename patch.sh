@@ -431,7 +431,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.6-rc5"
+	backport_tag="v5.6.2"
 
 	subsystem="exfat"
 	#regenerate="enable"
@@ -446,7 +446,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.5.8"
+	backport_tag="v5.5.15"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -482,6 +482,7 @@ backports () {
 	fi
 
 	backport_tag="v5.4.18"
+
 	subsystem="brcm80211"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -556,15 +557,14 @@ dir 'fixes'
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.6-rc4"
+		backport_tag="v5.6"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
 		if [ "x${regenerate}" = "xenable" ] ; then
 			pre_backports
 
-			cp -v ~/linux-src/scripts/package/builddeb ./scripts/package/builddeb
-			cp -v ~/linux-src/scripts/package/mkdebian ./scripts/package/mkdebian
+			cp -v ~/linux-src/scripts/package/* ./scripts/package/
 
 			post_backports
 			exit 2

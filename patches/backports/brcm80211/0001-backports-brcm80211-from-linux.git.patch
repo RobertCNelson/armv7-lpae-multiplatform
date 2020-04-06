@@ -1,6 +1,6 @@
-From 3a18d3afabefc87a7bf4b5dd6bc2aa6bb2a40de4 Mon Sep 17 00:00:00 2001
+From d0aa02e5821eef3047f15ec1e8d9c64872aa4ec4 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 6 Apr 2020 13:11:41 -0500
+Date: Mon, 6 Apr 2020 16:24:22 -0500
 Subject: [PATCH] backports: brcm80211: from: linux.git
 
 Reference: v5.4.18
