@@ -1,41 +1,44 @@
-From 4625543cf82b61751aa5cc10912200ebf35b54dd Mon Sep 17 00:00:00 2001
+From 0a7e774fee638d36543ff606cf1b9a9c7a4031ec Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 6 Apr 2020 14:35:28 -0500
+Date: Wed, 8 Apr 2020 11:34:25 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.4.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.4.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/e45c8fe1416e83a7de9d2d958a762451fdddefad
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/2b774461d8649d72a1e69117e73f3ac2d3bca24e
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1191 +++++++++++++++++
+ arch/arm/boot/dts/Makefile                    |    1 +
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1284 +++++++++++++++++
  .../dts/{stm32mp157c.dtsi => stm32mp151.dtsi} |  332 ++++-
  arch/arm/boot/dts/stm32mp153.dtsi             |   46 +
- arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  925 -------------
+ arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  925 ------------
  arch/arm/boot/dts/stm32mp157.dtsi             |   31 +
  arch/arm/boot/dts/stm32mp157a-avenger96.dts   |   24 +-
  arch/arm/boot/dts/stm32mp157a-dk1.dts         |  433 +-----
  arch/arm/boot/dts/stm32mp157c-dk2.dts         |   65 +-
  arch/arm/boot/dts/stm32mp157c-ed1.dts         |   93 +-
  arch/arm/boot/dts/stm32mp157c-ev1.dts         |   36 +-
+ arch/arm/boot/dts/stm32mp157c-seeed-npi.dts   |  285 ++++
  arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi  |   90 --
  arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi  |   62 -
- arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi  |   78 --
+ arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi  |   78 -
  arch/arm/boot/dts/stm32mp157xad-pinctrl.dtsi  |   62 -
  arch/arm/boot/dts/stm32mp15xc.dtsi            |   18 +
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  625 +++++++++
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  625 ++++++++
  arch/arm/boot/dts/stm32mp15xxaa-pinctrl.dtsi  |   85 ++
  arch/arm/boot/dts/stm32mp15xxab-pinctrl.dtsi  |   57 +
  arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi  |   73 +
  arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi  |   57 +
  include/dt-bindings/rtc/rtc-stm32.h           |   13 +
- include/uapi/linux/input-event-codes.h        |   77 ++
- 22 files changed, 2702 insertions(+), 1771 deletions(-)
+ include/uapi/linux/input-event-codes.h        |   77 +
+ 24 files changed, 3081 insertions(+), 1771 deletions(-)
  create mode 100644 arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
  rename arch/arm/boot/dts/{stm32mp157c.dtsi => stm32mp151.dtsi} (85%)
  create mode 100644 arch/arm/boot/dts/stm32mp153.dtsi
  delete mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
  create mode 100644 arch/arm/boot/dts/stm32mp157.dtsi
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
  delete mode 100644 arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
  delete mode 100644 arch/arm/boot/dts/stm32mp157xab-pinctrl.dtsi
  delete mode 100644 arch/arm/boot/dts/stm32mp157xac-pinctrl.dtsi
@@ -48,12 +51,24 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  create mode 100644 arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 12b4aec62419..a8ee3b7fd94a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -997,6 +997,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
+ 	stm32mp157a-avenger96.dtb \
+ 	stm32mp157a-dk1.dtb \
+ 	stm32mp157c-dk2.dtb \
++	stm32mp157c-seeed-npi.dtb \
+ 	stm32mp157c-ed1.dtb \
+ 	stm32mp157c-ev1.dtb
+ dtb-$(CONFIG_MACH_SUN4I) += \
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 new file mode 100644
-index 000000000000..dc4cc23d3fb0
+index 000000000000..8cbea91c4038
 --- /dev/null
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -0,0 +1,1191 @@
+@@ -0,0 +1,1284 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
 +/*
 + * Copyright (C) STMicroelectronics 2017 - All Rights Reserved
@@ -1040,12 +1055,33 @@ index 000000000000..dc4cc23d3fb0
 +		};
 +	};
 +
++	sdmmc2_d47_pins_s: sdmmc2-d47-1 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
++				 <STM32_PINMUX('A', 9, AF10)>, /* SDMMC2_D5 */
++				 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
++				 <STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
++			slew-rate = <1>;
++			drive-push-pull;
++			bias-pull-up;
++		};
++	};
++
 +	sdmmc2_d47_sleep_pins_a: sdmmc2-d47-sleep-0 {
 +		pins {
 +			pinmux = <STM32_PINMUX('A', 8, ANALOG)>, /* SDMMC2_D4 */
 +				 <STM32_PINMUX('A', 9, ANALOG)>, /* SDMMC2_D5 */
 +				 <STM32_PINMUX('E', 5, ANALOG)>, /* SDMMC2_D6 */
 +				 <STM32_PINMUX('D', 3, ANALOG)>; /* SDMMC2_D7 */
++		};
++	};
++
++	sdmmc2_d47_sleep_pins_s: sdmmc2-d47-sleep-1 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 8, ANALOG)>, /* SDMMC2_D4 */
++				 <STM32_PINMUX('A', 9, ANALOG)>, /* SDMMC2_D5 */
++				 <STM32_PINMUX('E', 5, ANALOG)>, /* SDMMC2_D6 */
++				 <STM32_PINMUX('C', 7, ANALOG)>; /* SDMMC2_D7 */
 +		};
 +	};
 +
@@ -1062,6 +1098,25 @@ index 000000000000..dc4cc23d3fb0
 +		};
 +		pins2 {
 +			pinmux = <STM32_PINMUX('G', 15, AF10)>; /* SDMMC3_CK */
++			slew-rate = <2>;
++			drive-push-pull;
++			bias-pull-up;
++		};
++	};
++
++	sdmmc3_b4_pins_s: sdmmc3-b4-1 {
++		pins1 {
++			pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
++				 <STM32_PINMUX('F', 4, AF9)>, /* SDMMC3_D1 */
++				 <STM32_PINMUX('D', 5, AF10)>, /* SDMMC3_D2 */
++				 <STM32_PINMUX('D', 7, AF10)>, /* SDMMC3_D3 */
++				 <STM32_PINMUX('F', 1, AF9)>; /* SDMMC3_CMD */
++			slew-rate = <1>;
++			drive-push-pull;
++			bias-pull-up;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('G', 15, AF10)>; /* SDMMC3_CLK */
 +			slew-rate = <2>;
 +			drive-push-pull;
 +			bias-pull-up;
@@ -1092,11 +1147,47 @@ index 000000000000..dc4cc23d3fb0
 +		};
 +	};
 +
++	sdmmc3_b4_od_pins_s: sdmmc3-b4-od-1 {
++		pins1 {
++			pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
++				 <STM32_PINMUX('F', 4, AF9)>, /* SDMMC3_D1 */
++				 <STM32_PINMUX('D', 5, AF10)>, /* SDMMC3_D2 */
++				 <STM32_PINMUX('D', 7, AF10)>; /* SDMMC3_D3 */
++			slew-rate = <1>;
++			drive-push-pull;
++			bias-pull-up;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('G', 15, AF10)>; /* SDMMC3_CLK */
++			slew-rate = <2>;
++			drive-push-pull;
++			bias-pull-up;
++		};
++		pins3 {
++			pinmux = <STM32_PINMUX('F', 1, AF9)>; /* SDMMC2_CMD */
++			slew-rate = <1>;
++			drive-open-drain;
++			bias-pull-up;
++		};
++	};
++
++
 +	sdmmc3_b4_sleep_pins_a: sdmmc3-b4-sleep-0 {
 +		pins {
 +			pinmux = <STM32_PINMUX('F', 0, ANALOG)>, /* SDMMC3_D0 */
 +				 <STM32_PINMUX('F', 4, ANALOG)>, /* SDMMC3_D1 */
 +				 <STM32_PINMUX('F', 5, ANALOG)>, /* SDMMC3_D2 */
++				 <STM32_PINMUX('D', 7, ANALOG)>, /* SDMMC3_D3 */
++				 <STM32_PINMUX('G', 15, ANALOG)>, /* SDMMC3_CK */
++				 <STM32_PINMUX('F', 1, ANALOG)>; /* SDMMC3_CMD */
++		};
++	};
++
++	sdmmc3_b4_sleep_pins_s: sdmmc3-b4-sleep-1 {
++		pins {
++			pinmux = <STM32_PINMUX('F', 0, ANALOG)>, /* SDMMC3_D0 */
++				 <STM32_PINMUX('F', 4, ANALOG)>, /* SDMMC3_D1 */
++				 <STM32_PINMUX('D', 5, ANALOG)>, /* SDMMC3_D2 */
 +				 <STM32_PINMUX('D', 7, ANALOG)>, /* SDMMC3_D3 */
 +				 <STM32_PINMUX('G', 15, ANALOG)>, /* SDMMC3_CK */
 +				 <STM32_PINMUX('F', 1, ANALOG)>; /* SDMMC3_CMD */
@@ -1152,6 +1243,23 @@ index 000000000000..dc4cc23d3fb0
 +		pins2 {
 +			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
 +			bias-disable;
++		};
++	};
++
++	uart4_idle_pins_a: uart4-idle-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('G', 11, ANALOG)>; /* UART4_TX */
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
++			bias-disable;
++		};
++	};
++
++	uart4_sleep_pins_a: uart4-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('G', 11, ANALOG)>, /* UART4_TX */
++				 <STM32_PINMUX('B', 2, ANALOG)>; /* UART4_RX */
 +		};
 +	};
 +
@@ -3742,6 +3850,297 @@ index 91fc0a315c49..8a4c7ff31a92 100644
  	phys = <&usbphyc_port1 0>;
  	phy-names = "usb2-phy";
  	status = "okay";
+diff --git a/arch/arm/boot/dts/stm32mp157c-seeed-npi.dts b/arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
+new file mode 100644
+index 000000000000..0d446ca0a75d
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
+@@ -0,0 +1,285 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) STMicroelectronics 2019 - All Rights Reserved
++ * Author: Alexandre Torgue <alexandre.torgue@st.com> for STMicroelectronics.
++ */
++
++/dts-v1/;
++
++#include "stm32mp157.dtsi"
++#include "stm32mp15xc.dtsi"
++#include "stm32mp15-pinctrl.dtsi"
++#include "stm32mp15xxac-pinctrl.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/rtc/rtc-stm32.h>
++#include <dt-bindings/mfd/st,stpmic1.h>
++
++/ {
++	model = "Seeed NPi STM32MP157C Board";
++	compatible = "seeed,npi-stm32mp1", "st,stm32mp157";
++
++	aliases {
++		ethernet0 = &ethernet0;
++		serial0 = &uart4;
++		serial1 = &usart1;
++		serial2 = &usart2;
++		mmc0    = &sdmmc1;
++		mmc1    = &sdmmc2;
++		mmc2    = &sdmmc3;
++		i2c0	= &i2c2;
++		i2c1	= &i2c4;	/* RPi compatible */
++		i2c2	= &i2c1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c2_pins_a>;
++	pinctrl-1 = <&i2c2_pins_sleep_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
++	status = "okay";
++	/delete-property/dmas;
++	/delete-property/dma-names;
++
++	pmic: stpmic@33 {
++		compatible = "st,stpmic1";
++		reg = <0x33>;
++		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		status = "okay";
++
++		st,main-control-register = <0x04>;
++		st,vin-control-register = <0xc0>;
++		st,usb-control-register = <0x20>;
++
++		regulators {
++			compatible = "st,stpmic1-regulators";
++			ldo1-supply = <&v3v3>;
++			ldo3-supply = <&vdd_ddr>;
++			ldo6-supply = <&v3v3>;
++			pwr_sw1-supply = <&bst_out>;
++			pwr_sw2-supply = <&bst_out>;
++
++			vddcore: buck1 {
++				regulator-name = "vddcore";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd_ddr: buck2 {
++				regulator-name = "vdd_ddr";
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd: buck3 {
++				regulator-name = "vdd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				st,mask-reset;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			v3v3: buck4 {
++				regulator-name = "v3v3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++				regulator-initial-mode = <0>;
++			};
++
++			v1v8_audio: ldo1 {
++				regulator-name = "v1v8_audio";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO1 0>;
++			};
++
++			v3v3_hdmi: ldo2 {
++				regulator-name = "v3v3_hdmi";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO2 0>;
++
++			};
++
++			vtt_ddr: ldo3 {
++				regulator-name = "vtt_ddr";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <750000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			vdd_usb: ldo4 {
++				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				interrupts = <IT_CURLIM_LDO4 0>;
++			};
++
++			vdda: ldo5 {
++				regulator-name = "vdda";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
++				interrupts = <IT_CURLIM_LDO5 0>;
++				regulator-boot-on;
++			};
++
++			v1v2_hdmi: ldo6 {
++				regulator-name = "v1v2_hdmi";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO6 0>;
++
++			};
++
++			vref_ddr: vref_ddr {
++				regulator-name = "vref_ddr";
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			bst_out: boost {
++				regulator-name = "bst_out";
++				interrupts = <IT_OCP_BOOST 0>;
++			};
++
++			vbus_otg: pwr_sw1 {
++				regulator-name = "vbus_otg";
++				interrupts = <IT_OCP_OTG 0>;
++				regulator-active-discharge;
++			};
++
++			vbus_sw: pwr_sw2 {
++				regulator-name = "vbus_sw";
++				interrupts = <IT_OCP_SWOUT 0>;
++				regulator-active-discharge;
++			};
++		};
++
++		onkey {
++			compatible = "st,stpmic1-onkey";
++			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
++			interrupt-names = "onkey-falling", "onkey-rising";
++			power-off-time-sec = <5>;
++			st,onkey-clear-cc-flag;
++			status = "okay";
++		};
++
++		watchdog {
++			compatible = "st,stpmic1-wdt";
++			status = "disabled";
++		};
++	};
++};
++
++&uart4 {
++	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
++	pinctrl-0 = <&uart4_pins_a>;
++	pinctrl-1 = <&uart4_sleep_pins_a>;
++	pinctrl-2 = <&uart4_idle_pins_a>;
++	pinctrl-3 = <&uart4_pins_a>;
++	status = "okay";
++};
++
++&sdmmc1 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc1_b4_pins_a>;
++	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
++&sdmmc2 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_s>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_s>;
++	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_s>;
++	non-removable;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <8>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
++&ethernet0 {
++	status = "okay";
++	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
++	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
++	pinctrl-names = "default", "sleep";
++	clock-names = "stmmaceth",
++		      "mac-clk-tx",
++		      "mac-clk-rx",
++		      "ethstp",
++		      "eth-ck";
++	clocks = <&rcc ETHMAC>,
++		 <&rcc ETHTX>,
++		 <&rcc ETHRX>,
++		 <&rcc ETHSTP>,
++		 <&rcc ETHCK_K>;
++	assigned-clocks = <&rcc ETHCK_K>;
++	assigned-clock-parents = <&rcc PLL4_P>;
++	assigned-clock-rates = <125000000>;
++	phy-mode = "rgmii";
++	max-speed = <1000>;
++	phy-handle = <&phy0>;
++	phy-reset-gpios = <&gpiog 0 GPIO_ACTIVE_LOW>;
++	st,eth-clk-sel;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++
++		phy0: ethernet-phy@7 {
++			reg = <7>;
++		};
++	};
++};
++
++&usbh_ehci {
++	phys = <&usbphyc_port0>, <&usbphyc_port1 1>;
++	phy-names = "usb", "usb2";
++	status = "okay";
++};
++
++&usbphyc {
++	status = "okay";
++};
++
++&usbphyc_port0 {
++	phy-supply = <&vdd_usb>;
++	vdda1v1-supply = <&reg11>;
++	vdda1v8-supply = <&reg18>;
++};
++
++&usbphyc_port1 {
++	phy-supply = <&vdd_usb>;
++	vdda1v1-supply = <&reg11>;
++	vdda1v8-supply = <&reg18>;
++};
 diff --git a/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp157xaa-pinctrl.dtsi
 deleted file mode 100644
 index 875adf5e1e30..000000000000
