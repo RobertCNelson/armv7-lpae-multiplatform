@@ -283,6 +283,10 @@ beagleboard_dtbs () {
 	dir 'soc/ti/beagleboard_dtbs'
 }
 
+dtb_makefile_append_stm () {
+	sed -i -e 's:stm32mp157c-dk2.dtb \\:stm32mp157c-dk2.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
+}
+
 stm32_dtbs () {
 	branch="v5.5.x"
 	https_repo="https://github.com/RobertCNelson/stm32-DeviceTrees"
@@ -309,6 +313,8 @@ stm32_dtbs () {
 
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
+
+		device="stm32mp157c-seeed-npi.dtb" ; dtb_makefile_append_stm
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -435,6 +441,7 @@ drivers () {
 
 	dir 'drivers/mmci'
 	dir 'drivers/stm32-rtc'
+	dir 'drivers/stm32-dwmac'
 }
 
 soc () {
