@@ -442,7 +442,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.6.13"
+	backport_tag="v5.6.15"
 
 	subsystem="exfat"
 	#regenerate="enable"
@@ -534,7 +534,6 @@ reverts () {
 
 drivers () {
 	dir 'drivers/ar1021_i2c'
-	dir 'drivers/pwm'
 	dir 'drivers/sound'
 	dir 'drivers/spi'
 	dir 'drivers/tps65217'
