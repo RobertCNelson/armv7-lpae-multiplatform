@@ -1,11 +1,11 @@
-From c9b2c60a94dba0a706c59b7bd6e3c69b23d01f79 Mon Sep 17 00:00:00 2001
+From 8f1d83ad27a76cf436d2ffc8b7c08c50776cc393 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 4 Jun 2020 11:04:31 -0500
+Date: Thu, 4 Jun 2020 15:28:56 -0500
 Subject: [PATCH] Add BeagleBoard.org DTBS: v4.19.x
 
 https://github.com/beagleboard/BeagleBoard-DeviceTrees/tree/v4.19.x
 
-https://github.com/beagleboard/BeagleBoard-DeviceTrees/commit/0aad19f9f0b384503187b3e4d801713acaa122b3
+https://github.com/beagleboard/BeagleBoard-DeviceTrees/commit/3a912cce8a85895ebd0dba50937d03d5b51a7218
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/Makefile                    |   13 +
@@ -71,7 +71,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/am33xx-clocks.dtsi          |    5 +-
  arch/arm/boot/dts/am33xx-l4.dtsi              | 2131 ++++++++
  arch/arm/boot/dts/am33xx.dtsi                 |  168 +-
- arch/arm/boot/dts/am5729-beagleboneai.dts     |  731 +++
+ arch/arm/boot/dts/am5729-beagleboneai.dts     |  744 +++
  .../boot/dts/am57xx-beagle-x15-common.dtsi    |    9 +-
  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts |   10 +-
  arch/arm/boot/dts/am57xx-beagle-x15-revc.dts  |   10 +-
@@ -109,7 +109,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  include/dt-bindings/pinctrl/omap.h            |    1 +
  include/dt-bindings/thermal/thermal.h         |    3 +-
  include/uapi/linux/input-event-codes.h        |   17 +-
- 101 files changed, 22281 insertions(+), 579 deletions(-)
+ 101 files changed, 22294 insertions(+), 579 deletions(-)
  create mode 100644 arch/arm/boot/dts/am335x-abbbi.dts
  create mode 100644 arch/arm/boot/dts/am335x-bone-common-no-capemgr.dtsi
  create mode 100644 arch/arm/boot/dts/am335x-bone-common-univ.dtsi
@@ -15658,10 +15658,10 @@ index d3dd6a16e70a7..37ea4e662f8e4 100644
  					     "ti,am33xx-ehrpwm";
 diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
 new file mode 100644
-index 0000000000000..9877d7709d410
+index 0000000000000..8d5d924a983ec
 --- /dev/null
 +++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
-@@ -0,0 +1,731 @@
+@@ -0,0 +1,744 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
@@ -15689,6 +15689,8 @@ index 0000000000000..9877d7709d410
 +
 +	chosen {
 +		stdout-path = &uart1;
++		base_dtb = "am5729-beagleboneai.dts";
++		base_dtb_timestamp = __TIMESTAMP__;
 +	};
 +
 +	memory@0 {
@@ -15864,6 +15866,14 @@ index 0000000000000..9877d7709d410
 +	};
 +};
 +
++&dra7_pmx_core {
++	pmic_pins_default: pmic_pins_default {
++		pinctrl-single,pins = <
++			DRA7XX_CORE_IOPAD(0x3690, PIN_INPUT_PULLUP | MUX_MODE14) /* F21: gpio6_16.gpio6_16 - PMIC_INT */
++		>;
++	};
++};
++
 +&i2c1 {
 +	status = "okay";
 +	clock-frequency = <400000>;
@@ -15873,6 +15883,9 @@ index 0000000000000..9877d7709d410
 +		reg = <0x58>;
 +		interrupt-parent = <&gpio6>;
 +		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_pins_default>;
 +
 +		#interrupt-cells = <2>;
 +		interrupt-controller;
