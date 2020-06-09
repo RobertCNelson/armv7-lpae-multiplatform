@@ -450,6 +450,9 @@ reverts () {
 
 	## notes
 	##git revert --no-edit xyz -s
+	git revert --no-edit 6d4cd041f0af5b4c8fc742b4a68eac22e420e28c -s
+	git revert --no-edit 43f2ebd5571653f5a02c178d6d73ab642e8a0cad -s
+	git revert --no-edit cd28d1d6e52e740130745429b3ff0af7cbba7b2c -s
 
 	#${git} "${DIR}/patches/reverts/0001-Revert-xyz.patch"
 
@@ -487,7 +490,7 @@ soc () {
 
 ###
 #backports
-#reverts
+reverts
 drivers
 soc
 
@@ -513,5 +516,5 @@ packaging () {
 	${git} "${DIR}/patches/backports/bindeb-pkg/0002-builddeb-Install-our-dtbs-under-boot-dtbs-version.patch"
 }
 
-packaging
+#packaging
 echo "patch.sh ran successfully"
