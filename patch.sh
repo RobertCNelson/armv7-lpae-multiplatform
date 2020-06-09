@@ -350,8 +350,13 @@ ti_pm_firmware () {
 
 	dir 'drivers/ti/firmware'
 }
+
 dtb_makefile_append_omap4 () {
 	sed -i -e 's:omap4-panda.dtb \\:omap4-panda.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
+}
+
+dtb_makefile_append_am5 () {
+	sed -i -e 's:am57xx-beagle-x15.dtb \\:am57xx-beagle-x15.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
 }
 
 dtb_makefile_append () {
@@ -392,6 +397,8 @@ beagleboard_dtbs () {
 		device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
+
+		device="am5729-beagleboneai.dtb" ; dtb_makefile_append_am5
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
