@@ -1,12 +1,14 @@
-From b316abfab941c31d2686c60d2a76f72675eaf65f Mon Sep 17 00:00:00 2001
+From 7cb578ba609f29e73aacf6cfd11fcc9694d67f28 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 7 Oct 2019 14:20:41 -0500
+Date: Tue, 9 Jun 2020 12:43:11 -0500
 Subject: [PATCH] Add BeagleBoard.org DTBS: v5.2.x
 
 https://github.com/beagleboard/BeagleBoard-DeviceTrees/tree/v5.2.x
+
+https://github.com/beagleboard/BeagleBoard-DeviceTrees/commit/d3a36d866ba1ffa84d5957e511687e7fb3c9aa6d
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/Makefile                    |    6 +
+ arch/arm/boot/dts/Makefile                    |    7 +
  arch/arm/boot/dts/am335x-abbbi.dts            |  164 +
  .../dts/am335x-bone-common-no-capemgr.dtsi    |  373 +++
  .../arm/boot/dts/am335x-bone-common-univ.dtsi | 2949 +++++++++++++++++
@@ -29,11 +31,12 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/am335x-sancloud-bbe.dts     |    5 +
  arch/arm/boot/dts/am33xx-l4.dtsi              |  162 +
  arch/arm/boot/dts/am33xx.dtsi                 |    2 +-
+ arch/arm/boot/dts/am5729-beagleboneai.dts     |  751 +++++
  .../boot/dts/am57xx-beagle-x15-common.dtsi    |    4 +
  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts |    5 +
  arch/arm/boot/dts/am57xx-beagle-x15-revc.dts  |    5 +
  arch/arm/boot/dts/am57xx-beagle-x15.dts       |    5 +
- arch/arm/boot/dts/dra7.dtsi                   |   10 +
+ arch/arm/boot/dts/dra7.dtsi                   |   12 +-
  arch/arm/boot/dts/omap3-beagle-xm.dts         |   53 +-
  arch/arm/boot/dts/omap3-beagle.dts            |   11 +
  arch/arm/boot/dts/omap4-panda-a4.dts          |   12 +
@@ -45,7 +48,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/omap4.dtsi                  |    2 +
  arch/arm/boot/dts/twl6030.dtsi                |    5 +
  .../dt-bindings/board/am335x-bbw-bbb-base.h   |  103 +
- 39 files changed, 9465 insertions(+), 118 deletions(-)
+ 40 files changed, 10218 insertions(+), 119 deletions(-)
  create mode 100644 arch/arm/boot/dts/am335x-abbbi.dts
  create mode 100644 arch/arm/boot/dts/am335x-bone-common-no-capemgr.dtsi
  create mode 100644 arch/arm/boot/dts/am335x-bone-common-univ.dtsi
@@ -55,11 +58,12 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  create mode 100644 arch/arm/boot/dts/am335x-boneblack-uboot.dts
  create mode 100644 arch/arm/boot/dts/am335x-bonegreen-wireless-common-univ.dtsi
  create mode 100644 arch/arm/boot/dts/am335x-bonegreen-wireless-uboot-univ.dts
+ create mode 100644 arch/arm/boot/dts/am5729-beagleboneai.dts
  create mode 100644 arch/arm/boot/dts/omap4-panda-es-b3.dts
  create mode 100644 include/dt-bindings/board/am335x-bbw-bbb-base.h
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index dab2914fa293..ddff30011f27 100644
+index dab2914fa293c..5ed74b0f0210c 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
 @@ -730,6 +730,11 @@ dtb-$(CONFIG_SOC_AM33XX) += \
@@ -82,9 +86,17 @@ index dab2914fa293..ddff30011f27 100644
  	omap4-panda-a4.dtb \
  	omap4-panda-es.dtb \
  	omap4-sdp.dtb \
+@@ -779,6 +785,7 @@ dtb-$(CONFIG_SOC_OMAP5) += \
+ 	omap5-uevm.dtb
+ dtb-$(CONFIG_SOC_DRA7XX) += \
+ 	am57xx-beagle-x15.dtb \
++	am5729-beagleboneai.dtb \
+ 	am57xx-beagle-x15-revb1.dtb \
+ 	am57xx-beagle-x15-revc.dtb \
+ 	am57xx-cl-som-am57x.dtb \
 diff --git a/arch/arm/boot/dts/am335x-abbbi.dts b/arch/arm/boot/dts/am335x-abbbi.dts
 new file mode 100644
-index 000000000000..870ce8567471
+index 0000000000000..870ce8567471b
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-abbbi.dts
 @@ -0,0 +1,164 @@
@@ -254,7 +266,7 @@ index 000000000000..870ce8567471
 +};
 diff --git a/arch/arm/boot/dts/am335x-bone-common-no-capemgr.dtsi b/arch/arm/boot/dts/am335x-bone-common-no-capemgr.dtsi
 new file mode 100644
-index 000000000000..90f13e062933
+index 0000000000000..90f13e0629338
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-bone-common-no-capemgr.dtsi
 @@ -0,0 +1,373 @@
@@ -633,7 +645,7 @@ index 000000000000..90f13e062933
 +};
 diff --git a/arch/arm/boot/dts/am335x-bone-common-univ.dtsi b/arch/arm/boot/dts/am335x-bone-common-univ.dtsi
 new file mode 100644
-index 000000000000..a168b3266088
+index 0000000000000..a168b3266088f
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-bone-common-univ.dtsi
 @@ -0,0 +1,2949 @@
@@ -3587,7 +3599,7 @@ index 000000000000..a168b3266088
 +	};
 +};
 diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 89b4cf2cb7f8..914f23be9bcf 100644
+index 89b4cf2cb7f8a..914f23be9bcf7 100644
 --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
 +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
 @@ -26,14 +26,14 @@
@@ -3638,7 +3650,7 @@ index 89b4cf2cb7f8..914f23be9bcf 100644
  };
 diff --git a/arch/arm/boot/dts/am335x-bone-jtag.dtsi b/arch/arm/boot/dts/am335x-bone-jtag.dtsi
 new file mode 100644
-index 000000000000..2cdca0141712
+index 0000000000000..2cdca01417121
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-bone-jtag.dtsi
 @@ -0,0 +1,15 @@
@@ -3659,7 +3671,7 @@ index 000000000000..2cdca0141712
 +};
 diff --git a/arch/arm/boot/dts/am335x-bone-uboot-univ.dts b/arch/arm/boot/dts/am335x-bone-uboot-univ.dts
 new file mode 100644
-index 000000000000..87559166d38e
+index 0000000000000..87559166d38ee
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-bone-uboot-univ.dts
 @@ -0,0 +1,29 @@
@@ -3693,7 +3705,7 @@ index 000000000000..87559166d38e
 +	vmmc-supply = <&ldo3_reg>;
 +};
 diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index 43bfbce41049..c7ae3e59d29e 100644
+index 43bfbce410494..c7ae3e59d29e3 100644
 --- a/arch/arm/boot/dts/am335x-bone.dts
 +++ b/arch/arm/boot/dts/am335x-bone.dts
 @@ -6,10 +6,16 @@
@@ -3714,7 +3726,7 @@ index 43bfbce41049..c7ae3e59d29e 100644
  
  &ldo3_reg {
 diff --git a/arch/arm/boot/dts/am335x-boneblack-common.dtsi b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
-index 7ad079861efd..40e88b1c2d5f 100644
+index 7ad079861efd6..40e88b1c2d5ff 100644
 --- a/arch/arm/boot/dts/am335x-boneblack-common.dtsi
 +++ b/arch/arm/boot/dts/am335x-boneblack-common.dtsi
 @@ -27,7 +27,6 @@
@@ -3751,7 +3763,7 @@ index 7ad079861efd..40e88b1c2d5f 100644
  		/* video-ports = <0x234501>; */
 diff --git a/arch/arm/boot/dts/am335x-boneblack-uboot-univ.dts b/arch/arm/boot/dts/am335x-boneblack-uboot-univ.dts
 new file mode 100644
-index 000000000000..4e5633e38694
+index 0000000000000..4e5633e386945
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-boneblack-uboot-univ.dts
 @@ -0,0 +1,40 @@
@@ -3797,7 +3809,7 @@ index 000000000000..4e5633e38694
 +};
 diff --git a/arch/arm/boot/dts/am335x-boneblack-uboot.dts b/arch/arm/boot/dts/am335x-boneblack-uboot.dts
 new file mode 100644
-index 000000000000..09e8c27a4b29
+index 0000000000000..09e8c27a4b29d
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-boneblack-uboot.dts
 @@ -0,0 +1,41 @@
@@ -3843,7 +3855,7 @@ index 000000000000..09e8c27a4b29
 +	vmmc-supply = <&vmmcsd_fixed>;
 +};
 diff --git a/arch/arm/boot/dts/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
-index 3124d94c0b3c..f98e0cfe14ad 100644
+index 3124d94c0b3cc..f98e0cfe14ad0 100644
 --- a/arch/arm/boot/dts/am335x-boneblack-wireless.dts
 +++ b/arch/arm/boot/dts/am335x-boneblack-wireless.dts
 @@ -8,11 +8,17 @@
@@ -3865,7 +3877,7 @@ index 3124d94c0b3c..f98e0cfe14ad 100644
  		compatible = "regulator-fixed";
  		regulator-name = "wlan-en-regulator";
 diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
-index d3928662aed4..40b17b956109 100644
+index d3928662aed4e..40b17b9561099 100644
 --- a/arch/arm/boot/dts/am335x-boneblack.dts
 +++ b/arch/arm/boot/dts/am335x-boneblack.dts
 @@ -7,10 +7,16 @@
@@ -3886,7 +3898,7 @@ index d3928662aed4..40b17b956109 100644
  
  &cpu0_opp_table {
 diff --git a/arch/arm/boot/dts/am335x-boneblue.dts b/arch/arm/boot/dts/am335x-boneblue.dts
-index 0257576d5d16..6df70194b15d 100644
+index 0257576d5d16f..6df70194b15d8 100644
 --- a/arch/arm/boot/dts/am335x-boneblue.dts
 +++ b/arch/arm/boot/dts/am335x-boneblue.dts
 @@ -11,6 +11,11 @@
@@ -4450,7 +4462,7 @@ index 0257576d5d16..6df70194b15d 100644
 +};
 diff --git a/arch/arm/boot/dts/am335x-bonegreen-wireless-common-univ.dtsi b/arch/arm/boot/dts/am335x-bonegreen-wireless-common-univ.dtsi
 new file mode 100644
-index 000000000000..e6f28c969b75
+index 0000000000000..e6f28c969b752
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-bonegreen-wireless-common-univ.dtsi
 @@ -0,0 +1,2794 @@
@@ -7250,7 +7262,7 @@ index 000000000000..e6f28c969b75
 +};
 diff --git a/arch/arm/boot/dts/am335x-bonegreen-wireless-uboot-univ.dts b/arch/arm/boot/dts/am335x-bonegreen-wireless-uboot-univ.dts
 new file mode 100644
-index 000000000000..ac63c249b196
+index 0000000000000..ac63c249b1961
 --- /dev/null
 +++ b/arch/arm/boot/dts/am335x-bonegreen-wireless-uboot-univ.dts
 @@ -0,0 +1,55 @@
@@ -7310,7 +7322,7 @@ index 000000000000..ac63c249b196
 +	};
 +};
 diff --git a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
-index 4092cd193b8a..a0a841d97165 100644
+index 4092cd193b8a6..a0a841d97165e 100644
 --- a/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
 +++ b/arch/arm/boot/dts/am335x-bonegreen-wireless.dts
 @@ -8,11 +8,17 @@
@@ -7332,7 +7344,7 @@ index 4092cd193b8a..a0a841d97165 100644
  		compatible = "regulator-fixed";
  		regulator-name = "wlan-en-regulator";
 diff --git a/arch/arm/boot/dts/am335x-bonegreen.dts b/arch/arm/boot/dts/am335x-bonegreen.dts
-index c12bb0717779..d3009aeeb640 100644
+index c12bb07177796..d3009aeeb640e 100644
 --- a/arch/arm/boot/dts/am335x-bonegreen.dts
 +++ b/arch/arm/boot/dts/am335x-bonegreen.dts
 @@ -7,8 +7,14 @@
@@ -7351,7 +7363,7 @@ index c12bb0717779..d3009aeeb640 100644
 +	};
  };
 diff --git a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
-index f47cc9fea253..bdb783879277 100644
+index f47cc9fea2538..bdb783879277e 100644
 --- a/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
 +++ b/arch/arm/boot/dts/am335x-osd3358-sm-red.dts
 @@ -13,10 +13,16 @@
@@ -7427,7 +7439,7 @@ index f47cc9fea253..bdb783879277 100644
  		pinctrl-single,pins = <
  			/* Slave 1 */
 diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index ff4f919d22f6..d2533a887870 100644
+index ff4f919d22f62..d2533a8878707 100644
 --- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
 +++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
 @@ -15,6 +15,8 @@
@@ -9547,7 +9559,7 @@ index ff4f919d22f6..d2533a887870 100644
 +	};
 +};
 diff --git a/arch/arm/boot/dts/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
-index 8678e6e35493..2381a5c5110c 100644
+index 8678e6e35493f..2381a5c5110c8 100644
 --- a/arch/arm/boot/dts/am335x-sancloud-bbe.dts
 +++ b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
 @@ -12,6 +12,11 @@
@@ -9563,7 +9575,7 @@ index 8678e6e35493..2381a5c5110c 100644
  
  &am33xx_pinmux {
 diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
-index 46849d6ecb3e..7ba792f7213c 100644
+index 46849d6ecb3e2..7ba792f7213c2 100644
 --- a/arch/arm/boot/dts/am33xx-l4.dtsi
 +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
 @@ -158,6 +158,39 @@
@@ -9778,7 +9790,7 @@ index 46849d6ecb3e..7ba792f7213c 100644
  					compatible = "ti,am3352-ehrpwm",
  						     "ti,am33xx-ehrpwm";
 diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index fb6b8aa12cc5..634f0b2d40a0 100644
+index fb6b8aa12cc56..634f0b2d40a09 100644
 --- a/arch/arm/boot/dts/am33xx.dtsi
 +++ b/arch/arm/boot/dts/am33xx.dtsi
 @@ -160,7 +160,7 @@
@@ -9790,8 +9802,765 @@ index fb6b8aa12cc5..634f0b2d40a0 100644
  		compatible = "simple-bus";
  		#address-cells = <1>;
  		#size-cells = <1>;
+diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
+new file mode 100644
+index 0000000000000..ea8c15368746b
+--- /dev/null
++++ b/arch/arm/boot/dts/am5729-beagleboneai.dts
+@@ -0,0 +1,751 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2014-2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++/dts-v1/;
++
++#include "dra74x.dtsi"
++#include "am57xx-commercial-grade.dtsi"
++#include "dra74x-mmc-iodelay.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/dra.h>
++
++/ {
++	model = "BeagleBoard.org BeagleBone AI";
++	compatible = "beagle,am5729-beagleboneai", "ti,am5728",
++		     "ti,dra742", "ti,dra74", "ti,dra7";
++
++	aliases {
++		rtc0 = &tps659038_rtc;
++		rtc1 = &rtc;
++		display0 = &hdmi_conn;
++	};
++
++	chosen {
++		stdout-path = &uart1;
++		base_dtb = "am5729-beagleboneai.dts";
++		base_dtb_timestamp = __TIMESTAMP__;
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x0 0x40000000>;
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ipu2_memory_region: ipu2-memory@95800000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x95800000 0x0 0x3800000>;
++			reusable;
++			status = "okay";
++		};
++
++		dsp1_memory_region: dsp1-memory@99000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x99000000 0x0 0x4000000>;
++			reusable;
++			status = "okay";
++		};
++
++		ipu1_memory_region: ipu1-memory@9d000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x9d000000 0x0 0x2000000>;
++			reusable;
++			status = "okay";
++		};
++
++		dsp2_memory_region: dsp2-memory@9f000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x9f000000 0x0 0x800000>;
++			reusable;
++			status = "okay";
++		};
++
++	};
++
++	vdd_adc: gpioregulator-vdd_adc {
++		compatible = "regulator-gpio";
++		regulator-name = "vdd_adc";
++		vin-supply = <&vdd_5v>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++		gpios = <&gpio3 27 GPIO_ACTIVE_HIGH>;
++		states = <1800000 0
++			3300000 1>;
++	};
++
++	vdd_5v: fixedregulator-vdd_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "vdd_5v";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vtt_fixed: fixedregulator-vtt {
++		/* TPS51200 */
++		compatible = "regulator-fixed";
++		regulator-name = "vtt_fixed";
++		vin-supply = <&vdd_ddr>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		led0 {
++			label = "beaglebone:green:usr0";
++			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
++
++		led1 {
++			label = "beaglebone:green:usr1";
++			gpios = <&gpio5 5 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc0";
++			default-state = "off";
++		};
++
++		led2 {
++			label = "beaglebone:green:usr2";
++			gpios = <&gpio3 15 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "cpu";
++			default-state = "off";
++		};
++
++		led3 {
++			label = "beaglebone:green:usr3";
++			gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc1";
++			default-state = "off";
++		};
++
++		led4 {
++			label = "beaglebone:green:usr4";
++			gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "netdev";
++			default-state = "off";
++		};
++	};
++
++	hdmi_conn: connector@0 {
++		compatible = "hdmi-connector";
++		label = "hdmi";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_encoder_out>;
++			};
++		};
++	};
++
++	hdmi_enc: encoder@0 {
++		/* "ti,tpd12s016" software compatible with "ti,tpd12s015"
++		 *  no need for individual driver
++		 */
++		compatible = "ti,tpd12s015";
++		gpios = <0>,
++			<0>,
++			<&gpio7 12 GPIO_ACTIVE_HIGH>;
++
++		ports {
++			#address-cells = <0x1>;
++			#size-cells = <0x0>;
++
++			port@0 {
++				reg = <0x0>;
++
++				hdmi_encoder_in: endpoint@0 {
++					remote-endpoint = <&hdmi_out>;
++				};
++			};
++
++			port@1 {
++				reg = <0x1>;
++
++				hdmi_encoder_out: endpoint@0 {
++					remote-endpoint = <&hdmi_connector_in>;
++				};
++			};
++		};
++	};
++
++	emmc_pwrseq: emmc_pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio5 7 GPIO_ACTIVE_LOW>;
++	};
++
++	brcmf_pwrseq: brcmf_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>,	/* BT-REG-ON */
++				<&gpio3 18 GPIO_ACTIVE_LOW>;	/* WL-REG-ON */
++	};
++
++	extcon_usb1: extcon_usb1 {
++		compatible = "linux,extcon-usb-gpio";
++		ti,enable-id-detection;
++		id-gpio = <&gpio3 13 GPIO_ACTIVE_HIGH>;
++	};
++};
++
++&dra7_pmx_core {
++	ethphy_extra_pins_default: ethphy_extra_pins_default {
++		pinctrl-single,pins = <
++			DRA7XX_CORE_IOPAD(0x34c4, PIN_OUTPUT_PULLUP | MUX_MODE14) /* N1: gpmc_advn_ale.gpio2_23 - RGMII_RST */
++			DRA7XX_CORE_IOPAD(0x364c, PIN_INPUT | MUX_MODE14) /* Y1: uart3_txd.gpio5_19 - MII0_INT */
++		>;
++	};
++
++	pmic_pins_default: pmic_pins_default {
++		pinctrl-single,pins = <
++			DRA7XX_CORE_IOPAD(0x3690, PIN_INPUT_PULLUP | MUX_MODE14) /* F21: gpio6_16.gpio6_16 - PMIC_INT */
++		>;
++	};
++};
++
++&i2c1 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	tps659038: tps659038@58 {
++		compatible = "ti,tps659038";
++		reg = <0x58>;
++		interrupt-parent = <&gpio6>;
++		interrupts = <16 IRQ_TYPE_LEVEL_LOW>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pmic_pins_default>;
++
++		#interrupt-cells = <2>;
++		interrupt-controller;
++
++		ti,system-power-controller;
++		ti,palmas-override-powerhold;
++
++		tps659038_pmic {
++			compatible = "ti,tps659038-pmic";
++
++			smps12-in-supply = <&vdd_5v>;
++			smps3-in-supply = <&vdd_5v>;
++			smps45-in-supply = <&vdd_5v>;
++			smps6-in-supply = <&vdd_5v>;
++			smps7-in-supply = <&vdd_5v>;
++			mps3-in-supply = <&vdd_5v>;
++			smps8-in-supply = <&vdd_5v>;
++			smps9-in-supply = <&vdd_5v>;
++			ldo1-in-supply = <&vdd_5v>;
++			ldo2-in-supply = <&vdd_5v>;
++			ldo3-in-supply = <&vdd_5v>;
++			ldo4-in-supply = <&vdd_5v>;
++			ldo9-in-supply = <&vdd_5v>;
++			ldoln-in-supply = <&vdd_5v>;
++			ldousb-in-supply = <&vdd_5v>;
++			ldortc-in-supply = <&vdd_5v>;
++
++			regulators {
++				vdd_mpu: smps12 {
++					/* VDD_MPU */
++					regulator-name = "smps12";
++					regulator-min-microvolt = <850000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_ddr: smps3 {
++					/* VDD_DDR EMIF1 EMIF2 */
++					regulator-name = "smps3";
++					regulator-min-microvolt = <1350000>;
++					regulator-max-microvolt = <1350000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_dspeve: smps45 {
++					/* VDD_DSPEVE on AM572 */
++					regulator-name = "smps45";
++					regulator-min-microvolt = < 850000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_gpu: smps6 {
++					/* VDD_GPU */
++					regulator-name = "smps6";
++					regulator-min-microvolt = < 850000>;
++					regulator-max-microvolt = <1250000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_core: smps7 {
++					/* VDD_CORE */
++					regulator-name = "smps7";
++					regulator-min-microvolt = < 850000>;	/*** 1.15V */
++					regulator-max-microvolt = <1150000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_iva: smps8 {
++					/* VDD_IVAHD */				/*** 1.06V */
++					regulator-name = "smps8";
++				};
++
++				vdd_3v3: smps9 {
++					/* VDD_3V3 */
++					regulator-name = "smps9";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_sd: ldo1 {
++					/* VDDSHV8 - VSDMMC  */
++					regulator-name = "ldo1";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				vdd_1v8: ldo2 {
++					/* VDDSH18V */
++					regulator-name = "ldo2";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_1v8_phy_ldo3: ldo3 {
++					/* R1.3a 572x V1_8PHY_LDO3: USB, SATA */
++					regulator-name = "ldo3";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_1v8_phy_ldo4: ldo4 {
++					/* R1.3a 572x V1_8PHY_LDO4: PCIE, HDMI*/
++					regulator-name = "ldo4";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				/* LDO5-8 unused */
++
++				vdd_rtc: ldo9 {
++					/* VDD_RTC  */
++					regulator-name = "ldo9";
++					regulator-min-microvolt = < 840000>;
++					regulator-max-microvolt = <1160000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				vdd_1v8_pll: ldoln {
++					/* VDDA_1V8_PLL */
++					regulator-name = "ldoln";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldousb_reg: ldousb {
++					/* VDDA_3V_USB: VDDA_USBHS33 */
++					regulator-name = "ldousb";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				ldortc_reg: ldortc {
++					/* VDDA_RTC  */
++					regulator-name = "ldortc";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++				};
++
++				regen1: regen1 {
++					/* VDD_3V3_ON */
++					regulator-name = "regen1";
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				regen2: regen2 {
++					/* Needed for PMIC internal resource */
++					regulator-name = "regen2";
++					regulator-boot-on;
++					regulator-always-on;
++				};
++			};
++		};
++
++		tps659038_rtc: tps659038_rtc {
++			compatible = "ti,palmas-rtc";
++			interrupt-parent = <&tps659038>;
++			interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
++			wakeup-source;
++		};
++
++		tps659038_pwr_button: tps659038_pwr_button {
++			compatible = "ti,palmas-pwrbutton";
++			interrupt-parent = <&tps659038>;
++			interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
++			wakeup-source;
++			ti,palmas-long-press-seconds = <12>;
++		};
++
++		tps659038_gpio: tps659038_gpio {
++			compatible = "ti,palmas-gpio";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++	};
++
++	/* STMPE811 touch screen controller */
++	stmpe811@41 {
++		compatible = "st,stmpe811";
++		reg = <0x41>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-parent = <&gpio2>;
++		interrupt-controller;
++		id = <0>;
++		blocks = <0x5>;
++		irq-trigger = <0x1>;
++		st,mod-12b = <1>; /* 12-bit ADC */
++		st,ref-sel = <0>; /* internal ADC reference */
++		st,adc-freq = <1>; /* 3.25 MHz ADC clock speed */
++		st,sample-time = <4>; /* ADC converstion time: 80 clocks */
++
++		stmpe_adc {
++			compatible = "st,stmpe-adc";
++			st,norequest-mask = <0x00>; /* mask any channels to be used by touchscreen */
++			adc0: iio-device@0 {
++				#io-channel-cells = <1>;
++				iio-channels = <&adc0 4>, <&adc0 1>, <&adc0 2>, <&adc0 3>, <&adc0 4>, <&adc0 5>, <&adc0 6>;
++				iio-channel-names = "AIN0_P9_39", "AIN1_P9_40", "AIN2_P9_37", "AIN3_P9_38",
++					"AIN4_P9_33", "AIN5_P9_36", "AIN6_P9_35";
++			};
++		};
++
++		stmpe_touchscreen {
++			status = "disabled";
++			compatible = "st,stmpe-ts";
++			/* 8 sample average control */
++			st,ave-ctrl = <3>;
++			/* 7 length fractional part in z */
++			st,fraction-z = <7>;
++			/*
++			 * 50 mA typical 80 mA max touchscreen drivers
++			 * current limit value
++			 */
++			st,i-drive = <1>;
++			/* 1 ms panel driver settling time */
++			st,settling = <3>;
++			/* 5 ms touch detect interrupt delay */
++			st,touch-det-delay = <5>;
++		};
++
++		stmpe_gpio {
++			compatible = "st,stmpe-gpio";
++		};
++
++		stmpe_pwm {
++			compatible = "st,stmpe-pwm";
++			#pwm-cells = <2>;
++		};
++	};
++};
++
++&mcspi3 {
++	status = "okay";
++	ti,pindir-d0-out-d1-in;
++
++	sn65hvs882: sn65hvs882@0 {
++		compatible = "pisosr-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpol;
++	};
++};
++
++&cpu0 {
++	vdd-supply = <&vdd_mpu>;
++	voltage-tolerance = <1>;
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&davinci_mdio {
++	reset-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
++	reset-delay-us = <2>;
++
++	phy0: ethernet-phy@1 {
++		reg = <4>;
++		eee-broken-100tx;
++		eee-broken-1000t;
++	};
++};
++
++&mac {
++	slaves = <1>;
++	status = "okay";
++};
++
++&cpsw_emac0 {
++	phy-handle = <&phy0>;
++	phy-mode = "rgmii";
++};
++
++&ocp {
++	pruss1_shmem: pruss_shmem@4b200000 {
++		status = "okay";
++		compatible = "ti,pruss-shmem";
++		reg = <0x4b200000 0x020000>;
++	};
++
++	pruss2_shmem: pruss_shmem@4b280000 {
++		status = "okay";
++		compatible = "ti,pruss-shmem";
++		reg = <0x4b280000 0x020000>;
++	};
++};
++
++&mmc1 {
++	status = "okay";
++	vmmc-supply = <&vdd_3v3>;
++	vqmmc-supply = <&vdd_sd>;
++	bus-width = <4>;
++	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_default>;
++};
++
++&mmc2 {
++	status = "okay";
++	vmmc-supply = <&vdd_1v8>;
++	vqmmc-supply = <&vdd_1v8>;
++	bus-width = <8>;
++	ti,non-removable;
++	non-removable;
++	mmc-pwrseq = <&emmc_pwrseq>;
++
++	ti,needs-special-reset;
++	dmas = <&sdma_xbar 47>, <&sdma_xbar 48>;
++	dma-names = "tx", "rx";
++
++};
++
++&mmc4 {
++	/* DS: Default speed (DS) up to 25 MHz, including 1- and 4-bit modes (3.3 V signaling). */
++	/* HS: High speed up to 50 MHz (3.3 V signaling). */
++	/* SDR12: SDR up to 25 MHz (1.8 V signaling). */
++	/* SDR25: SDR up to 50 MHz (1.8 V signaling). */
++	/* SDR50: SDR up to 100 MHz (1.8 V signaling). */
++	/* SDR104: SDR up to 208 MHz (1.8 V signaling) */
++	/* DDR50: DDR up to 50 MHz (1.8 V signaling). */
++	status = "okay";
++
++	ti,needs-special-reset;
++	vmmc-supply = <&vdd_3v3>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++	bus-width = <4>;
++	ti,non-removable;
++	non-removable;
++	no-1-8-v;
++	max-frequency = <24000000>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mmc-pwrseq = <&brcmf_pwrseq>;
++
++	brcmf: wifi@1 {
++		status = "okay";
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++
++		brcm,sd-head-align = <4>;
++		brcm,sd_head_align = <4>;
++		brcm,sd_sgentry_align = <512>;
++
++		interrupt-parent = <&gpio3>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "host-wake";
++	};
++};
++
++&usb2_phy1 {
++	phy-supply = <&ldousb_reg>;
++};
++
++&usb2_phy2 {
++	phy-supply = <&ldousb_reg>;
++};
++
++&usb1 {
++	status = "okay";
++	dr_mode = "otg";
++};
++
++&omap_dwc3_1 {
++	extcon = <&extcon_usb1>;
++};
++
++&usb2 {
++	status = "okay";
++	dr_mode = "host";
++};
++
++&dss {
++	status = "okay";
++	vdda_video-supply = <&vdd_1v8_pll>;
++};
++
++&hdmi {
++	status = "okay";
++	vdda-supply = <&vdd_1v8_phy_ldo4>;
++
++	port {
++		hdmi_out: endpoint {
++			remote-endpoint = <&hdmi_encoder_in>;
++		};
++	};
++};
++
++&bandgap {
++	status = "okay";
++};
++
++&mailbox1 {
++	status = "okay";
++};
++
++&mailbox2 {
++	status = "okay";
++};
++
++&mailbox3 {
++	status = "okay";
++};
++
++&mailbox4 {
++	status = "okay";
++};
++
++&mailbox5 {
++	status = "okay";
++};
++
++&mailbox6 {
++	status = "okay";
++};
++
++&mailbox7 {
++	status = "okay";
++};
++
++&mailbox8 {
++	status = "okay";
++};
++
++&mailbox9 {
++	status = "okay";
++};
++
++&mailbox10 {
++	status = "okay";
++};
++
++&mailbox11 {
++	status = "okay";
++};
++
++&mailbox12 {
++	status = "okay";
++};
++
++&mailbox13 {
++	status = "okay";
++};
++
++&cpu_alert0 {
++	temperature = <55000>; /* milliCelsius */
++};
++
++&cpu_crit {
++	temperature = <85000>; /* milliCelsius */
++};
++
++&gpu_crit {
++	temperature = <85000>; /* milliCelsius */
++};
++
++&core_crit {
++	temperature = <85000>; /* milliCelsius */
++};
++
++&dspeve_crit {
++	temperature = <85000>; /* milliCelsius */
++};
++
++&iva_crit {
++	temperature = <85000>; /* milliCelsius */
++};
++
++&sata {
++	status = "disabled";
++};
++
++&sata_phy {
++	status = "disabled";
++};
++
++/* bluetooth */
++&uart6 {
++	status = "okay";
++};
++
++/* cape header stuff */
++&i2c4 {
++	status = "okay";
++	clock-frequency = <100000>;
++};
++
++&cpu0_opp_table {
++	opp_slow-500000000 {
++		opp-shared;
++	};
++};
 diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index bc76f1705c0f..d5c56a111df0 100644
+index bc76f1705c0f6..d5c56a111df00 100644
 --- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
 +++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
 @@ -164,6 +164,10 @@
@@ -9806,7 +10575,7 @@ index bc76f1705c0f..d5c56a111df0 100644
  	status = "okay";
  	clock-frequency = <400000>;
 diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-index 7b113b52c3fb..062ff4806e23 100644
+index 7b113b52c3fb6..062ff4806e236 100644
 --- a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
 +++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
 @@ -7,6 +7,11 @@
@@ -9822,7 +10591,7 @@ index 7b113b52c3fb..062ff4806e23 100644
  
  &tpd12s015 {
 diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-index 30c500b15b21..4ad6551c9017 100644
+index 30c500b15b219..4ad6551c90175 100644
 --- a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
 +++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
 @@ -7,6 +7,11 @@
@@ -9838,7 +10607,7 @@ index 30c500b15b21..4ad6551c9017 100644
  
  &tpd12s015 {
 diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index a5c24ed4d12f..dbda396f92b4 100644
+index a5c24ed4d12f3..dbda396f92b47 100644
 --- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
 +++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
 @@ -8,6 +8,11 @@
@@ -9854,9 +10623,18 @@ index a5c24ed4d12f..dbda396f92b4 100644
  
  &tpd12s015 {
 diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 953f0ffce2a9..05ebd38d54dc 100644
+index 953f0ffce2a90..41cb73360c36e 100644
 --- a/arch/arm/boot/dts/dra7.dtsi
 +++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -143,7 +143,7 @@
+ 	 * the moment, just use a fake OCP bus entry to represent the whole bus
+ 	 * hierarchy.
+ 	 */
+-	ocp {
++	ocp: ocp {
+ 		compatible = "ti,dra7-l3-noc", "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 @@ -377,6 +377,16 @@
  			ti,hwmods = "dmm";
  		};
@@ -9875,7 +10653,7 @@ index 953f0ffce2a9..05ebd38d54dc 100644
  			compatible = "ti,dra7-dsp-iommu";
  			reg = <0x40d01000 0x100>;
 diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index 1aa99fc1487a..28d5c0707218 100644
+index 1aa99fc1487aa..28d5c07072180 100644
 --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
 +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
 @@ -152,6 +152,7 @@
@@ -9967,7 +10745,7 @@ index 1aa99fc1487a..28d5c0707218 100644
  	ti,use-leds;
  	/* pullups: BIT(1) */
 diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index e3df3c166902..64f0787d961f 100644
+index e3df3c166902f..64f0787d961ff 100644
 --- a/arch/arm/boot/dts/omap3-beagle.dts
 +++ b/arch/arm/boot/dts/omap3-beagle.dts
 @@ -139,6 +139,7 @@
@@ -10006,7 +10784,7 @@ index e3df3c166902..64f0787d961f 100644
  #include "twl4030_omap3.dtsi"
  
 diff --git a/arch/arm/boot/dts/omap4-panda-a4.dts b/arch/arm/boot/dts/omap4-panda-a4.dts
-index 64083075dd52..065f3db3f29d 100644
+index 64083075dd523..065f3db3f29d0 100644
 --- a/arch/arm/boot/dts/omap4-panda-a4.dts
 +++ b/arch/arm/boot/dts/omap4-panda-a4.dts
 @@ -7,6 +7,18 @@
@@ -10029,7 +10807,7 @@ index 64083075dd52..065f3db3f29d 100644
  &dss_hdmi_pins {
  	pinctrl-single,pins = <
 diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index 14be2ecb62b1..e5f842c122a8 100644
+index 14be2ecb62b1f..e5f842c122a83 100644
 --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
 +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
 @@ -481,16 +481,6 @@
@@ -10051,7 +10829,7 @@ index 14be2ecb62b1..e5f842c122a8 100644
  	pinctrl-0 = <&mcbsp1_pins>;
 diff --git a/arch/arm/boot/dts/omap4-panda-es-b3.dts b/arch/arm/boot/dts/omap4-panda-es-b3.dts
 new file mode 100644
-index 000000000000..19d02df8d8a5
+index 0000000000000..19d02df8d8a59
 --- /dev/null
 +++ b/arch/arm/boot/dts/omap4-panda-es-b3.dts
 @@ -0,0 +1,85 @@
@@ -10141,7 +10919,7 @@ index 000000000000..19d02df8d8a5
 +	 ti,no-reset-on-init;
 +};
 diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-index 9dd307b52604..ea4dce2f3a6b 100644
+index 9dd307b526048..ea4dce2f3a6b1 100644
 --- a/arch/arm/boot/dts/omap4-panda-es.dts
 +++ b/arch/arm/boot/dts/omap4-panda-es.dts
 @@ -12,6 +12,18 @@
@@ -10164,7 +10942,7 @@ index 9dd307b52604..ea4dce2f3a6b 100644
  &sound {
  	ti,model = "PandaBoardES";
 diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index fb2f47717b45..2ca852eadb8d 100644
+index fb2f47717b45b..2ca852eadb8d5 100644
 --- a/arch/arm/boot/dts/omap4-panda.dts
 +++ b/arch/arm/boot/dts/omap4-panda.dts
 @@ -11,3 +11,15 @@
@@ -10184,7 +10962,7 @@ index fb2f47717b45..2ca852eadb8d 100644
 +	status = "ok";
 +};
 diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 3c274965ff40..97001fefe875 100644
+index 3c274965ff40a..97001fefe8753 100644
 --- a/arch/arm/boot/dts/omap4-sdp.dts
 +++ b/arch/arm/boot/dts/omap4-sdp.dts
 @@ -521,11 +521,13 @@
@@ -10202,7 +10980,7 @@ index 3c274965ff40..97001fefe875 100644
  
  &keypad {
 diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index c43e52fd5f65..ec51eaabb463 100644
+index c43e52fd5f65c..ec51eaabb463e 100644
 --- a/arch/arm/boot/dts/omap4.dtsi
 +++ b/arch/arm/boot/dts/omap4.dtsi
 @@ -252,6 +252,7 @@
@@ -10222,7 +11000,7 @@ index c43e52fd5f65..ec51eaabb463 100644
  
  		aes1: aes@4b501000 {
 diff --git a/arch/arm/boot/dts/twl6030.dtsi b/arch/arm/boot/dts/twl6030.dtsi
-index 9d588cfaa5cb..c0094e0c4e0f 100644
+index 9d588cfaa5cb5..c0094e0c4e0f0 100644
 --- a/arch/arm/boot/dts/twl6030.dtsi
 +++ b/arch/arm/boot/dts/twl6030.dtsi
 @@ -80,6 +80,11 @@
@@ -10239,7 +11017,7 @@ index 9d588cfaa5cb..c0094e0c4e0f 100644
  		interrupts = <4>, <10>;
 diff --git a/include/dt-bindings/board/am335x-bbw-bbb-base.h b/include/dt-bindings/board/am335x-bbw-bbb-base.h
 new file mode 100644
-index 000000000000..35f6d57ef492
+index 0000000000000..35f6d57ef4923
 --- /dev/null
 +++ b/include/dt-bindings/board/am335x-bbw-bbb-base.h
 @@ -0,0 +1,103 @@
@@ -10347,5 +11125,5 @@ index 000000000000..35f6d57ef492
 +
 +#endif
 -- 
-2.23.0
+2.26.2
 

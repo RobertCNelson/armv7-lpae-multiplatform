@@ -358,6 +358,10 @@ dtb_makefile_append_omap4 () {
 	sed -i -e 's:omap4-panda.dtb \\:omap4-panda.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
 }
 
+dtb_makefile_append_am5 () {
+	sed -i -e 's:am57xx-beagle-x15.dtb \\:am57xx-beagle-x15.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
+}
+
 dtb_makefile_append () {
 	sed -i -e 's:am335x-boneblack.dtb \\:am335x-boneblack.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
 }
@@ -395,6 +399,8 @@ beagleboard_dtbs () {
 		device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
+
+		device="am5729-beagleboneai.dtb" ; dtb_makefile_append_am5
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -509,6 +515,9 @@ reverts () {
 
 	## notes
 	##git revert --no-edit xyz -s
+	git revert --no-edit 6d4cd041f0af5b4c8fc742b4a68eac22e420e28c -s
+	git revert --no-edit 43f2ebd5571653f5a02c178d6d73ab642e8a0cad -s
+	git revert --no-edit cd28d1d6e52e740130745429b3ff0af7cbba7b2c -s
 
 	#${git} "${DIR}/patches/reverts/0001-Revert-xyz.patch"
 
@@ -547,7 +556,7 @@ soc () {
 
 ###
 backports
-#reverts
+reverts
 drivers
 soc
 
