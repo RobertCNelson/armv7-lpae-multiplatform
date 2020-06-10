@@ -1,11 +1,11 @@
-From 5baa13122c2c13ad1018c79f34a50234dd6370c4 Mon Sep 17 00:00:00 2001
+From 07ae524c33b9f63ceba3e231f3b1f42d296d0ed3 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 9 Jun 2020 13:51:09 -0500
+Date: Wed, 10 Jun 2020 10:55:18 -0500
 Subject: [PATCH] Add BeagleBoard.org DTBS: v5.4.x
 
 https://github.com/beagleboard/BeagleBoard-DeviceTrees/tree/v5.4.x
 
-https://github.com/beagleboard/BeagleBoard-DeviceTrees/commit/45259a62dd31ea5971ca8ca260b6cae17c566923
+https://github.com/beagleboard/BeagleBoard-DeviceTrees/commit/cd284f3733e37b118a32dc51184a508c505f1ede
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/Makefile                    |    8 +
@@ -10761,7 +10761,7 @@ index a5c24ed4d12f3..dbda396f92b47 100644
  
  &tpd12s015 {
 diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index c6be65249f425..2448faaa53d3f 100644
+index a6ef3d137c7a0..dc7e89013a1bf 100644
 --- a/arch/arm/boot/dts/dra7.dtsi
 +++ b/arch/arm/boot/dts/dra7.dtsi
 @@ -143,7 +143,7 @@
