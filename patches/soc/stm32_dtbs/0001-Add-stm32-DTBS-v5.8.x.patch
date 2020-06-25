@@ -1,0 +1,110 @@
+From df95c8a0c5cab6be9a79fa32f3c69802ead42a9a Mon Sep 17 00:00:00 2001
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Thu, 25 Jun 2020 15:16:30 -0500
+Subject: [PATCH] Add stm32 DTBS: v5.8.x
+
+https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.8.x
+
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/a0033866da8267d231e544cda80de1911cb376cf
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+---
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi |  6 +++++
+ arch/arm/boot/dts/stm32mp157c-dk2.dts    | 33 ++++++++++++++++++++++++
+ include/dt-bindings/rtc/rtc-stm32.h      | 13 ++++++++++
+ 3 files changed, 52 insertions(+)
+ create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
+
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index 7eb858732d6d0..b66fccd82b785 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -1051,6 +1051,12 @@ pins {
+ 		};
+ 	};
+ 
++	rtc_out2_rmp_pins_a: rtc-out2-rmp-pins@0 {
++		pins {
++			pinmux = <STM32_PINMUX('I', 8, ANALOG)>; /* RTC_OUT2_RMP */
++		};
++	};
++
+ 	sai2a_pins_a: sai2a-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('I', 5, AF10)>, /* SAI2_SCK_A */
+diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+index 9a8a26710ac1c..f08ef02facdfe 100644
+--- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
++++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+@@ -11,6 +11,7 @@
+ #include "stm32mp15-pinctrl.dtsi"
+ #include "stm32mp15xxac-pinctrl.dtsi"
+ #include "stm32mp15xx-dkx.dtsi"
++#include <dt-bindings/rtc/rtc-stm32.h>
+ 
+ / {
+ 	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
+@@ -24,6 +25,11 @@ aliases {
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpioh 4 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &dsi {
+@@ -84,3 +90,30 @@ ltdc_ep1_out: endpoint@1 {
+ 		};
+ 	};
+ };
++
++&rtc {
++	st,lsco = <RTC_OUT2_RMP>;
++	pinctrl-0 = <&rtc_out2_rmp_pins_a>;
++	pinctrl-names = "default";
++};
++
++&sdmmc2 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc2_b4_pins_b>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_b>;
++	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
++	non-removable;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	keep-power-in-suspend;
++	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
+diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
+new file mode 100644
+index 0000000000000..4373c4dea5879
+--- /dev/null
++++ b/include/dt-bindings/rtc/rtc-stm32.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for STM32_RTC bindings.
++ */
++
++#ifndef _DT_BINDINGS_RTC_RTC_STM32_H
++#define _DT_BINDINGS_RTC_RTC_STM32_H
++
++#define RTC_OUT1	0
++#define RTC_OUT2	1
++#define RTC_OUT2_RMP	2
++
++#endif
+-- 
+2.27.0
+
