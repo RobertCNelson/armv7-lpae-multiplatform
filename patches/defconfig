@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 4.14.183 Kernel Configuration
+# Linux/arm 4.14.185 Kernel Configuration
 #
 CONFIG_ARM=y
 CONFIG_ARM_HAS_SG_CHAIN=y
@@ -6046,7 +6046,7 @@ CONFIG_TSL4531=m
 CONFIG_US5182D=m
 CONFIG_VCNL4000=m
 CONFIG_VEML6070=m
-# CONFIG_VL6180 is not set
+CONFIG_VL6180=m
 
 #
 # Magnetometer sensors
