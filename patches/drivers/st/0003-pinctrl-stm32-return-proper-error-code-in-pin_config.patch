@@ -1,0 +1,33 @@
+From 9035f760062e1bf8b42313a4cb19b2eb490c106e Mon Sep 17 00:00:00 2001
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Date: Mon, 15 Jun 2020 14:59:50 +0200
+Subject: [PATCH 3/4] pinctrl: stm32: return proper error code in
+ pin_config_set
+
+".pin_config_set" or ".pin_config_group_set" can be called with a
+configuration not supported (i.e. PIN_CONFIG_PERSIST_STATE). In this case,
+it is more suitable to return -ENOTSUPP instead of -EINVAL.
+
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Link: https://lore.kernel.org/r/20200615125951.28008-2-alexandre.torgue@st.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index 162535e7c94dd..cdf6b01d1956f 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -1085,7 +1085,7 @@ static int stm32_pconf_parse_conf(struct pinctrl_dev *pctldev,
+ 		ret = stm32_pmx_gpio_set_direction(pctldev, range, pin, false);
+ 		break;
+ 	default:
+-		ret = -EINVAL;
++		ret = -ENOTSUPP;
+ 	}
+ 
+ 	return ret;
+-- 
+2.27.0
+
