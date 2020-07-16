@@ -1,21 +1,21 @@
-From df95c8a0c5cab6be9a79fa32f3c69802ead42a9a Mon Sep 17 00:00:00 2001
+From 4f08b12ab25fa12a8909cf4887b14e5c0c0e6848 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 25 Jun 2020 15:16:30 -0500
+Date: Wed, 15 Jul 2020 19:28:46 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.8.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.8.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/a0033866da8267d231e544cda80de1911cb376cf
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/f43453fa97116ff7c9c761a5a8e451bd43ff6a8a
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi |  6 +++++
- arch/arm/boot/dts/stm32mp157c-dk2.dts    | 33 ++++++++++++++++++++++++
- include/dt-bindings/rtc/rtc-stm32.h      | 13 ++++++++++
- 3 files changed, 52 insertions(+)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 28 ++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-dk2.dts    | 49 ++++++++++++++++++++++++
+ include/dt-bindings/rtc/rtc-stm32.h      | 13 +++++++
+ 3 files changed, 90 insertions(+)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 7eb858732d6d0..b66fccd82b785 100644
+index 7eb858732d6d0..88ac04c5155a1 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -1051,6 +1051,12 @@ pins {
@@ -31,8 +31,37 @@ index 7eb858732d6d0..b66fccd82b785 100644
  	sai2a_pins_a: sai2a-0 {
  		pins {
  			pinmux = <STM32_PINMUX('I', 5, AF10)>, /* SAI2_SCK_A */
+@@ -1727,6 +1733,28 @@ pins {
+ 				 <STM32_PINMUX('A', 12, ANALOG)>; /* OTG_FS_DP */
+ 		};
+ 	};
++
++	spi4_pins_b: spi4-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 14, AF5)>;  /* SPI4_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			bias-disable;
++		};
++	};
++
++	spi4_sleep_pins_b: spi4-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, ANALOG)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 13, ANALOG)>, /* SPI4_MISO */
++				 <STM32_PINMUX('E', 14, ANALOG)>; /* SPI4_MOSI */
++		};
++	};
+ };
+ 
+ &pinctrl_z {
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 9a8a26710ac1c..f08ef02facdfe 100644
+index 9a8a26710ac1c..765a5f51f6583 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 @@ -11,6 +11,7 @@
@@ -43,7 +72,13 @@ index 9a8a26710ac1c..f08ef02facdfe 100644
  
  / {
  	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
-@@ -24,6 +25,11 @@ aliases {
+@@ -19,11 +20,17 @@ / {
+ 	aliases {
+ 		ethernet0 = &ethernet0;
+ 		serial0 = &uart4;
++		spi0 = &spi4;
+ 	};
+ 
  	chosen {
  		stdout-path = "serial0:115200n8";
  	};
@@ -55,7 +90,7 @@ index 9a8a26710ac1c..f08ef02facdfe 100644
  };
  
  &dsi {
-@@ -84,3 +90,30 @@ ltdc_ep1_out: endpoint@1 {
+@@ -84,3 +91,45 @@ ltdc_ep1_out: endpoint@1 {
  		};
  	};
  };
@@ -84,6 +119,21 @@ index 9a8a26710ac1c..f08ef02facdfe 100644
 +	brcmf: bcrmf@1 {
 +		reg = <1>;
 +		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++&spi4 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&spi4_pins_b>;
++	pinctrl-1 = <&spi4_sleep_pins_b>;
++	cs-gpios = <&gpioe 11 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	spidev@0 {
++		compatible = "spidev";
++		reg = <0>;
++		spi-max-frequency = <4000000>;
++		st,spi-midi-ns = <4000>;
 +	};
 +};
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
