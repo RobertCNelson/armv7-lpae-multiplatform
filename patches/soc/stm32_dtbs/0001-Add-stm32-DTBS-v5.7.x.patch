@@ -1,22 +1,21 @@
-From 9acd16119d821cf23a4c30ca5e8ea3b9396c5683 Mon Sep 17 00:00:00 2001
+From 56934ae560f450229e9208c3bc7c3ac48568b757 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 25 Jun 2020 15:06:09 -0500
+Date: Wed, 19 Aug 2020 14:30:45 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.7.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.7.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/c17f2b4842977dceea6fa658394e97dab499d75f
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/8db54cd992e8de38a7802836de1da44f685a092e
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi    | 99 +++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157a-avenger96.dts |  3 -
- arch/arm/boot/dts/stm32mp157c-dk2.dts       | 33 +++++++
- include/dt-bindings/rtc/rtc-stm32.h         | 13 +++
- 4 files changed, 145 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 99 ++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-dk2.dts    | 33 ++++++++
+ include/dt-bindings/rtc/rtc-stm32.h      | 13 ++++
+ 3 files changed, 145 insertions(+)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 73c07f0dfad27..8cbea91c40385 100644
+index 4b67b682dd53..a7f4a9138f85 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -698,6 +698,12 @@ pins {
@@ -166,23 +165,9 @@ index 73c07f0dfad27..8cbea91c40385 100644
 +
  	uart7_pins_a: uart7-0 {
  		pins1 {
- 			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-index 081037b510bcb..425175f7d83c3 100644
---- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -92,9 +92,6 @@ mdio0 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		compatible = "snps,dwmac-mdio";
--		reset-gpios = <&gpioz 2 GPIO_ACTIVE_LOW>;
--		reset-delay-us = <1000>;
--
- 		phy0: ethernet-phy@7 {
- 			reg = <7>;
- 		};
+ 			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 7985b80967cad..8b0d6c4b3c21d 100644
+index 7985b80967ca..8b0d6c4b3c21 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 @@ -11,6 +11,7 @@
@@ -238,7 +223,7 @@ index 7985b80967cad..8b0d6c4b3c21d 100644
 +};
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
-index 0000000000000..4373c4dea5879
+index 000000000000..4373c4dea587
 --- /dev/null
 +++ b/include/dt-bindings/rtc/rtc-stm32.h
 @@ -0,0 +1,13 @@
@@ -256,5 +241,5 @@ index 0000000000000..4373c4dea5879
 +
 +#endif
 -- 
-2.27.0
+2.28.0
 
