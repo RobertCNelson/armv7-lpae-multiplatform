@@ -341,11 +341,11 @@ local_patch () {
 }
 
 #external_git
-can_isotp
+#can_isotp
 #rt
 ti_pm_firmware
-beagleboard_dtbs
-stm32_dtbs
+#beagleboard_dtbs
+#stm32_dtbs
 #local_patch
 
 pre_backports () {
@@ -436,8 +436,8 @@ drivers () {
 	dir 'drivers/ti/gpio'
 	dir 'drivers/greybus'
 
-	dir 'dirvers/st'
-	dir 'drivers/stm32-rtc'
+#	dir 'dirvers/st'
+#	dir 'drivers/stm32-rtc'
 #	dir 'drivers/stm32-dwmac'
 }
 
