@@ -435,6 +435,7 @@ drivers () {
 	dir 'drivers/ti/tsc'
 	dir 'drivers/ti/gpio'
 	dir 'drivers/greybus'
+	dir 'drivers/mikrobus'
 
 	dir 'dirvers/st'
 	dir 'drivers/stm32-rtc'
