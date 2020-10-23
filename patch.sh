@@ -438,6 +438,7 @@ drivers () {
 	dir 'drivers/mikrobus'
 	dir 'drivers/serdev'
 	dir 'drivers/iio'
+	dir 'drivers/fb_ssd1306'
 
 	dir 'dirvers/st'
 	dir 'drivers/stm32-rtc'
