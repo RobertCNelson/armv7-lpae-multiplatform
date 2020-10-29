@@ -448,7 +448,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.8.15"
+	backport_tag="v5.8.17"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -472,6 +472,7 @@ backports () {
 		pre_backports
 
 		cp -v ~/linux-src/drivers/staging/exfat/* ./drivers/staging/exfat/
+		sed -i -e 's:CONFIG_EXFAT_FS:CONFIG_STAGING_EXFAT_FS:g' ./drivers/staging/Makefile
 
 		post_backports
 		exit 2
