@@ -413,7 +413,6 @@ soc () {
 #reverts
 drivers
 soc
-dir 'fixes'
 
 packaging () {
 	#do_backport="enable"
