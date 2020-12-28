@@ -392,7 +392,6 @@ drivers () {
 	dir 'drivers/greybus'
 	dir 'drivers/mikrobus'
 	dir 'drivers/serdev'
-	dir 'drivers/iio'
 	dir 'drivers/fb_ssd1306'
 
 #	dir 'dirvers/st'
