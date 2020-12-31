@@ -316,6 +316,10 @@ pre_backports () {
 	cd -
 }
 
+omap () {
+	dir 'tmlind/v5.11'
+}
+
 post_backports () {
 	if [ ! "x${backport_tag}" = "x" ] ; then
 		cd ~/linux-src/
@@ -411,6 +415,7 @@ soc () {
 ###
 #backports
 #reverts
+omap
 drivers
 soc
 
