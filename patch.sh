@@ -361,6 +361,11 @@ pre_backports () {
 	cd -
 }
 
+omap () {
+	dir 'tmlind/v5.10'
+	dir 'tmlind/v5.11'
+}
+
 post_backports () {
 	if [ ! "x${backport_tag}" = "x" ] ; then
 		cd ~/linux-src/
@@ -439,6 +444,7 @@ drivers () {
 	dir 'drivers/serdev'
 	dir 'drivers/iio'
 	dir 'drivers/fb_ssd1306'
+	dir 'drivers/mmc'
 
 #	dir 'dirvers/st'
 #	dir 'drivers/stm32-rtc'
@@ -457,6 +463,7 @@ soc () {
 ###
 #backports
 reverts
+omap
 drivers
 soc
 
