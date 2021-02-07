@@ -537,7 +537,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.9.16"
+	backport_tag="v5.10.14"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -669,7 +669,7 @@ soc
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.11"
+		backport_tag="v5.10.14"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
