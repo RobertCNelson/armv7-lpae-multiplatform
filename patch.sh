@@ -259,19 +259,19 @@ rt () {
 }
 
 ti_pm_firmware () {
-	#http://git.ti.com/gitweb/?p=processor-firmware/ti-amx3-cm3-pm-firmware.git;a=shortlog;h=refs/heads/ti-v4.1.y-next
+	#https://git.ti.com/gitweb?p=processor-firmware/ti-amx3-cm3-pm-firmware.git;a=shortlog;h=refs/heads/ti-v4.1.y
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 
 		cd ../
 		if [ ! -d ./ti-amx3-cm3-pm-firmware ] ; then
-			${git_bin} clone -b ti-v4.1.y-next git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
+			${git_bin} clone -b ti-v4.1.y git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
 			cd ./ti-amx3-cm3-pm-firmware
 				ti_amx3_cm3_hash=$(git rev-parse HEAD)
 			cd -
 		else
 			rm -rf ./ti-amx3-cm3-pm-firmware || true
-			${git_bin} clone -b ti-v4.1.y-next git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
+			${git_bin} clone -b ti-v4.1.y git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
 			cd ./ti-amx3-cm3-pm-firmware
 				ti_amx3_cm3_hash=$(git rev-parse HEAD)
 			cd -
@@ -379,7 +379,7 @@ dtb_makefile_append_stm () {
 }
 
 stm32_dtbs () {
-	branch="v5.8.x"
+	branch="v5.11.x"
 	https_repo="https://github.com/RobertCNelson/stm32-DeviceTrees"
 	work_dir="stm32-DeviceTrees"
 	#regenerate="enable"
@@ -437,7 +437,7 @@ wpanusb
 #rt
 ti_pm_firmware
 beagleboard_dtbs
-#stm32_dtbs
+stm32_dtbs
 #local_patch
 
 pre_backports () {
@@ -474,7 +474,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12-rc2"
+	backport_tag="v5.12-rc3"
 
 	subsystem="wlcore"
 	#regenerate="enable"
