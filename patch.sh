@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2009-2020 Robert Nelson <robertcnelson@gmail.com>
+# Copyright (c) 2009-2021 Robert Nelson <robertcnelson@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -112,6 +112,7 @@ aufs () {
 	aufs_prefix="aufs5-"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
+		KERNEL_REL=5.1
 		wget https://raw.githubusercontent.com/sfjro/${aufs_prefix}standalone/aufs${KERNEL_REL}/${aufs_prefix}kbuild.patch
 		patch -p1 < ${aufs_prefix}kbuild.patch || aufs_fail
 		rm -rf ${aufs_prefix}kbuild.patch
@@ -152,6 +153,7 @@ aufs () {
 			cd -
 		fi
 		cd ./KERNEL/
+		KERNEL_REL=5.1
 
 		cp -v ../${aufs_prefix}standalone/Documentation/ABI/testing/*aufs ./Documentation/ABI/testing/
 		mkdir -p ./Documentation/filesystems/aufs/
@@ -183,6 +185,50 @@ aufs () {
 	fi
 
 	dir 'aufs'
+}
+
+can_isotp () {
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		cd ../
+		if [ ! -d ./can-isotp ] ; then
+			${git_bin} clone https://github.com/hartkopp/can-isotp --depth=1
+			cd ./can-isotp
+				isotp_hash=$(git rev-parse HEAD)
+			cd -
+		else
+			rm -rf ./can-isotp || true
+			${git_bin} clone https://github.com/hartkopp/can-isotp --depth=1
+			cd ./can-isotp
+				isotp_hash=$(git rev-parse HEAD)
+			cd -
+		fi
+
+		cd ./KERNEL/
+
+		cp -v ../can-isotp/include/uapi/linux/can/isotp.h  include/uapi/linux/can/
+		cp -v ../can-isotp/net/can/isotp.c net/can/
+
+		${git_bin} add .
+		${git_bin} commit -a -m 'merge: can-isotp: https://github.com/hartkopp/can-isotp' -m "https://github.com/hartkopp/can-isotp/commit/${isotp_hash}" -s
+		${git_bin} format-patch -1 -o ../patches/can_isotp/
+		echo "CAN-ISOTP: https://github.com/hartkopp/can-isotp/commit/${isotp_hash}" > ../patches/git/CAN-ISOTP
+
+		rm -rf ../can-isotp/ || true
+
+		${git_bin} reset --hard HEAD~1
+
+		start_cleanup
+
+		${git} "${DIR}/patches/can_isotp/0001-merge-can-isotp-https-github.com-hartkopp-can-isotp.patch"
+
+		wdir="can_isotp"
+		number=1
+		cleanup
+
+		exit 2
+	fi
+	dir 'can_isotp'
 }
 
 rt_cleanup () {
@@ -264,19 +310,19 @@ wireguard () {
 }
 
 ti_pm_firmware () {
-	#http://git.ti.com/gitweb/?p=processor-firmware/ti-amx3-cm3-pm-firmware.git;a=shortlog;h=refs/heads/ti-v4.1.y-next
+	#https://git.ti.com/gitweb?p=processor-firmware/ti-amx3-cm3-pm-firmware.git;a=shortlog;h=refs/heads/ti-v4.1.y
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 
 		cd ../
 		if [ ! -d ./ti-amx3-cm3-pm-firmware ] ; then
-			${git_bin} clone -b ti-v4.1.y-next git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
+			${git_bin} clone -b ti-v4.1.y git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
 			cd ./ti-amx3-cm3-pm-firmware
 				ti_amx3_cm3_hash=$(git rev-parse HEAD)
 			cd -
 		else
 			rm -rf ./ti-amx3-cm3-pm-firmware || true
-			${git_bin} clone -b ti-v4.1.y-next git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
+			${git_bin} clone -b ti-v4.1.y git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
 			cd ./ti-amx3-cm3-pm-firmware
 				ti_amx3_cm3_hash=$(git rev-parse HEAD)
 			cd -
@@ -340,20 +386,22 @@ beagleboard_dtbs () {
 		fi
 		cd ./KERNEL/
 
+		mkdir -p arch/arm/boot/dts/overlays/
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
 
 		device="omap4-panda-es-b3.dtb" ; dtb_makefile_append_omap4
 
 		device="am335x-abbbi.dtb" ; dtb_makefile_append
+		device="am335x-bonegreen-gateway.dtb" ; dtb_makefile_append
 
 		device="am335x-boneblack-uboot.dtb" ; dtb_makefile_append
+		device="am335x-sancloud-bbe-uboot.dtb" ; dtb_makefile_append
 
 		device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
-
-		device="am5729-beagleboneai.dtb" ; dtb_makefile_append_am5
+		device="am335x-sancloud-bbe-uboot-univ.dtb" ; dtb_makefile_append
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -384,6 +432,7 @@ local_patch () {
 
 #external_git
 aufs
+can_isotp
 #rt
 wireguard
 ti_pm_firmware
@@ -450,9 +499,6 @@ reverts () {
 
 	## notes
 	##git revert --no-edit xyz -s
-	git revert --no-edit 6d4cd041f0af5b4c8fc742b4a68eac22e420e28c -s
-	git revert --no-edit 43f2ebd5571653f5a02c178d6d73ab642e8a0cad -s
-	git revert --no-edit cd28d1d6e52e740130745429b3ff0af7cbba7b2c -s
 
 	#${git} "${DIR}/patches/reverts/0001-Revert-xyz.patch"
 
@@ -464,14 +510,16 @@ reverts () {
 }
 
 drivers () {
+	#exit 2
+	dir 'RPi'
 	dir 'drivers/ar1021_i2c'
 	dir 'drivers/pwm'
+	dir 'drivers/sound'
 	dir 'drivers/spi'
 	dir 'drivers/ssd1306'
 	dir 'drivers/tps65217'
 	dir 'drivers/wiznet'
 
-	dir 'drivers/ti/overlays'
 	dir 'drivers/ti/cpsw'
 	dir 'drivers/ti/eqep'
 	dir 'drivers/ti/rpmsg'
@@ -486,11 +534,12 @@ soc () {
 	dir 'soc/imx/imx7'
 
 	dir 'soc/ti/panda'
+	dir 'fixes'
 }
 
 ###
 #backports
-reverts
+#reverts
 drivers
 soc
 
@@ -516,5 +565,5 @@ packaging () {
 	${git} "${DIR}/patches/backports/bindeb-pkg/0002-builddeb-Install-our-dtbs-under-boot-dtbs-version.patch"
 }
 
-#packaging
+packaging
 echo "patch.sh ran successfully"
