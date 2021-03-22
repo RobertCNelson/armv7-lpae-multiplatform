@@ -1,17 +1,18 @@
-From 56934ae560f450229e9208c3bc7c3ac48568b757 Mon Sep 17 00:00:00 2001
+From d078d8b072cb5d116d49f900d103065075616627 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 19 Aug 2020 14:30:45 -0500
+Date: Mon, 22 Mar 2021 12:22:29 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.7.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.7.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/8db54cd992e8de38a7802836de1da44f685a092e
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/496e78c2882e881d12f04196e49a35e10c4d8675
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 99 ++++++++++++++++++++++++
  arch/arm/boot/dts/stm32mp157c-dk2.dts    | 33 ++++++++
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   |  3 +-
  include/dt-bindings/rtc/rtc-stm32.h      | 13 ++++
- 3 files changed, 145 insertions(+)
+ 4 files changed, 147 insertions(+), 1 deletion(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -221,6 +222,27 @@ index 7985b80967ca..8b0d6c4b3c21 100644
 +		compatible = "brcm,bcm4329-fmac";
 +	};
 +};
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+index d946e0a02f5c..96fe49130bd4 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -62,7 +62,7 @@ gpu_reserved: gpu@d4000000 {
+ 
+ 	led {
+ 		compatible = "gpio-leds";
+-		blue {
++		led-blue {
+ 			label = "heartbeat";
+ 			gpios = <&gpiod 11 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
+@@ -598,6 +598,7 @@ &usbotg_hs {
+ 	dr_mode = "peripheral";
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
++	//usb-role-switch;
+ 	status = "okay";
+ };
+ 
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
 index 000000000000..4373c4dea587
@@ -241,5 +263,5 @@ index 000000000000..4373c4dea587
 +
 +#endif
 -- 
-2.28.0
+2.30.2
 
