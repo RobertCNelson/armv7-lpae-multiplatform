@@ -1,15 +1,15 @@
-From 38403f55cfff01a432a0f906636083b85b324689 Mon Sep 17 00:00:00 2001
+From dce94d33e6aa85662392e3b5e4ab4df617d715dc Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 8 Apr 2020 12:17:50 -0500
+Date: Mon, 22 Mar 2021 12:57:55 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.6.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.6.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/1fbcd2d328bb6e4dfa5061059851c84e981963f7
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/be83980c594687c3aa8f2da73eb8601652ca9a2d
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi    | 192 +++++++++++++
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi    | 200 +++++++++++++-
  arch/arm/boot/dts/stm32mp151.dtsi           |  16 +-
  arch/arm/boot/dts/stm32mp153.dtsi           |   1 +
  arch/arm/boot/dts/stm32mp157a-avenger96.dts |  11 +-
@@ -17,17 +17,18 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/stm32mp157c-ed1.dts       |  16 +-
  arch/arm/boot/dts/stm32mp157c-ev1.dts       |  13 +-
  arch/arm/boot/dts/stm32mp157c-seeed-npi.dts | 285 ++++++++++++++++++++
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      |  10 +-
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      |  13 +-
  include/dt-bindings/rtc/rtc-stm32.h         |  13 +
- 11 files changed, 565 insertions(+), 26 deletions(-)
+ include/uapi/linux/input-event-codes.h      |   2 +-
+ 12 files changed, 572 insertions(+), 32 deletions(-)
  create mode 100644 arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3e2c6bb7c949..bd4ec8fa3360 100644
+index de2e957aa1f4..676c234cf949 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -1018,6 +1018,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
+@@ -1026,6 +1026,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
  	stm32mp157a-avenger96.dtb \
  	stm32mp157a-dk1.dtb \
  	stm32mp157c-dk2.dtb \
@@ -36,7 +37,7 @@ index 3e2c6bb7c949..bd4ec8fa3360 100644
  	stm32mp157c-ev1.dtb
  dtb-$(CONFIG_MACH_SUN4I) += \
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 0237d4ddaa92..8cbea91c4038 100644
+index 0237d4ddaa92..a7f4a9138f85 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -162,6 +162,40 @@ pins1 {
@@ -251,7 +252,7 @@ index 0237d4ddaa92..8cbea91c4038 100644
  	uart4_pins_a: uart4-0 {
  		pins1 {
  			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-@@ -1026,6 +1175,23 @@ pins2 {
+@@ -1026,20 +1175,63 @@ pins2 {
  		};
  	};
  
@@ -274,8 +275,19 @@ index 0237d4ddaa92..8cbea91c4038 100644
 +
  	uart7_pins_a: uart7-0 {
  		pins1 {
- 			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-@@ -1040,6 +1206,32 @@ pins2 {
+-			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
++			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
+ 			bias-disable;
+ 			drive-push-pull;
+ 			slew-rate = <0>;
+ 		};
+ 		pins2 {
+-			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
+-				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
+-				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
++			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART7_RX */
++				 <STM32_PINMUX('E', 10, AF7)>, /* UART7_CTS */
++				 <STM32_PINMUX('E', 9, AF7)>; /* UART7_RTS */
  			bias-disable;
  		};
  	};
@@ -958,9 +970,18 @@ index 000000000000..39823237f23e
 +	vdda1v8-supply = <&reg18>;
 +};
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-index f6672e87aef3..d946e0a02f5c 100644
+index f6672e87aef3..96fe49130bd4 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
+@@ -62,7 +62,7 @@ gpu_reserved: gpu@d4000000 {
+ 
+ 	led {
+ 		compatible = "gpio-leds";
+-		blue {
++		led-blue {
+ 			label = "heartbeat";
+ 			gpios = <&gpiod 11 GPIO_ACTIVE_HIGH>;
+ 			linux,default-trigger = "heartbeat";
 @@ -216,10 +216,12 @@ cs42l51_rx_endpoint: endpoint@1 {
  };
  
@@ -1002,6 +1023,14 @@ index f6672e87aef3..d946e0a02f5c 100644
  	st,neg-edge;
  	bus-width = <4>;
  	vmmc-supply = <&v3v3>;
+@@ -598,6 +598,7 @@ &usbotg_hs {
+ 	dr_mode = "peripheral";
+ 	phys = <&usbphyc_port1 0>;
+ 	phy-names = "usb2-phy";
++	//usb-role-switch;
+ 	status = "okay";
+ };
+ 
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
 index 000000000000..4373c4dea587
@@ -1021,6 +1050,16 @@ index 000000000000..4373c4dea587
 +#define RTC_OUT2_RMP	2
 +
 +#endif
+diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
+index b6a835d37826..6923dc7e0298 100644
+--- a/include/uapi/linux/input-event-codes.h
++++ b/include/uapi/linux/input-event-codes.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+  * Input event codes
+  *
 -- 
-2.25.1
+2.30.2
 
