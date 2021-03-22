@@ -1,0 +1,316 @@
+From d977f0f678aeacadc6de2ffa32d72958ddc7f97b Mon Sep 17 00:00:00 2001
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Mon, 22 Mar 2021 11:00:00 -0500
+Subject: [PATCH] Add stm32 DTBS: v5.9.x
+
+https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.9.x
+
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/3bba5d2d0870405347ea70c47c4fdcf12599b57f
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+---
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi     | 146 +++++++++++++++++--
+ arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts |   4 +-
+ arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts    |  15 +-
+ include/dt-bindings/rtc/rtc-stm32.h          |  13 ++
+ 4 files changed, 160 insertions(+), 18 deletions(-)
+ create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
+
+diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+index b5a66429670c..7b4249ed1983 100644
+--- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
+@@ -349,6 +349,61 @@ pins {
+ 		};
+ 	};
+ 
++	fmc_pins_b: fmc-1 {
++		pins {
++			pinmux = <STM32_PINMUX('D', 4, AF12)>, /* FMC_NOE */
++				 <STM32_PINMUX('D', 5, AF12)>, /* FMC_NWE */
++				 <STM32_PINMUX('B', 7, AF12)>, /* FMC_NL */
++				 <STM32_PINMUX('D', 14, AF12)>, /* FMC_D0 */
++				 <STM32_PINMUX('D', 15, AF12)>, /* FMC_D1 */
++				 <STM32_PINMUX('D', 0, AF12)>, /* FMC_D2 */
++				 <STM32_PINMUX('D', 1, AF12)>, /* FMC_D3 */
++				 <STM32_PINMUX('E', 7, AF12)>, /* FMC_D4 */
++				 <STM32_PINMUX('E', 8, AF12)>, /* FMC_D5 */
++				 <STM32_PINMUX('E', 9, AF12)>, /* FMC_D6 */
++				 <STM32_PINMUX('E', 10, AF12)>, /* FMC_D7 */
++				 <STM32_PINMUX('E', 11, AF12)>, /* FMC_D8 */
++				 <STM32_PINMUX('E', 12, AF12)>, /* FMC_D9 */
++				 <STM32_PINMUX('E', 13, AF12)>, /* FMC_D10 */
++				 <STM32_PINMUX('E', 14, AF12)>, /* FMC_D11 */
++				 <STM32_PINMUX('E', 15, AF12)>, /* FMC_D12 */
++				 <STM32_PINMUX('D', 8, AF12)>, /* FMC_D13 */
++				 <STM32_PINMUX('D', 9, AF12)>, /* FMC_D14 */
++				 <STM32_PINMUX('D', 10, AF12)>, /* FMC_D15 */
++				 <STM32_PINMUX('G', 9, AF12)>, /* FMC_NE2_FMC_NCE */
++				 <STM32_PINMUX('G', 12, AF12)>; /* FMC_NE4 */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <3>;
++		};
++	};
++
++	fmc_sleep_pins_b: fmc-sleep-1 {
++		pins {
++			pinmux = <STM32_PINMUX('D', 4, ANALOG)>, /* FMC_NOE */
++				 <STM32_PINMUX('D', 5, ANALOG)>, /* FMC_NWE */
++				 <STM32_PINMUX('B', 7, ANALOG)>, /* FMC_NL */
++				 <STM32_PINMUX('D', 14, ANALOG)>, /* FMC_D0 */
++				 <STM32_PINMUX('D', 15, ANALOG)>, /* FMC_D1 */
++				 <STM32_PINMUX('D', 0, ANALOG)>, /* FMC_D2 */
++				 <STM32_PINMUX('D', 1, ANALOG)>, /* FMC_D3 */
++				 <STM32_PINMUX('E', 7, ANALOG)>, /* FMC_D4 */
++				 <STM32_PINMUX('E', 8, ANALOG)>, /* FMC_D5 */
++				 <STM32_PINMUX('E', 9, ANALOG)>, /* FMC_D6 */
++				 <STM32_PINMUX('E', 10, ANALOG)>, /* FMC_D7 */
++				 <STM32_PINMUX('E', 11, ANALOG)>, /* FMC_D8 */
++				 <STM32_PINMUX('E', 12, ANALOG)>, /* FMC_D9 */
++				 <STM32_PINMUX('E', 13, ANALOG)>, /* FMC_D10 */
++				 <STM32_PINMUX('E', 14, ANALOG)>, /* FMC_D11 */
++				 <STM32_PINMUX('E', 15, ANALOG)>, /* FMC_D12 */
++				 <STM32_PINMUX('D', 8, ANALOG)>, /* FMC_D13 */
++				 <STM32_PINMUX('D', 9, ANALOG)>, /* FMC_D14 */
++				 <STM32_PINMUX('D', 10, ANALOG)>, /* FMC_D15 */
++				 <STM32_PINMUX('G', 9, ANALOG)>, /* FMC_NE2_FMC_NCE */
++				 <STM32_PINMUX('G', 12, ANALOG)>; /* FMC_NE4 */
++		};
++	};
++
+ 	i2c1_pins_a: i2c1-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('D', 12, AF5)>, /* I2C1_SCL */
+@@ -1218,6 +1273,18 @@ pins3 {
+ 		};
+ 	};
+ 
++	sdmmc1_b4_init_pins_a: sdmmc1-b4-init-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1_D0 */
++				 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1_D1 */
++				 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1_D2 */
++				 <STM32_PINMUX('C', 11, AF12)>; /* SDMMC1_D3 */
++			slew-rate = <1>;
++			drive-push-pull;
++			bias-disable;
++		};
++	};
++
+ 	sdmmc1_b4_sleep_pins_a: sdmmc1-b4-sleep-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('C', 8, ANALOG)>, /* SDMMC1_D0 */
+@@ -1244,6 +1311,17 @@ pins2{
+ 		};
+ 	};
+ 
++	sdmmc1_dir_init_pins_a: sdmmc1-dir-init-0 {
++		pins1 {
++			pinmux = <STM32_PINMUX('F', 2, AF11)>, /* SDMMC1_D0DIR */
++				 <STM32_PINMUX('C', 7, AF8)>, /* SDMMC1_D123DIR */
++				 <STM32_PINMUX('B', 9, AF11)>; /* SDMMC1_CDIR */
++			slew-rate = <1>;
++			drive-push-pull;
++			bias-pull-up;
++		};
++	};
++
+ 	sdmmc1_dir_sleep_pins_a: sdmmc1-dir-sleep-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('F', 2, ANALOG)>, /* SDMMC1_D0DIR */
+@@ -1437,6 +1515,24 @@ pins {
+ 		};
+ 	};
+ 
++	sdmmc2_d47_pins_d: sdmmc2-d47-3 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 8, AF9)>, /* SDMMC2_D4 */
++				 <STM32_PINMUX('A', 9, AF10)>, /* SDMMC2_D5 */
++				 <STM32_PINMUX('E', 5, AF9)>, /* SDMMC2_D6 */
++				 <STM32_PINMUX('C', 7, AF10)>; /* SDMMC2_D7 */
++		};
++	};
++
++	sdmmc2_d47_sleep_pins_d: sdmmc2-d47-sleep-3 {
++		pins {
++			pinmux = <STM32_PINMUX('A', 8, ANALOG)>, /* SDMMC2_D4 */
++				 <STM32_PINMUX('A', 9, ANALOG)>, /* SDMMC2_D5 */
++				 <STM32_PINMUX('E', 5, ANALOG)>, /* SDMMC2_D6 */
++				 <STM32_PINMUX('C', 7, ANALOG)>; /* SDMMC2_D7 */
++		};
++	};
++
+ 	sdmmc3_b4_pins_a: sdmmc3-b4-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
+@@ -1573,6 +1669,27 @@ pins2 {
+ 		};
+ 	};
+ 
++	spi4_pins_a: spi4-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			bias-disable;
++		};
++	};
++
++	stusb1600_pins_a: stusb1600-0 {
++		pins {
++			pinmux = <STM32_PINMUX('I', 11, ANALOG)>;
++			bias-pull-up;
++		};
++	};
++
+ 	uart4_pins_a: uart4-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
+@@ -1700,16 +1817,10 @@ pins2 {
+ 		};
+ 	};
+ 
+-	spi4_pins_a: spi4-0 {
++	uart8_rtscts_pins_a: uart8rtscts-0 {
+ 		pins {
+-			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
+-				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
+-			bias-disable;
+-			drive-push-pull;
+-			slew-rate = <1>;
+-		};
+-		pins2 {
+-			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			pinmux = <STM32_PINMUX('G', 7, AF8)>, /* UART8_RTS */
++				 <STM32_PINMUX('G', 10, AF8)>; /* UART8_CTS */
+ 			bias-disable;
+ 		};
+ 	};
+@@ -1930,6 +2041,23 @@ pins {
+ 		};
+ 	};
+ 
++	i2c6_pins_a: i2c6-0 {
++		pins {
++			pinmux = <STM32_PINMUX('Z', 6, AF2)>, /* I2C6_SCL */
++				 <STM32_PINMUX('Z', 7, AF2)>; /* I2C6_SDA */
++			bias-disable;
++			drive-open-drain;
++			slew-rate = <0>;
++		};
++	};
++
++	i2c6_sleep_pins_a: i2c6-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('Z', 6, ANALOG)>, /* I2C6_SCL */
++				 <STM32_PINMUX('Z', 7, ANALOG)>; /* I2C6_SDA */
++		};
++	};
++
+ 	spi1_pins_a: spi1-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
+diff --git a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts b/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
+index 197aa98d49e2..d3b81382f97c 100644
+--- a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
++++ b/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
+@@ -4,7 +4,7 @@
+  *
+  * DHCOM STM32MP1 variant:
+  * DHCM-STM32MP157C-C065-R102-F0819-SPI-E2-CAN2-SDR104-RTC-WBT-T-DSI-I-01D2
+- * DHCOR PCB number: 587-200 or newer
++ * DHCOM PCB number: 587-200 or newer
+  * PDK2 PCB number: 516-400 or newer
+  */
+ /dts-v1/;
+@@ -15,7 +15,7 @@
+ #include "stm32mp15xx-dhcom-pdk2.dtsi"
+ 
+ / {
+-	model = "DH Electronics STM32MP157C DHCOM Premium Developer Kit (2)";
++	model = "DH electronics STM32MP157C DHCOM Premium Developer Kit (2)";
+ 	compatible = "dh,stm32mp157c-dhcom-pdk2", "dh,stm32mp157c-dhcom-som",
+ 		     "st,stm32mp157";
+ };
+diff --git a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
+index b85025d00943..ed9f8a1d05e2 100644
+--- a/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts
+@@ -15,7 +15,7 @@
+ 
+ / {
+ 	model = "Linux Automation MC-1 board";
+-	compatible = "lxa,stm32mp157c-mc1", "st,stm32mp157";
++	compatible = "lxa,stm32mp157c-mc1", "oct,stm32mp15xx-osd32", "st,stm32mp157";
+ 
+ 	aliases {
+ 		ethernet0 = &ethernet0;
+@@ -36,34 +36,35 @@ chosen {
+ 		stdout-path = &uart4;
+ 	};
+ 
+-	led-act {
++	led-controller-0 {
+ 		compatible = "gpio-leds";
+ 
+-		led-green {
++		led-0 {
+ 			label = "mc1:green:act";
+ 			gpios = <&gpioa 13 GPIO_ACTIVE_LOW>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
+ 
+-	led-rgb {
++	led-controller-1 {
+ 		compatible = "pwm-leds";
+ 
+-		led-red {
++		/* led-1 to led-3 are part of a single RGB led */
++		led-1 {
+ 			label = "mc1:red:rgb";
+ 			pwms = <&leds_pwm 1 1000000 0>;
+ 			max-brightness = <255>;
+ 			active-low;
+ 		};
+ 
+-		led-green {
++		led-2 {
+ 			label = "mc1:green:rgb";
+ 			pwms = <&leds_pwm 2 1000000 0>;
+ 			max-brightness = <255>;
+ 			active-low;
+ 		};
+ 
+-		led-blue {
++		led-3 {
+ 			label = "mc1:blue:rgb";
+ 			pwms = <&leds_pwm 3 1000000 0>;
+ 			max-brightness = <255>;
+diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
+new file mode 100644
+index 000000000000..4373c4dea587
+--- /dev/null
++++ b/include/dt-bindings/rtc/rtc-stm32.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for STM32_RTC bindings.
++ */
++
++#ifndef _DT_BINDINGS_RTC_RTC_STM32_H
++#define _DT_BINDINGS_RTC_RTC_STM32_H
++
++#define RTC_OUT1	0
++#define RTC_OUT2	1
++#define RTC_OUT2_RMP	2
++
++#endif
+-- 
+2.30.2
+
