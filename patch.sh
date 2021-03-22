@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2009-2020 Robert Nelson <robertcnelson@gmail.com>
+# Copyright (c) 2009-2021 Robert Nelson <robertcnelson@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -112,6 +112,7 @@ aufs () {
 	aufs_prefix="aufs5-"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
+		KERNEL_REL=5.3.16
 		wget https://raw.githubusercontent.com/sfjro/${aufs_prefix}standalone/aufs${KERNEL_REL}/${aufs_prefix}kbuild.patch
 		patch -p1 < ${aufs_prefix}kbuild.patch || aufs_fail
 		rm -rf ${aufs_prefix}kbuild.patch
@@ -152,6 +153,7 @@ aufs () {
 			cd -
 		fi
 		cd ./KERNEL/
+		KERNEL_REL=5.3
 
 		cp -v ../${aufs_prefix}standalone/Documentation/ABI/testing/*aufs ./Documentation/ABI/testing/
 		mkdir -p ./Documentation/filesystems/aufs/
@@ -308,19 +310,19 @@ wireguard () {
 }
 
 ti_pm_firmware () {
-	#http://git.ti.com/gitweb/?p=processor-firmware/ti-amx3-cm3-pm-firmware.git;a=shortlog;h=refs/heads/ti-v4.1.y-next
+	#https://git.ti.com/gitweb?p=processor-firmware/ti-amx3-cm3-pm-firmware.git;a=shortlog;h=refs/heads/ti-v4.1.y
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 
 		cd ../
 		if [ ! -d ./ti-amx3-cm3-pm-firmware ] ; then
-			${git_bin} clone -b ti-v4.1.y-next git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
+			${git_bin} clone -b ti-v4.1.y git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
 			cd ./ti-amx3-cm3-pm-firmware
 				ti_amx3_cm3_hash=$(git rev-parse HEAD)
 			cd -
 		else
 			rm -rf ./ti-amx3-cm3-pm-firmware || true
-			${git_bin} clone -b ti-v4.1.y-next git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
+			${git_bin} clone -b ti-v4.1.y git://git.ti.com/processor-firmware/ti-amx3-cm3-pm-firmware.git --depth=1
 			cd ./ti-amx3-cm3-pm-firmware
 				ti_amx3_cm3_hash=$(git rev-parse HEAD)
 			cd -
@@ -384,6 +386,7 @@ beagleboard_dtbs () {
 		fi
 		cd ./KERNEL/
 
+		mkdir -p arch/arm/boot/dts/overlays/
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
 
@@ -393,12 +396,12 @@ beagleboard_dtbs () {
 		device="am335x-bonegreen-gateway.dtb" ; dtb_makefile_append
 
 		device="am335x-boneblack-uboot.dtb" ; dtb_makefile_append
+		device="am335x-sancloud-bbe-uboot.dtb" ; dtb_makefile_append
 
 		device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
 		device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
-
-		device="am5729-beagleboneai.dtb" ; dtb_makefile_append_am5
+		device="am335x-sancloud-bbe-uboot-univ.dtb" ; dtb_makefile_append
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -472,7 +475,7 @@ patch_backports (){
 backports () {
 	dir 'drivers/exfat'
 
-	backport_tag="v5.4.2"
+	backport_tag="1657f11c7ca109b6f7e7bec4e241bf6cbbe2d4b0"
 
 	subsystem="exfat"
 	#regenerate="enable"
@@ -480,6 +483,7 @@ backports () {
 		pre_backports
 
 		cp -v ~/linux-src/drivers/staging/exfat/* ./drivers/staging/exfat/
+		sed -i -e 's:CONFIG_EXFAT_FS:CONFIG_STAGING_EXFAT_FS:g' ./drivers/staging/Makefile
 
 		post_backports
 		exit 2
@@ -508,15 +512,16 @@ reverts () {
 }
 
 drivers () {
+	#exit 2
+	dir 'RPi'
 	dir 'drivers/ar1021_i2c'
 	dir 'drivers/pwm'
+	dir 'drivers/sound'
 	dir 'drivers/spi'
 	dir 'drivers/ssd1306'
 	dir 'drivers/tps65217'
 
-	dir 'drivers/ti/overlays'
 	dir 'drivers/ti/cpsw'
-#	dir 'drivers/ti/eqep'
 	dir 'drivers/ti/rpmsg'
 	dir 'drivers/ti/serial'
 	dir 'drivers/ti/tsc'
@@ -530,6 +535,8 @@ soc () {
 	dir 'soc/imx/imx7'
 
 	dir 'soc/ti/panda'
+	dir 'bootup_hacks'
+	dir 'fixes'
 }
 
 ###
@@ -539,9 +546,9 @@ drivers
 soc
 
 packaging () {
-	#do_backport="enable"
+	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.3.18"
+		backport_tag="v5.4.107"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
