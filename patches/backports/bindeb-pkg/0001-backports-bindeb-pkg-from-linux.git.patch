@@ -1,6 +1,6 @@
-From bbdaefe944fa4fb2fde1ca000de5b0e7f490352a Mon Sep 17 00:00:00 2001
+From b886656b10db2044bc7d8db687a9f9caa3cabc6c Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 4 Jun 2020 11:18:36 -0500
+Date: Mon, 22 Mar 2021 15:59:13 -0500
 Subject: [PATCH] backports: bindeb-pkg: from: linux.git
 
 Reference: v5.2.21
@@ -13,7 +13,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  4 files changed, 46 insertions(+), 34 deletions(-)
 
 diff --git a/scripts/package/Makefile b/scripts/package/Makefile
-index aa39c2b5e46ac..ca7f46b562a4f 100644
+index aa39c2b5e46a..ca7f46b562a4 100644
 --- a/scripts/package/Makefile
 +++ b/scripts/package/Makefile
 @@ -1,3 +1,4 @@
@@ -45,7 +45,7 @@ index aa39c2b5e46ac..ca7f46b562a4f 100644
  clean-dirs += $(objtree)/tar-install/
  
 diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index 8ac25d10a6ad6..b03dd56a4782b 100755
+index 8ac25d10a6ad..b03dd56a4782 100755
 --- a/scripts/package/builddeb
 +++ b/scripts/package/builddeb
 @@ -12,6 +12,18 @@
@@ -139,7 +139,7 @@ index 8ac25d10a6ad6..b03dd56a4782b 100755
  fi
  destdir=$kernel_headers_dir/usr/src/linux-headers-$version
 diff --git a/scripts/package/buildtar b/scripts/package/buildtar
-index cfd2a4a3fe42d..2f66c81e4021b 100755
+index cfd2a4a3fe42..2f66c81e4021 100755
 --- a/scripts/package/buildtar
 +++ b/scripts/package/buildtar
 @@ -56,7 +56,7 @@ dirs=boot
@@ -152,7 +152,7 @@ index cfd2a4a3fe42d..2f66c81e4021b 100755
  	dirs="$dirs lib"
  fi
 diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index f030961c5165b..8351584cb24e6 100755
+index f030961c5165..8351584cb24e 100755
 --- a/scripts/package/mkdebian
 +++ b/scripts/package/mkdebian
 @@ -7,7 +7,7 @@
@@ -253,5 +253,5 @@ index f030961c5165b..8351584cb24e6 100755
  
  exit 0
 -- 
-2.26.2
+2.30.2
 
