@@ -109,6 +109,7 @@ aufs_fail () {
 }
 
 aufs () {
+	#https://github.com/sfjro/aufs5-standalone/tree/aufs5.10
 	aufs_prefix="aufs5-"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -478,7 +479,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12-rc5"
+	backport_tag="v5.12-rc7"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -494,7 +495,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12-rc5"
+	backport_tag="v5.12-rc7"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -502,6 +503,21 @@ backports () {
 		pre_backports
 
 		cp -rv ~/linux-src/drivers/net/wireless/ti/* ./drivers/net/wireless/ti/
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.12-rc7"
+
+	subsystem="rtc-stm32"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -v ~/linux-src/drivers/rtc/rtc-stm32.c ./drivers/rtc/rtc-stm32.c
 
 		post_backports
 		exit 2
@@ -570,7 +586,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.11"
+		backport_tag="v5.10.30"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
