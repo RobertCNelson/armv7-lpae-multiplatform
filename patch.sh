@@ -548,8 +548,7 @@ drivers () {
 	dir 'drivers/fb_ssd1306'
 #	dir 'fixes'
 
-#	dir 'dirvers/st'
-#	dir 'drivers/stm32-rtc'
+	dir 'drivers/stm32-rtc'
 #	dir 'drivers/stm32-dwmac'
 }
 
