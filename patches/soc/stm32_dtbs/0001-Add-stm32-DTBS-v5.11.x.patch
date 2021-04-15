@@ -1,25 +1,26 @@
-From 31e38c4a099579c684c235f3ea289832b2ebf5e5 Mon Sep 17 00:00:00 2001
+From 553e544f5bcd2509bc8f74bf1c4615ef9ee49dec Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 30 Mar 2021 10:36:31 -0500
+Date: Thu, 15 Apr 2021 11:22:13 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.11.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.11.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/3d44dc7a3709921698176ff7cb92ea33485fa389
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/c53570479d506d9f9e8e643f38b9c636eae40605
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 40 +++++++++++++++++++
- arch/arm/boot/dts/stm32mp151.dtsi             |  3 ++
+ arch/arm/boot/dts/stm32mp151.dtsi             |  9 +++--
  arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |  4 --
  arch/arm/boot/dts/stm32mp157c-ed1.dts         |  4 --
  arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts     | 13 +++---
  .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  2 -
  arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  4 --
- .../boot/dts/stm32mp15xx-dhcom-picoitx.dtsi   |  4 --
+ .../boot/dts/stm32mp15xx-dhcom-picoitx.dtsi   | 12 ++++--
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 20 +++++++++-
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  4 --
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  4 --
  include/dt-bindings/rtc/rtc-stm32.h           | 13 ++++++
- 11 files changed, 63 insertions(+), 32 deletions(-)
+ 12 files changed, 93 insertions(+), 36 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -88,9 +89,36 @@ index 20a59e8f7a33..7b4249ed1983 100644
  		pins1 {
  			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 3c75abacb374..51acb2b04720 100644
+index 3c75abacb374..4b8031782555 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
 +++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1047,7 +1047,7 @@ adc2: adc@100 {
+ 			};
+ 		};
+ 
+-		sdmmc3: sdmmc@48004000 {
++		sdmmc3: mmc@48004000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x00253180>;
+ 			reg = <0x48004000 0x400>;
+@@ -1368,7 +1368,7 @@ qspi: spi@58003000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdmmc1: sdmmc@58005000 {
++		sdmmc1: mmc@58005000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x00253180>;
+ 			reg = <0x58005000 0x1000>;
+@@ -1383,7 +1383,7 @@ sdmmc1: sdmmc@58005000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdmmc2: sdmmc@58007000 {
++		sdmmc2: mmc@58007000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x00253180>;
+ 			reg = <0x58007000 0x1000>;
 @@ -1482,10 +1482,13 @@ iwdg2: watchdog@5a002000 {
  		usbphyc: usbphyc@5a006000 {
  			#address-cells = <1>;
@@ -214,10 +242,32 @@ index 8456f172d4b1..5523f4138fd6 100644
 -	vdda1v8-supply = <&reg18>;
  };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi
-index 32700cca24c8..03167e5781bc 100644
+index 32700cca24c8..cd3a1798ca68 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi
-@@ -132,12 +132,8 @@ &usbphyc {
+@@ -36,6 +36,10 @@ &dac {
+ 	status = "disabled";
+ };
+ 
++&fmc {
++	status = "disabled";
++};
++
+ &gpioa {
+ 	/*
+ 	 * NOTE: The USB Port on the PicoITX needs a PWR_EN signal to enable
+@@ -94,6 +98,10 @@ &i2c5 {	/* On board-to-board connector */
+ 	/delete-property/dma-names;
+ };
+ 
++&ksz8851 {
++	status = "disabled";
++};
++
+ &usart3 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usart3_pins_a>;
+@@ -132,12 +140,8 @@ &usbphyc {
  
  &usbphyc_port0 {
  	phy-supply = <&vdd_usb>;
@@ -230,6 +280,50 @@ index 32700cca24c8..03167e5781bc 100644
 -	vdda1v1-supply = <&reg11>;
 -	vdda1v8-supply = <&reg18>;
  };
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
+index daff5318f301..2617815e42a6 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
+@@ -386,20 +386,38 @@ &rtc {
+ };
+ 
+ &sdmmc1 {
+-	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-names = "default", "opendrain", "sleep", "init";
+ 	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
+ 	pinctrl-1 = <&sdmmc1_b4_od_pins_a &sdmmc1_dir_pins_a>;
+ 	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a &sdmmc1_dir_sleep_pins_a>;
++	pinctrl-3 = <&sdmmc1_b4_init_pins_a &sdmmc1_dir_init_pins_a>;
+ 	cd-gpios = <&gpiog 1 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+ 	disable-wp;
+ 	st,sig-dir;
+ 	st,neg-edge;
+ 	st,use-ckin;
++	st,cmd-gpios = <&gpiod 2 0>;
++	st,ck-gpios = <&gpioc 12 0>;
++	st,ckin-gpios = <&gpioe 4 0>;
+ 	bus-width = <4>;
+ 	vmmc-supply = <&vdd_sd>;
+ 	status = "okay";
+ };
+ 
++&sdmmc1_b4_pins_a {
++	/*
++	 * SD bus pull-up resistors:
++	 * - optional on SoMs with SD voltage translator
++	 * - mandatory on SoMs without SD voltage translator
++	 */
++	pins1 {
++		bias-pull-up;
++	};
++	pins2 {
++		bias-pull-up;
++	};
++};
++
+ &sdmmc2 {
+ 	pinctrl-names = "default", "opendrain", "sleep";
+ 	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_a>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
 index ec02cee1dd9b..b09e87fe901a 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
