@@ -1,6 +1,6 @@
-From cf17acb59c02fe5e1340148f0112e34221cd373b Mon Sep 17 00:00:00 2001
+From b43fc2e9dcdb5c8feff3c0218365a91135af951e Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 15 Apr 2021 11:21:49 -0500
+Date: Thu, 15 Apr 2021 15:53:35 -0500
 Subject: [PATCH] Add BeagleBoard.org DTBS: v5.11.x
 
 https://github.com/beagleboard/BeagleBoard-DeviceTrees/tree/v5.11.x
@@ -26,7 +26,6 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/am335x-pocketbeagle.dts     |   2 +
  .../boot/dts/am335x-sancloud-bbe-uboot.dts    | 151 +++++++++++++
  arch/arm/boot/dts/am335x-sancloud-bbe.dts     |   5 +
- arch/arm/boot/dts/am33xx.dtsi                 |   3 +
  arch/arm/boot/dts/am5729-beagleboneai.dts     |   5 +
  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts |   5 +
  arch/arm/boot/dts/am57xx-beagle-x15-revc.dts  |   5 +
@@ -47,7 +46,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/overlays/BBORG_FAN-A000.dts |  30 +++
  arch/arm/boot/dts/overlays/Makefile           |  10 +
  arch/arm/boot/dts/twl6030.dtsi                |   5 +
- 39 files changed, 855 insertions(+), 60 deletions(-)
+ 38 files changed, 852 insertions(+), 60 deletions(-)
  create mode 100644 arch/arm/boot/dts/am335x-bone-jtag.dtsi
  create mode 100644 arch/arm/boot/dts/am335x-boneblack-uboot.dts
  create mode 100644 arch/arm/boot/dts/am335x-bonegreen-gateway.dts
@@ -1009,20 +1008,6 @@ index 275ba339adf4..0a80f58489d9 100644
  };
  
  &am33xx_pinmux {
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 5b213a1e68bb..5e33d0e88f5b 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -40,6 +40,9 @@ aliases {
- 		ethernet1 = &cpsw_emac1;
- 		spi0 = &spi0;
- 		spi1 = &spi1;
-+		mmc0 = &mmc1;
-+		mmc1 = &mmc2;
-+		mmc2 = &mmc3;
- 	};
- 
- 	cpus {
 diff --git a/arch/arm/boot/dts/am5729-beagleboneai.dts b/arch/arm/boot/dts/am5729-beagleboneai.dts
 index 149cfafb90bf..630107b270e7 100644
 --- a/arch/arm/boot/dts/am5729-beagleboneai.dts

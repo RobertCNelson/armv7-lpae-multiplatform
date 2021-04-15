@@ -1,33 +1,47 @@
-From 553e544f5bcd2509bc8f74bf1c4615ef9ee49dec Mon Sep 17 00:00:00 2001
+From 24ba1cff525177d105169bde8058a8bcc12571b4 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 15 Apr 2021 11:22:13 -0500
+Date: Thu, 15 Apr 2021 16:02:55 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.11.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.11.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/c53570479d506d9f9e8e643f38b9c636eae40605
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/1484264e165719ad2bebd85621198220aa93d91a
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 40 +++++++++++++++++++
- arch/arm/boot/dts/stm32mp151.dtsi             |  9 +++--
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 46 +++++++++++++++++++
+ arch/arm/boot/dts/stm32mp151.dtsi             |  9 ++--
  arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |  4 --
+ arch/arm/boot/dts/stm32mp157c-dk2.dts         | 46 ++++++++++++++++++-
  arch/arm/boot/dts/stm32mp157c-ed1.dts         |  4 --
  arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts     | 13 +++---
  .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  2 -
  arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  4 --
- .../boot/dts/stm32mp15xx-dhcom-picoitx.dtsi   | 12 ++++--
- arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 20 +++++++++-
+ .../boot/dts/stm32mp15xx-dhcom-picoitx.dtsi   | 12 +++--
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 20 +++++++-
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  4 --
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  4 --
  include/dt-bindings/rtc/rtc-stm32.h           | 13 ++++++
- 12 files changed, 93 insertions(+), 36 deletions(-)
+ 13 files changed, 144 insertions(+), 37 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 20a59e8f7a33..7b4249ed1983 100644
+index 20a59e8f7a33..34aac8f23a22 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-@@ -1273,6 +1273,18 @@ pins3 {
+@@ -1106,6 +1106,12 @@ pins {
+ 		};
+ 	};
+ 
++	rtc_out2_rmp_pins_a: rtc-out2-rmp-pins-0 {
++		pins {
++			pinmux = <STM32_PINMUX('I', 8, ANALOG)>; /* RTC_OUT2_RMP */
++		};
++	};
++
+ 	sai2a_pins_a: sai2a-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('I', 5, AF10)>, /* SAI2_SCK_A */
+@@ -1273,6 +1279,18 @@ pins3 {
  		};
  	};
  
@@ -46,7 +60,7 @@ index 20a59e8f7a33..7b4249ed1983 100644
  	sdmmc1_b4_sleep_pins_a: sdmmc1-b4-sleep-0 {
  		pins {
  			pinmux = <STM32_PINMUX('C', 8, ANALOG)>, /* SDMMC1_D0 */
-@@ -1299,6 +1311,17 @@ pins2{
+@@ -1299,6 +1317,17 @@ pins2{
  		};
  	};
  
@@ -64,7 +78,7 @@ index 20a59e8f7a33..7b4249ed1983 100644
  	sdmmc1_dir_sleep_pins_a: sdmmc1-dir-sleep-0 {
  		pins {
  			pinmux = <STM32_PINMUX('F', 2, ANALOG)>, /* SDMMC1_D0DIR */
-@@ -2018,6 +2041,23 @@ pins {
+@@ -2018,6 +2047,23 @@ pins {
  		};
  	};
  
@@ -149,6 +163,80 @@ index 58275bcf9e26..113c48b2ef93 100644
  	phy-supply = <&vdd_usb>;
 -	vdda1v1-supply = <&reg11>;
 -	vdda1v8-supply = <&reg18>;
+ };
+diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+index 2bc92ef3aeb9..f230d9e37323 100644
+--- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
++++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
+@@ -11,6 +11,7 @@
+ #include "stm32mp15-pinctrl.dtsi"
+ #include "stm32mp15xxac-pinctrl.dtsi"
+ #include "stm32mp15xx-dkx.dtsi"
++#include <dt-bindings/rtc/rtc-stm32.h>
+ 
+ / {
+ 	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
+@@ -27,6 +28,11 @@ aliases {
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	wifi_pwrseq: wifi-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpioh 4 GPIO_ACTIVE_LOW>;
++	};
+ };
+ 
+ &cryp1 {
+@@ -92,10 +98,48 @@ ltdc_ep1_out: endpoint@1 {
+ 	};
+ };
+ 
++&rtc {
++	st,lsco = <RTC_OUT2_RMP>;
++	pinctrl-0 = <&rtc_out2_rmp_pins_a>;
++	pinctrl-names = "default";
++};
++
++/* Wifi */
++&sdmmc2 {
++	arm,primecell-periphid = <0x10153180>;
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc2_b4_pins_a>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
++	non-removable;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	brcmf: bcrmf@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* Bluetooth */
+ &usart2 {
+ 	pinctrl-names = "default", "sleep", "idle";
+ 	pinctrl-0 = <&usart2_pins_c>;
+ 	pinctrl-1 = <&usart2_sleep_pins_c>;
+ 	pinctrl-2 = <&usart2_idle_pins_c>;
+-	status = "disabled";
++	uart-has-rtscts;
++	status = "okay";
++
++	bluetooth {
++		shutdown-gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <3000000>;
++		vbat-supply = <&v3v3>;
++		vddio-supply = <&v3v3>;
++	};
  };
 diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
 index 81a7d5849db4..95b08876b2b3 100644
