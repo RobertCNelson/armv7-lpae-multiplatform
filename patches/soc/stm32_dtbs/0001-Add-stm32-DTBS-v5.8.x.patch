@@ -1,31 +1,33 @@
-From 6fa48b932fbfafba9c97afa0c34302fced4a971c Mon Sep 17 00:00:00 2001
+From e34ab5e88d3b7c355e3800fdeb1adb2e4816c129 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 22 Mar 2021 11:42:30 -0500
+Date: Tue, 20 Apr 2021 17:42:32 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.8.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.8.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/61b7f6d7ae1bb0102ee7dbd17f7cb58310384914
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/739f46d15b6a3ee2f54fc27e189460d51b69b476
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 400 +++++++++++++++++-
- arch/arm/boot/dts/stm32mp151.dtsi             |   4 +-
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 314 +++++++++++++++++-
+ arch/arm/boot/dts/stm32mp151.dtsi             |  17 +-
  arch/arm/boot/dts/stm32mp157a-dk1.dts         |   2 +
+ arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |   4 -
  arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts  |   4 +-
- arch/arm/boot/dts/stm32mp157c-dk2.dts         |  60 +++
- arch/arm/boot/dts/stm32mp157c-ed1.dts         |   4 +-
+ arch/arm/boot/dts/stm32mp157c-dk2.dts         |  55 +++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts         |   8 +-
  arch/arm/boot/dts/stm32mp157c-ev1.dts         |  15 +
  arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts     |  17 +-
- arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  19 +-
+ arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  23 +-
  arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  |   2 +
+ .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |   4 -
  arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |   4 +
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  37 +-
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  41 ++-
  include/dt-bindings/rtc/rtc-stm32.h           |  13 +
- 13 files changed, 547 insertions(+), 34 deletions(-)
+ 15 files changed, 464 insertions(+), 59 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index cc505458da2f..d676bae30acc 100644
+index cc505458da2f..34aac8f23a22 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -210,8 +210,8 @@ pins1 {
@@ -123,7 +125,7 @@ index cc505458da2f..d676bae30acc 100644
  		};
  	};
  
-+	rtc_out2_rmp_pins_a: rtc-out2-rmp-pins@0 {
++	rtc_out2_rmp_pins_a: rtc-out2-rmp-pins-0 {
 +		pins {
 +			pinmux = <STM32_PINMUX('I', 8, ANALOG)>; /* RTC_OUT2_RMP */
 +		};
@@ -202,10 +204,24 @@ index cc505458da2f..d676bae30acc 100644
  	sdmmc3_b4_pins_a: sdmmc3-b4-0 {
  		pins1 {
  			pinmux = <STM32_PINMUX('F', 0, AF9)>, /* SDMMC3_D0 */
-@@ -1574,6 +1675,13 @@ pins2 {
+@@ -1574,6 +1675,27 @@ pins2 {
  		};
  	};
  
++	spi4_pins_a: spi4-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			bias-disable;
++		};
++	};
++
 +	stusb1600_pins_a: stusb1600-0 {
 +		pins {
 +			pinmux = <STM32_PINMUX('I', 11, ANALOG)>;
@@ -216,7 +232,7 @@ index cc505458da2f..d676bae30acc 100644
  	uart4_pins_a: uart4-0 {
  		pins1 {
  			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-@@ -1587,6 +1695,23 @@ pins2 {
+@@ -1587,6 +1709,23 @@ pins2 {
  		};
  	};
  
@@ -240,7 +256,7 @@ index cc505458da2f..d676bae30acc 100644
  	uart4_pins_b: uart4-1 {
  		pins1 {
  			pinmux = <STM32_PINMUX('D', 1, AF8)>; /* UART4_TX */
-@@ -1641,29 +1766,53 @@ pins2 {
+@@ -1641,29 +1780,53 @@ pins2 {
  		};
  	};
  
@@ -302,7 +318,7 @@ index cc505458da2f..d676bae30acc 100644
  			bias-disable;
  		};
  	};
-@@ -1716,6 +1865,42 @@ pins {
+@@ -1716,6 +1879,42 @@ pins {
  		};
  	};
  
@@ -345,7 +361,7 @@ index cc505458da2f..d676bae30acc 100644
  	usart3_pins_a: usart3-0 {
  		pins1 {
  			pinmux = <STM32_PINMUX('B', 10, AF7)>; /* USART3_TX */
-@@ -1729,6 +1914,158 @@ pins2 {
+@@ -1729,6 +1928,78 @@ pins2 {
  		};
  	};
  
@@ -421,142 +437,46 @@ index cc505458da2f..d676bae30acc 100644
 +		};
 +	};
 +
-+	uart4_pins_a: uart4-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			bias-disable;
-+		};
-+	};
-+
-+	uart4_pins_b: uart4-1 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('D', 1, AF8)>; /* UART4_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			bias-disable;
-+		};
-+	};
-+
-+	uart4_pins_c: uart4-2 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('G', 11, AF6)>; /* UART4_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('B', 2, AF8)>; /* UART4_RX */
-+			bias-disable;
-+		};
-+	};
-+
-+	uart7_pins_a: uart7-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART4_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 7, AF7)>, /* UART4_RX */
-+				 <STM32_PINMUX('E', 10, AF7)>, /* UART4_CTS */
-+				 <STM32_PINMUX('E', 9, AF7)>; /* UART4_RTS */
-+			bias-disable;
-+		};
-+	};
-+
-+	uart7_pins_b: uart7-1 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('F', 7, AF7)>; /* UART7_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('F', 6, AF7)>; /* UART7_RX */
-+			bias-disable;
-+		};
-+	};
-+
-+	uart8_pins_a: uart8-0 {
-+		pins1 {
-+			pinmux = <STM32_PINMUX('E', 1, AF8)>; /* UART8_TX */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 0, AF8)>; /* UART8_RX */
-+			bias-disable;
-+		};
-+	};
-+
  	usbotg_hs_pins_a: usbotg-hs-0 {
  		pins {
  			pinmux = <STM32_PINMUX('A', 10, ANALOG)>; /* OTG_ID */
-@@ -1741,6 +2078,28 @@ pins {
- 				 <STM32_PINMUX('A', 12, ANALOG)>; /* OTG_FS_DP */
+@@ -1776,6 +2047,23 @@ pins {
  		};
  	};
-+
-+	spi4_pins_b: spi4-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
-+				 <STM32_PINMUX('E', 14, AF5)>;  /* SPI4_MOSI */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
-+			bias-disable;
-+		};
-+	};
-+
-+	spi4_sleep_pins_b: spi4-sleep-0 {
-+		pins {
-+			pinmux = <STM32_PINMUX('E', 12, ANALOG)>, /* SPI4_SCK */
-+				 <STM32_PINMUX('E', 13, ANALOG)>, /* SPI4_MISO */
-+				 <STM32_PINMUX('E', 14, ANALOG)>; /* SPI4_MOSI */
-+		};
-+	};
- };
  
- &pinctrl_z {
-@@ -1790,4 +2149,19 @@ pins2 {
- 			bias-disable;
- 		};
- 	};
-+
-+	spi4_pins_a: spi4-0 {
++	i2c6_pins_a: i2c6-0 {
 +		pins {
-+			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
-+				 <STM32_PINMUX('E', 6, AF5)>;  /* SPI4_MOSI */
++			pinmux = <STM32_PINMUX('Z', 6, AF2)>, /* I2C6_SCL */
++				 <STM32_PINMUX('Z', 7, AF2)>; /* I2C6_SDA */
 +			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <1>;
-+		};
-+
-+		pins2 {
-+			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
-+			bias-disable;
++			drive-open-drain;
++			slew-rate = <0>;
 +		};
 +	};
- };
++
++	i2c6_sleep_pins_a: i2c6-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('Z', 6, ANALOG)>, /* I2C6_SCL */
++				 <STM32_PINMUX('Z', 7, ANALOG)>; /* I2C6_SDA */
++		};
++	};
++
+ 	spi1_pins_a: spi1-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 36f38a95b4de..bfe29023fbd5 100644
+index 36f38a95b4de..40af89bb57a2 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
 +++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1038,7 +1038,7 @@ adc2: adc@100 {
+ 			};
+ 		};
+ 
+-		sdmmc3: sdmmc@48004000 {
++		sdmmc3: mmc@48004000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x10153180>;
+ 			reg = <0x48004000 0x400>;
 @@ -1127,7 +1127,7 @@ usb33: usb33 {
  		};
  
@@ -566,7 +486,7 @@ index 36f38a95b4de..bfe29023fbd5 100644
  			reg = <0x50001014 0x4>;
  		};
  
-@@ -1331,6 +1331,8 @@ qspi: spi@58003000 {
+@@ -1331,10 +1331,12 @@ qspi: spi@58003000 {
  			dma-names = "tx", "rx";
  			clocks = <&rcc QSPI_K>;
  			resets = <&rcc QSPI_R>;
@@ -575,6 +495,52 @@ index 36f38a95b4de..bfe29023fbd5 100644
  			status = "disabled";
  		};
  
+-		sdmmc1: sdmmc@58005000 {
++		sdmmc1: mmc@58005000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x10153180>;
+ 			reg = <0x58005000 0x1000>;
+@@ -1349,7 +1351,7 @@ sdmmc1: sdmmc@58005000 {
+ 			status = "disabled";
+ 		};
+ 
+-		sdmmc2: sdmmc@58007000 {
++		sdmmc2: mmc@58007000 {
+ 			compatible = "arm,pl18x", "arm,primecell";
+ 			arm,primecell-periphid = <0x10153180>;
+ 			reg = <0x58007000 0x1000>;
+@@ -1402,7 +1404,7 @@ ethernet0: ethernet@5800a000 {
+ 			status = "disabled";
+ 		};
+ 
+-		usbh_ohci: usbh-ohci@5800c000 {
++		usbh_ohci: usb@5800c000 {
+ 			compatible = "generic-ohci";
+ 			reg = <0x5800c000 0x1000>;
+ 			clocks = <&rcc USBH>;
+@@ -1411,7 +1413,7 @@ usbh_ohci: usbh-ohci@5800c000 {
+ 			status = "disabled";
+ 		};
+ 
+-		usbh_ehci: usbh-ehci@5800d000 {
++		usbh_ehci: usb@5800d000 {
+ 			compatible = "generic-ehci";
+ 			reg = <0x5800d000 0x1000>;
+ 			clocks = <&rcc USBH>;
+@@ -1448,10 +1450,13 @@ iwdg2: watchdog@5a002000 {
+ 		usbphyc: usbphyc@5a006000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			#clock-cells = <0>;
+ 			compatible = "st,stm32mp1-usbphyc";
+ 			reg = <0x5a006000 0x1000>;
+ 			clocks = <&rcc USBPHY_K>;
+ 			resets = <&rcc USBPHY_R>;
++			vdda1v1-supply = <&reg11>;
++			vdda1v8-supply = <&reg18>;
+ 			status = "disabled";
+ 
+ 			usbphyc_port0: usb-phy@0 {
 diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
 index d03d4cd2606a..4c8be9c8eb20 100644
 --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
@@ -588,6 +554,23 @@ index d03d4cd2606a..4c8be9c8eb20 100644
  	};
  
  	chosen {
+diff --git a/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi b/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
+index 58275bcf9e26..113c48b2ef93 100644
+--- a/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
++++ b/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
+@@ -331,12 +331,8 @@ &usbphyc {
+ 
+ &usbphyc_port0 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
+ 
+ &usbphyc_port1 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
 diff --git a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts b/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
 index 197aa98d49e2..d3b81382f97c 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
@@ -611,7 +594,7 @@ index 197aa98d49e2..d3b81382f97c 100644
  		     "st,stm32mp157";
  };
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 9a8a26710ac1..20cfa2a29f32 100644
+index 9a8a26710ac1..4a2baa9da8ee 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 @@ -11,6 +11,7 @@
@@ -622,14 +605,13 @@ index 9a8a26710ac1..20cfa2a29f32 100644
  
  / {
  	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
-@@ -19,11 +20,20 @@ / {
+@@ -19,11 +20,19 @@ / {
  	aliases {
  		ethernet0 = &ethernet0;
  		serial0 = &uart4;
 +		serial1 = &usart3;
 +		serial2 = &uart7;
 +		serial3 = &usart2;
-+		spi0 = &spi4;
  	};
  
  	chosen {
@@ -643,18 +625,10 @@ index 9a8a26710ac1..20cfa2a29f32 100644
  };
  
  &dsi {
-@@ -84,3 +94,53 @@ ltdc_ep1_out: endpoint@1 {
+@@ -84,3 +93,49 @@ ltdc_ep1_out: endpoint@1 {
  		};
  	};
  };
-+
-+&usart2 {
-+	pinctrl-names = "default", "sleep", "idle";
-+	pinctrl-0 = <&usart2_pins_c>;
-+	pinctrl-1 = <&usart2_sleep_pins_c>;
-+	pinctrl-2 = <&usart2_idle_pins_c>;
-+	status = "disabled";
-+};
 +
 +&rtc {
 +	st,lsco = <RTC_OUT2_RMP>;
@@ -662,43 +636,47 @@ index 9a8a26710ac1..20cfa2a29f32 100644
 +	pinctrl-names = "default";
 +};
 +
++/* Wifi */
 +&sdmmc2 {
++	arm,primecell-periphid = <0x10153180>;
 +	pinctrl-names = "default", "opendrain", "sleep";
-+	pinctrl-0 = <&sdmmc2_b4_pins_b>;
-+	pinctrl-1 = <&sdmmc2_b4_od_pins_b>;
++	pinctrl-0 = <&sdmmc2_b4_pins_a>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_a>;
 +	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a>;
 +	non-removable;
 +	st,neg-edge;
 +	bus-width = <4>;
 +	vmmc-supply = <&v3v3>;
 +	mmc-pwrseq = <&wifi_pwrseq>;
-+	keep-power-in-suspend;
-+	status = "okay";
-+
 +	#address-cells = <1>;
 +	#size-cells = <0>;
++	status = "okay";
++
 +	brcmf: bcrmf@1 {
 +		reg = <1>;
 +		compatible = "brcm,bcm4329-fmac";
 +	};
 +};
 +
-+&spi4 {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&spi4_pins_b>;
-+	pinctrl-1 = <&spi4_sleep_pins_b>;
-+	cs-gpios = <&gpioe 11 GPIO_ACTIVE_HIGH>;
++/* Bluetooth */
++&usart2 {
++	pinctrl-names = "default", "sleep", "idle";
++	pinctrl-0 = <&usart2_pins_c>;
++	pinctrl-1 = <&usart2_sleep_pins_c>;
++	pinctrl-2 = <&usart2_idle_pins_c>;
++	uart-has-rtscts;
 +	status = "okay";
 +
-+	spidev@0 {
-+		compatible = "spidev";
-+		reg = <0>;
-+		spi-max-frequency = <4000000>;
-+		st,spi-midi-ns = <4000>;
++	bluetooth {
++		shutdown-gpios = <&gpioz 6 GPIO_ACTIVE_HIGH>;
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <3000000>;
++		vbat-supply = <&v3v3>;
++		vddio-supply = <&v3v3>;
 +	};
 +};
 diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 32ccd50b4144..ca109dc18238 100644
+index 32ccd50b4144..c57087ed1df0 100644
 --- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
 @@ -353,8 +353,10 @@ timer@5 {
@@ -713,6 +691,19 @@ index 32ccd50b4144..ca109dc18238 100644
  	status = "okay";
  };
  
+@@ -364,12 +366,8 @@ &usbotg_hs {
+ 
+ &usbphyc_port0 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
+ 
+ &usbphyc_port1 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
 diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
 index b19056557ef0..85628e16d2d5 100644
 --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
@@ -811,7 +802,7 @@ index b85025d00943..c40dac257565 100644
  			reset-deassert-us = <300>;
  			micrel,force-master;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
-index e4e3c92eb30d..13f52b79454e 100644
+index e4e3c92eb30d..b1c87d96657a 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
 @@ -46,6 +46,16 @@ button-0 {
@@ -854,6 +845,19 @@ index e4e3c92eb30d..13f52b79454e 100644
  			default-state = "off";
  		};
  
+@@ -293,12 +296,8 @@ &usbphyc {
+ 
+ &usbphyc_port0 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
+ 
+ &usbphyc_port1 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 index a87ebc484396..e4804afc90e2 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
@@ -874,6 +878,23 @@ index a87ebc484396..e4804afc90e2 100644
  				regulator-min-microvolt = <2900000>;
  				regulator-max-microvolt = <2900000>;
  				interrupts = <IT_CURLIM_LDO1 0>;
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
+index 905cd7bb98cf..a5cba78c46c6 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
+@@ -390,12 +390,8 @@ &usbphyc {
+ 
+ &usbphyc_port0 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
+ 
+ &usbphyc_port1 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
 index 04fbb324a541..803eb8bc9c85 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
@@ -890,7 +911,7 @@ index 04fbb324a541..803eb8bc9c85 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&i2c4_pins_a>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
-index 70db923a45f7..7f49bd19d0d9 100644
+index 70db923a45f7..b73f8cfb561e 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
 @@ -62,7 +62,7 @@ gpu_reserved: gpu@d4000000 {
@@ -962,6 +983,21 @@ index 70db923a45f7..7f49bd19d0d9 100644
  	status = "okay";
  };
  
+@@ -607,14 +640,10 @@ &usbphyc {
+ 
+ &usbphyc_port0 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
+ 
+ &usbphyc_port1 {
+ 	phy-supply = <&vdd_usb>;
+-	vdda1v1-supply = <&reg11>;
+-	vdda1v8-supply = <&reg18>;
+ };
+ 
+ &vrefbuf {
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
 index 000000000000..4373c4dea587
