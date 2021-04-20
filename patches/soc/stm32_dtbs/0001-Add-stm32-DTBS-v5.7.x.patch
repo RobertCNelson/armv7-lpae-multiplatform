@@ -1,18 +1,18 @@
-From d078d8b072cb5d116d49f900d103065075616627 Mon Sep 17 00:00:00 2001
+From 6851701155eb10e1743e71436120d0667153f798 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 22 Mar 2021 12:22:29 -0500
+Date: Tue, 20 Apr 2021 18:35:16 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.7.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.7.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/496e78c2882e881d12f04196e49a35e10c4d8675
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/13270adb94f0477b809bf948c192e289d1efbe9b
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 99 ++++++++++++++++++++++++
- arch/arm/boot/dts/stm32mp157c-dk2.dts    | 33 ++++++++
+ arch/arm/boot/dts/stm32mp157c-dk2.dts    | 34 ++++++++
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi   |  3 +-
  include/dt-bindings/rtc/rtc-stm32.h      | 13 ++++
- 4 files changed, 147 insertions(+), 1 deletion(-)
+ 4 files changed, 148 insertions(+), 1 deletion(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -168,7 +168,7 @@ index 4b67b682dd53..a7f4a9138f85 100644
  		pins1 {
  			pinmux = <STM32_PINMUX('E', 8, AF7)>; /* UART7_TX */
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 7985b80967ca..8b0d6c4b3c21 100644
+index 7985b80967ca..6113605de644 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 @@ -11,6 +11,7 @@
@@ -191,7 +191,7 @@ index 7985b80967ca..8b0d6c4b3c21 100644
  };
  
  &dsi {
-@@ -92,3 +98,30 @@ ltdc_ep1_out: endpoint@1 {
+@@ -92,3 +98,31 @@ ltdc_ep1_out: endpoint@1 {
  		};
  	};
  };
@@ -202,6 +202,7 @@ index 7985b80967ca..8b0d6c4b3c21 100644
 +	pinctrl-names = "default";
 +};
 +
++/* Wifi */
 +&sdmmc2 {
 +	pinctrl-names = "default", "opendrain", "sleep";
 +	pinctrl-0 = <&sdmmc2_b4_pins_b>;
