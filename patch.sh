@@ -479,7 +479,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12-rc7"
+	backport_tag="v5.12-rc8"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -495,7 +495,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12-rc7"
+	backport_tag="v5.12-rc8"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -510,7 +510,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12-rc7"
+	backport_tag="v5.12-rc8"
 
 	subsystem="rtc-stm32"
 	#regenerate="enable"
@@ -547,6 +547,7 @@ reverts () {
 }
 
 drivers () {
+	#exit 2
 	dir 'RPi'
 	dir 'drivers/ar1021_i2c'
 	dir 'drivers/sound'
@@ -572,7 +573,7 @@ soc () {
 #	dir 'soc/imx/udoo'
 	dir 'soc/imx/imx7'
 
-	dir 'soc/ti/panda'
+#	dir 'soc/ti/panda'
 	dir 'bootup_hacks'
 }
 
@@ -586,7 +587,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.30"
+		backport_tag="v5.10.31"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
