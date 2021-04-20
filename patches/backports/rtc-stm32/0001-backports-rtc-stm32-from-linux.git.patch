@@ -1,0 +1,36 @@
+From 7b18ed38b88644549460d699c9d6eca329886e69 Mon Sep 17 00:00:00 2001
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Tue, 20 Apr 2021 16:54:29 -0500
+Subject: [PATCH] backports: rtc-stm32: from: linux.git
+
+Reference: v5.12-rc8
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+---
+ drivers/rtc/rtc-stm32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+index d774aa18f57a..75a8924ba12b 100644
+--- a/drivers/rtc/rtc-stm32.c
++++ b/drivers/rtc/rtc-stm32.c
+@@ -209,7 +209,7 @@ static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
+ 	const struct stm32_rtc_events *evts = &rtc->data->events;
+ 	unsigned int status, cr;
+ 
+-	mutex_lock(&rtc->rtc_dev->ops_lock);
++	rtc_lock(rtc->rtc_dev);
+ 
+ 	status = readl_relaxed(rtc->base + regs->sr);
+ 	cr = readl_relaxed(rtc->base + regs->cr);
+@@ -226,7 +226,7 @@ static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
+ 		stm32_rtc_clear_event_flags(rtc, evts->alra);
+ 	}
+ 
+-	mutex_unlock(&rtc->rtc_dev->ops_lock);
++	rtc_unlock(rtc->rtc_dev);
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+2.30.2
+
