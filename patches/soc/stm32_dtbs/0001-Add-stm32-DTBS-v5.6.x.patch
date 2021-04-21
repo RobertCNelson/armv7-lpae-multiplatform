@@ -1,26 +1,26 @@
-From dce94d33e6aa85662392e3b5e4ab4df617d715dc Mon Sep 17 00:00:00 2001
+From 6748ad3555d0f65c1ffa41479bfa9acb423afb2f Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 22 Mar 2021 12:57:55 -0500
+Date: Wed, 21 Apr 2021 15:39:10 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.6.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.6.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/be83980c594687c3aa8f2da73eb8601652ca9a2d
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/c7a0811c7ea4450711010b73c9c2aec784fc79cc
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/Makefile                  |   1 +
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi    | 200 +++++++++++++-
  arch/arm/boot/dts/stm32mp151.dtsi           |  16 +-
  arch/arm/boot/dts/stm32mp153.dtsi           |   1 +
- arch/arm/boot/dts/stm32mp157a-avenger96.dts |  11 +-
- arch/arm/boot/dts/stm32mp157c-dk2.dts       |  33 +++
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts |  14 +-
+ arch/arm/boot/dts/stm32mp157c-dk2.dts       |  34 +++
  arch/arm/boot/dts/stm32mp157c-ed1.dts       |  16 +-
  arch/arm/boot/dts/stm32mp157c-ev1.dts       |  13 +-
  arch/arm/boot/dts/stm32mp157c-seeed-npi.dts | 285 ++++++++++++++++++++
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      |  13 +-
  include/dt-bindings/rtc/rtc-stm32.h         |  13 +
  include/uapi/linux/input-event-codes.h      |   2 +-
- 12 files changed, 572 insertions(+), 32 deletions(-)
+ 12 files changed, 576 insertions(+), 32 deletions(-)
  create mode 100644 arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
@@ -455,10 +455,20 @@ index 2d759fc6015c..6d9ab08667fc 100644
  			reg = <1>;
  		};
 diff --git a/arch/arm/boot/dts/stm32mp157a-avenger96.dts b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-index cbfa4075907e..425175f7d83c 100644
+index cbfa4075907e..081037b510bc 100644
 --- a/arch/arm/boot/dts/stm32mp157a-avenger96.dts
 +++ b/arch/arm/boot/dts/stm32mp157a-avenger96.dts
-@@ -135,10 +135,6 @@ pmic: stpmic@33 {
+@@ -92,6 +92,9 @@ mdio0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		compatible = "snps,dwmac-mdio";
++		reset-gpios = <&gpioz 2 GPIO_ACTIVE_LOW>;
++		reset-delay-us = <1000>;
++
+ 		phy0: ethernet-phy@7 {
+ 			reg = <7>;
+ 		};
+@@ -135,10 +138,6 @@ pmic: stpmic@33 {
  		#interrupt-cells = <2>;
  		status = "okay";
  
@@ -469,7 +479,7 @@ index cbfa4075907e..425175f7d83c 100644
  		regulators {
  			compatible = "st,stpmic1-regulators";
  
-@@ -173,7 +169,6 @@ vdd: buck3 {
+@@ -173,7 +172,6 @@ vdd: buck3 {
  				regulator-min-microvolt = <3300000>;
  				regulator-max-microvolt = <3300000>;
  				regulator-always-on;
@@ -477,7 +487,7 @@ index cbfa4075907e..425175f7d83c 100644
  				regulator-initial-mode = <0>;
  				regulator-over-current-protection;
  			};
-@@ -213,8 +208,6 @@ vtt_ddr: ldo3 {
+@@ -213,8 +211,6 @@ vtt_ddr: ldo3 {
  
  			vdd_usb: ldo4 {
  				regulator-name = "vdd_usb";
@@ -486,7 +496,7 @@ index cbfa4075907e..425175f7d83c 100644
  				interrupts = <IT_CURLIM_LDO4 0>;
  				interrupt-parent = <&pmic>;
  			};
-@@ -240,7 +233,6 @@ v1v8: ldo6 {
+@@ -240,7 +236,6 @@ v1v8: ldo6 {
  			vref_ddr: vref_ddr {
  				regulator-name = "vref_ddr";
  				regulator-always-on;
@@ -494,7 +504,7 @@ index cbfa4075907e..425175f7d83c 100644
  			};
  
  			bst_out: boost {
-@@ -300,7 +292,8 @@ &sdmmc1 {
+@@ -300,7 +295,8 @@ &sdmmc1 {
  	pinctrl-0 = <&sdmmc1_b4_pins_a &sdmmc1_dir_pins_a>;
  	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
  	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
@@ -505,7 +515,7 @@ index cbfa4075907e..425175f7d83c 100644
  	st,neg-edge;
  	st,use-ckin;
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 7985b80967ca..8b0d6c4b3c21 100644
+index 7985b80967ca..6113605de644 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 @@ -11,6 +11,7 @@
@@ -528,7 +538,7 @@ index 7985b80967ca..8b0d6c4b3c21 100644
  };
  
  &dsi {
-@@ -92,3 +98,30 @@ ltdc_ep1_out: endpoint@1 {
+@@ -92,3 +98,31 @@ ltdc_ep1_out: endpoint@1 {
  		};
  	};
  };
@@ -539,6 +549,7 @@ index 7985b80967ca..8b0d6c4b3c21 100644
 +	pinctrl-names = "default";
 +};
 +
++/* Wifi */
 +&sdmmc2 {
 +	pinctrl-names = "default", "opendrain", "sleep";
 +	pinctrl-0 = <&sdmmc2_b4_pins_b>;
