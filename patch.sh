@@ -109,6 +109,7 @@ aufs_fail () {
 }
 
 aufs () {
+	#https://github.com/sfjro/aufs5-standalone/tree/aufs5.5
 	aufs_prefix="aufs5-"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -229,6 +230,50 @@ can_isotp () {
 		exit 2
 	fi
 	dir 'can_isotp'
+}
+
+wpanusb () {
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		cd ../
+		if [ ! -d ./wpanusb ] ; then
+			${git_bin} clone https://github.com/statropy/wpanusb --depth=1
+			cd ./wpanusb
+				wpanusb_hash=$(git rev-parse HEAD)
+			cd -
+		else
+			rm -rf ./wpanusb || true
+			${git_bin} clone https://github.com/statropy/wpanusb --depth=1
+			cd ./wpanusb
+				wpanusb_hash=$(git rev-parse HEAD)
+			cd -
+		fi
+
+		cd ./KERNEL/
+
+		cp -v ../wpanusb/wpanusb.h drivers/net/ieee802154/
+		cp -v ../wpanusb/wpanusb.c drivers/net/ieee802154/
+
+		${git_bin} add .
+		${git_bin} commit -a -m 'merge: wpanusb: https://github.com/statropy/wpanusb' -m "https://github.com/statropy/wpanusb/commit/${wpanusb_hash}" -s
+		${git_bin} format-patch -1 -o ../patches/wpanusb/
+		echo "WPANUSB: https://github.com/statropy/wpanusb/commit/${wpanusb_hash}" > ../patches/git/WPANUSB
+
+		rm -rf ../wpanusb/ || true
+
+		${git_bin} reset --hard HEAD~1
+
+		start_cleanup
+
+		${git} "${DIR}/patches/wpanusb/0001-merge-wpanusb-https-github.com-statropy-wpanusb.patch"
+
+		wdir="wpanusb"
+		number=1
+		cleanup
+
+		exit 2
+	fi
+	dir 'wpanusb'
 }
 
 rt_cleanup () {
@@ -437,6 +482,7 @@ local_patch () {
 #external_git
 aufs
 can_isotp
+wpanusb
 #rt
 ti_pm_firmware
 beagleboard_dtbs
@@ -463,6 +509,7 @@ post_backports () {
 		cd -
 	fi
 
+	rm -f arch/arm/boot/dts/overlays/*.dtbo || true
 	${git_bin} add .
 	${git_bin} commit -a -m "backports: ${subsystem}: from: linux.git" -m "Reference: ${backport_tag}" -s
 	if [ ! -d ../patches/backports/${subsystem}/ ] ; then
@@ -477,7 +524,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.9.16"
+	backport_tag="v5.11.16"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -486,6 +533,36 @@ backports () {
 
 		cp -rv ~/linux-src/drivers/greybus/* ./drivers/greybus/
 		cp -rv ~/linux-src/drivers/staging/greybus/* ./drivers/staging/greybus/
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.12-rc8"
+
+	subsystem="wlcore"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -rv ~/linux-src/drivers/net/wireless/ti/* ./drivers/net/wireless/ti/
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.12-rc8"
+
+	subsystem="rtc-stm32"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -v ~/linux-src/drivers/rtc/rtc-stm32.c ./drivers/rtc/rtc-stm32.c
 
 		post_backports
 		exit 2
@@ -531,7 +608,6 @@ backports () {
 }
 
 reverts () {
-	echo "dir: reverts"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		start_cleanup
@@ -540,7 +616,7 @@ reverts () {
 	## notes
 	##git revert --no-edit xyz -s
 
-	#${git} "${DIR}/patches/reverts/0001-Revert-xyz.patch"
+	dir 'reverts'
 
 	if [ "x${regenerate}" = "xenable" ] ; then
 		wdir="reverts"
@@ -575,7 +651,7 @@ soc () {
 #	dir 'soc/imx/wandboard'
 	dir 'soc/imx/imx7'
 
-	dir 'soc/ti/panda'
+#	dir 'soc/ti/panda'
 	dir 'bootup_hacks'
 }
 
@@ -588,7 +664,7 @@ soc
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.25"
+		backport_tag="v5.10.31"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
