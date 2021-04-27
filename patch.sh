@@ -461,6 +461,7 @@ post_backports () {
 		cd -
 	fi
 
+	rm -f arch/arm/boot/dts/overlays/*.dtbo || true
 	${git_bin} add .
 	${git_bin} commit -a -m "backports: ${subsystem}: from: linux.git" -m "Reference: ${backport_tag}" -s
 	if [ ! -d ../patches/backports/${subsystem}/ ] ; then
@@ -475,7 +476,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12-rc8"
+	backport_tag="v5.12"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -487,11 +488,11 @@ backports () {
 
 		post_backports
 		exit 2
-	else
-		patch_backports
+#	else
+#		patch_backports
 	fi
 
-	backport_tag="v5.12-rc8"
+	backport_tag="v5.12"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -502,9 +503,26 @@ backports () {
 
 		post_backports
 		exit 2
-	else
-		patch_backports
+#	else
+#		patch_backports
 	fi
+
+	backport_tag="v5.12"
+
+	subsystem="spidev"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -v ~/linux-src/drivers/spi/spidev.c ./drivers/spi/spidev.c
+
+		post_backports
+		exit 2
+#	else
+#		patch_backports
+	fi
+
+	${git} "${DIR}/patches/backports/spidev/0002-spidev-Add-Micron-SPI-NOR-Authenta-device-compatible.patch"
 }
 
 reverts () {
@@ -526,8 +544,9 @@ reverts () {
 }
 
 drivers () {
+	#https://github.com/raspberrypi/linux/branches
 	#exit 2
-#	dir 'RPi'
+	dir 'RPi'
 	dir 'drivers/ar1021_i2c'
 	dir 'drivers/spi'
 	dir 'drivers/tps65217'
@@ -555,7 +574,7 @@ soc () {
 }
 
 ###
-#backports
+backports
 #reverts
 drivers
 soc
