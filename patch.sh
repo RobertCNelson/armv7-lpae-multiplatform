@@ -109,11 +109,11 @@ aufs_fail () {
 }
 
 aufs () {
-	#https://github.com/sfjro/aufs5-standalone/tree/aufs5.12
+	#https://github.com/sfjro/aufs5-standalone/tree/aufs5.13
 	aufs_prefix="aufs5-"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
-		KERNEL_REL=5.12
+		KERNEL_REL=5.13
 		wget https://raw.githubusercontent.com/sfjro/${aufs_prefix}standalone/aufs${KERNEL_REL}/${aufs_prefix}kbuild.patch
 		patch -p1 < ${aufs_prefix}kbuild.patch || aufs_fail
 		rm -rf ${aufs_prefix}kbuild.patch
@@ -154,7 +154,7 @@ aufs () {
 			cd -
 		fi
 		cd ./KERNEL/
-		KERNEL_REL=5.12
+		KERNEL_REL=5.13
 
 		cp -v ../${aufs_prefix}standalone/Documentation/ABI/testing/*aufs ./Documentation/ABI/testing/
 		mkdir -p ./Documentation/filesystems/aufs/
@@ -316,7 +316,7 @@ dtb_makefile_append () {
 }
 
 beagleboard_dtbs () {
-	branch="v5.12.x"
+	branch="v5.13.x"
 	https_repo="https://github.com/beagleboard/BeagleBoard-DeviceTrees"
 	work_dir="BeagleBoard-DeviceTrees"
 	#regenerate="enable"
@@ -380,7 +380,7 @@ dtb_makefile_append_stm () {
 }
 
 stm32_dtbs () {
-	branch="v5.12.x"
+	branch="v5.13.x"
 	https_repo="https://github.com/RobertCNelson/stm32-DeviceTrees"
 	work_dir="stm32-DeviceTrees"
 	#regenerate="enable"
@@ -433,12 +433,12 @@ local_patch () {
 }
 
 #external_git
-aufs
+#aufs
 wpanusb
 #rt
 ti_pm_firmware
-beagleboard_dtbs
-stm32_dtbs
+#beagleboard_dtbs
+#stm32_dtbs
 #local_patch
 
 pre_backports () {
@@ -546,7 +546,7 @@ reverts () {
 drivers () {
 	#https://github.com/raspberrypi/linux/branches
 	#exit 2
-	dir 'RPi'
+	#dir 'RPi'
 	dir 'drivers/ar1021_i2c'
 	dir 'drivers/spi'
 	dir 'drivers/tps65217'
@@ -561,7 +561,7 @@ drivers () {
 	dir 'drivers/fb_ssd1306'
 #	dir 'fixes'
 
-	dir 'drivers/stm32-rtc'
+#	dir 'drivers/stm32-rtc'
 #	dir 'drivers/stm32-dwmac'
 }
 
@@ -574,7 +574,7 @@ soc () {
 }
 
 ###
-backports
+#backports
 #reverts
 drivers
 soc
