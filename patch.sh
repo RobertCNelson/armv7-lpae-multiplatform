@@ -526,7 +526,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.11.18"
+	backport_tag="v5.13-rc1"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -542,7 +542,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.1"
+	backport_tag="v5.13-rc1"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -557,7 +557,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.1"
+	backport_tag="v5.13-rc1"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -572,9 +572,7 @@ backports () {
 		patch_backports
 	fi
 
-	${git} "${DIR}/patches/backports/spidev/0002-spidev-Add-Micron-SPI-NOR-Authenta-device-compatible.patch"
-
-	backport_tag="v5.12.1"
+	backport_tag="v5.12.3"
 
 	subsystem="rtc-stm32"
 	#regenerate="enable"
@@ -597,7 +595,7 @@ reverts () {
 	fi
 
 	## notes
-	##git revert --no-edit ccd11d1dcd66c7d1b3d404bd537f55edc5223cc5 -s
+	##git revert --no-edit xyz -s
 
 	dir 'reverts'
 
@@ -652,7 +650,7 @@ soc
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.34"
+		backport_tag="v5.10.36"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
