@@ -476,7 +476,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12"
+	backport_tag="v5.13-rc1"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -488,11 +488,11 @@ backports () {
 
 		post_backports
 		exit 2
-#	else
-#		patch_backports
+	else
+		patch_backports
 	fi
 
-	backport_tag="v5.12"
+	backport_tag="v5.13-rc1"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -503,11 +503,11 @@ backports () {
 
 		post_backports
 		exit 2
-#	else
-#		patch_backports
+	else
+		patch_backports
 	fi
 
-	backport_tag="v5.12"
+	backport_tag="v5.13-rc1"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -518,11 +518,9 @@ backports () {
 
 		post_backports
 		exit 2
-#	else
-#		patch_backports
+	else
+		patch_backports
 	fi
-
-	${git} "${DIR}/patches/backports/spidev/0002-spidev-Add-Micron-SPI-NOR-Authenta-device-compatible.patch"
 }
 
 reverts () {
