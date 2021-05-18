@@ -1,6 +1,6 @@
-From 320fc20a0627240f433a760b49ebeb60b355bc61 Mon Sep 17 00:00:00 2001
+From 5fe09eb4db56be1e0ee7082eef0f83b385921800 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 12 May 2021 13:18:28 -0500
+Date: Tue, 18 May 2021 14:57:59 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.12.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.12.x
@@ -8,7 +8,7 @@ https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.12.x
 https://github.com/RobertCNelson/stm32-DeviceTrees/commit/84fbc5632f60a9a1c67d4760a29f964853b3676d
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 27 +++++++-
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  6 ++
  arch/arm/boot/dts/stm32mp151.dtsi             |  8 +++
  arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dts |  4 ++
  arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts  |  4 ++
@@ -20,11 +20,11 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi | 35 ++++++++++
  arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |  4 ++
  include/dt-bindings/rtc/rtc-stm32.h           | 13 ++++
- 12 files changed, 217 insertions(+), 16 deletions(-)
+ 12 files changed, 199 insertions(+), 13 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 7b4249ed1983..8710138fa19b 100644
+index 060baa8b7e9d..8710138fa19b 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -1106,6 +1106,12 @@ pins {
@@ -40,57 +40,6 @@ index 7b4249ed1983..8710138fa19b 100644
  	sai2a_pins_a: sai2a-0 {
  		pins {
  			pinmux = <STM32_PINMUX('I', 5, AF10)>, /* SAI2_SCK_A */
-@@ -1891,10 +1897,15 @@ pins2 {
- 	usart2_idle_pins_c: usart2-idle-2 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('D', 5, ANALOG)>, /* USART2_TX */
--				 <STM32_PINMUX('D', 4, ANALOG)>, /* USART2_RTS */
- 				 <STM32_PINMUX('D', 3, ANALOG)>; /* USART2_CTS_NSS */
- 		};
- 		pins2 {
-+			pinmux = <STM32_PINMUX('D', 4, AF7)>; /* USART2_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <3>;
-+		};
-+		pins3 {
- 			pinmux = <STM32_PINMUX('D', 6, AF7)>; /* USART2_RX */
- 			bias-disable;
- 		};
-@@ -1940,10 +1951,15 @@ pins2 {
- 	usart3_idle_pins_b: usart3-idle-1 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 10, ANALOG)>, /* USART3_TX */
--				 <STM32_PINMUX('G', 8, ANALOG)>, /* USART3_RTS */
- 				 <STM32_PINMUX('I', 10, ANALOG)>; /* USART3_CTS_NSS */
- 		};
- 		pins2 {
-+			pinmux = <STM32_PINMUX('G', 8, AF8)>; /* USART3_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins3 {
- 			pinmux = <STM32_PINMUX('B', 12, AF8)>; /* USART3_RX */
- 			bias-disable;
- 		};
-@@ -1976,10 +1992,15 @@ pins2 {
- 	usart3_idle_pins_c: usart3-idle-2 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 10, ANALOG)>, /* USART3_TX */
--				 <STM32_PINMUX('G', 8, ANALOG)>, /* USART3_RTS */
- 				 <STM32_PINMUX('B', 13, ANALOG)>; /* USART3_CTS_NSS */
- 		};
- 		pins2 {
-+			pinmux = <STM32_PINMUX('G', 8, AF8)>; /* USART3_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins3 {
- 			pinmux = <STM32_PINMUX('B', 12, AF8)>; /* USART3_RX */
- 			bias-disable;
- 		};
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
 index 4b8031782555..6eea5a9c04f3 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
