@@ -1,9 +1,9 @@
-From a654c0f20f56250be46dc1f8a0947a0a4c5c1e90 Mon Sep 17 00:00:00 2001
+From ccfacc8237c68545d54b917d1d7664a9d175ad82 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 12 May 2021 14:47:09 -0500
+Date: Thu, 20 May 2021 16:30:03 -0500
 Subject: [PATCH] backports: rtc-stm32: from: linux.git
 
-Reference: v5.12.3
+Reference: v5.12.5
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  drivers/rtc/rtc-stm32.c | 4 ++--
