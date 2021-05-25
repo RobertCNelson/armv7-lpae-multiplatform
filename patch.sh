@@ -511,7 +511,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.5"
+	backport_tag="v5.12.6"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -527,7 +527,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.5"
+	backport_tag="v5.12.6"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -542,7 +542,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc2"
+	backport_tag="v5.13-rc3"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -557,7 +557,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc2"
+	backport_tag="v5.13-rc3"
 
 	subsystem="pinctrl"
 	#regenerate="enable"
@@ -573,7 +573,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.5"
+	backport_tag="v5.12.6"
 
 	subsystem="rtc-stm32"
 	#regenerate="enable"
@@ -620,10 +620,8 @@ drivers () {
 	dir 'drivers/ti/tsc'
 	dir 'drivers/ti/gpio'
 	dir 'drivers/greybus'
-#	dir 'drivers/mikrobus'
 	dir 'drivers/serdev'
 	dir 'drivers/fb_ssd1306'
-#	dir 'fixes'
 
 	dir 'drivers/stm32-rtc'
 #	dir 'drivers/stm32-dwmac'
@@ -646,7 +644,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.38"
+		backport_tag="v5.10.39"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
