@@ -1,6 +1,6 @@
-From 91df6b6ce3e244729d9a2e9b771bc63816d9d5d6 Mon Sep 17 00:00:00 2001
+From b82aa3b79f3ddf81ec66bd25af8a372c745f68ab Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 20 May 2021 13:05:11 -0500
+Date: Wed, 26 May 2021 14:17:15 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.6.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.6.x
@@ -25,10 +25,10 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index de2e957aa1f4..676c234cf949 100644
+index 8ef6603e57b6..b1f63e17dd83 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -1026,6 +1026,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
+@@ -1025,6 +1025,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
  	stm32mp157a-avenger96.dtb \
  	stm32mp157a-dk1.dtb \
  	stm32mp157c-dk2.dtb \
