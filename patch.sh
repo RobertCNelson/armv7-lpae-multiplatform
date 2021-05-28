@@ -511,7 +511,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.6"
+	backport_tag="v5.12.8"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -527,7 +527,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.6"
+	backport_tag="v5.12.8"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -566,6 +566,24 @@ backports () {
 
 		cp -rv ~/linux-src/drivers/pinctrl/* ./drivers/pinctrl/
 		cp -rv ~/linux-src/include/linux/pinctrl/* ./include/linux/pinctrl/
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.13-rc3"
+
+	subsystem="pru_rproc"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -v ~/linux-src/drivers/irqchip/irq-pruss-intc.c ./drivers/irqchip/
+		cp -rv ~/linux-src/drivers/remoteproc/* ./drivers/remoteproc/
+		cp -v ~/linux-src/include/linux/remoteproc.h ./include/linux/remoteproc.h
+		cp -rv ~/linux-src/include/linux/remoteproc/* ./include/linux/remoteproc/
 
 		post_backports
 		exit 2
@@ -644,7 +662,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.39"
+		backport_tag="v5.10.41"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
