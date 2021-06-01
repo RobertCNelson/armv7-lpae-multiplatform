@@ -377,10 +377,10 @@ beagleboard_dtbs () {
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
 
-#		device="am335x-bonegreen-gateway.dtb" ; dtb_makefile_append
+		#device="am335x-bonegreen-gateway.dtb" ; dtb_makefile_append
 
-#		device="am335x-boneblack-uboot.dtb" ; dtb_makefile_append
-#		device="am335x-sancloud-bbe-uboot.dtb" ; dtb_makefile_append
+		#device="am335x-boneblack-uboot.dtb" ; dtb_makefile_append
+		#device="am335x-sancloud-bbe-uboot.dtb" ; dtb_makefile_append
 
 		#device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
 		#device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
@@ -511,7 +511,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -527,7 +527,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -542,7 +542,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="pinctrl"
 	#regenerate="enable"
@@ -558,7 +558,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="pru_rproc"
 	#regenerate="enable"
@@ -569,6 +569,7 @@ backports () {
 		cp -rv ~/linux-src/drivers/remoteproc/* ./drivers/remoteproc/
 		cp -v ~/linux-src/include/linux/remoteproc.h ./include/linux/remoteproc.h
 		cp -rv ~/linux-src/include/linux/remoteproc/* ./include/linux/remoteproc/
+		cp -v ~/linux-src/include/linux/pruss_driver.h ./include/linux/pruss_driver.h
 
 		post_backports
 		exit 2
@@ -631,7 +632,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.40"
+		backport_tag="v5.10.41"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
