@@ -542,7 +542,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -557,7 +557,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="pinctrl"
 	#regenerate="enable"
@@ -573,7 +573,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc3"
+	backport_tag="v5.13-rc4"
 
 	subsystem="pru_rproc"
 	#regenerate="enable"
@@ -584,6 +584,7 @@ backports () {
 		cp -rv ~/linux-src/drivers/remoteproc/* ./drivers/remoteproc/
 		cp -v ~/linux-src/include/linux/remoteproc.h ./include/linux/remoteproc.h
 		cp -rv ~/linux-src/include/linux/remoteproc/* ./include/linux/remoteproc/
+		cp -v ~/linux-src/include/linux/pruss_driver.h ./include/linux/pruss_driver.h
 
 		post_backports
 		exit 2
@@ -591,7 +592,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.6"
+	backport_tag="v5.12.8"
 
 	subsystem="rtc-stm32"
 	#regenerate="enable"
@@ -640,6 +641,7 @@ drivers () {
 	dir 'drivers/greybus'
 	dir 'drivers/serdev'
 	dir 'drivers/fb_ssd1306'
+	dir 'drivers/usb'
 
 	dir 'drivers/stm32-rtc'
 #	dir 'drivers/stm32-dwmac'
