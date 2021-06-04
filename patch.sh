@@ -515,7 +515,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.8"
+	backport_tag="v5.12.9"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -531,7 +531,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.8"
+	backport_tag="v5.12.9"
 
 	subsystem="wlcore"
 	#regenerate="enable"
