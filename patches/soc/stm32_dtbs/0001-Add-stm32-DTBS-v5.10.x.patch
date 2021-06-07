@@ -1,6 +1,6 @@
-From 3bb75353e3b3831c9bd99a604f31b57e3484031a Mon Sep 17 00:00:00 2001
+From 4abbef24bace541037e6da09c0a90dfb23f78f82 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 25 May 2021 17:25:34 -0500
+Date: Mon, 7 Jun 2021 16:45:11 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.10.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.10.x
@@ -8,24 +8,24 @@ https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.10.x
 https://github.com/RobertCNelson/stm32-DeviceTrees/commit/0d93608ea98325cf580af914d1a9fa60f3d649ac
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 157 ++++++++++++++++--
- arch/arm/boot/dts/stm32mp151.dtsi             |  26 ++-
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 136 ++++++++++++++++--
+ arch/arm/boot/dts/stm32mp151.dtsi             |  26 +++-
  arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |   4 -
- arch/arm/boot/dts/stm32mp157c-dk2.dts         |  50 +++++-
- arch/arm/boot/dts/stm32mp157c-ed1.dts         |  16 +-
+ arch/arm/boot/dts/stm32mp157c-dk2.dts         |  50 ++++++-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts         |  16 ++-
  arch/arm/boot/dts/stm32mp157c-ev1.dts         |   1 +
  arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts     |  15 +-
- .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  18 +-
+ .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  18 ++-
  arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |   4 -
- arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 117 ++++++++++++-
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 117 ++++++++++++++-
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  39 ++++-
- arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  42 ++++-
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  42 +++++-
  include/dt-bindings/rtc/rtc-stm32.h           |  13 ++
- 13 files changed, 441 insertions(+), 61 deletions(-)
+ 13 files changed, 423 insertions(+), 58 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index d84686e00370..8710138fa19b 100644
+index dee4d32ab32c..8710138fa19b 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -349,6 +349,61 @@ pins {
@@ -189,58 +189,7 @@ index d84686e00370..8710138fa19b 100644
  	usart2_pins_a: usart2-0 {
  		pins1 {
  			pinmux = <STM32_PINMUX('F', 5, AF7)>, /* USART2_TX */
-@@ -1806,10 +1897,15 @@ pins2 {
- 	usart2_idle_pins_c: usart2-idle-2 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('D', 5, ANALOG)>, /* USART2_TX */
--				 <STM32_PINMUX('D', 4, ANALOG)>, /* USART2_RTS */
- 				 <STM32_PINMUX('D', 3, ANALOG)>; /* USART2_CTS_NSS */
- 		};
- 		pins2 {
-+			pinmux = <STM32_PINMUX('D', 4, AF7)>; /* USART2_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <3>;
-+		};
-+		pins3 {
- 			pinmux = <STM32_PINMUX('D', 6, AF7)>; /* USART2_RX */
- 			bias-disable;
- 		};
-@@ -1855,10 +1951,15 @@ pins2 {
- 	usart3_idle_pins_b: usart3-idle-1 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 10, ANALOG)>, /* USART3_TX */
--				 <STM32_PINMUX('G', 8, ANALOG)>, /* USART3_RTS */
- 				 <STM32_PINMUX('I', 10, ANALOG)>; /* USART3_CTS_NSS */
- 		};
- 		pins2 {
-+			pinmux = <STM32_PINMUX('G', 8, AF8)>; /* USART3_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins3 {
- 			pinmux = <STM32_PINMUX('B', 12, AF8)>; /* USART3_RX */
- 			bias-disable;
- 		};
-@@ -1891,10 +1992,15 @@ pins2 {
- 	usart3_idle_pins_c: usart3-idle-2 {
- 		pins1 {
- 			pinmux = <STM32_PINMUX('B', 10, ANALOG)>, /* USART3_TX */
--				 <STM32_PINMUX('G', 8, ANALOG)>, /* USART3_RTS */
- 				 <STM32_PINMUX('B', 13, ANALOG)>; /* USART3_CTS_NSS */
- 		};
- 		pins2 {
-+			pinmux = <STM32_PINMUX('G', 8, AF8)>; /* USART3_RTS */
-+			bias-disable;
-+			drive-push-pull;
-+			slew-rate = <0>;
-+		};
-+		pins3 {
- 			pinmux = <STM32_PINMUX('B', 12, AF8)>; /* USART3_RX */
- 			bias-disable;
- 		};
-@@ -1956,6 +2062,23 @@ pins {
+@@ -1971,6 +2062,23 @@ pins {
  		};
  	};
  
