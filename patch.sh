@@ -382,10 +382,10 @@ beagleboard_dtbs () {
 		device="am335x-boneblack-uboot.dtb" ; dtb_makefile_append
 		device="am335x-sancloud-bbe-uboot.dtb" ; dtb_makefile_append
 
-		#device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
-		#device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
-		#device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
-		#device="am335x-sancloud-bbe-uboot-univ.dtb" ; dtb_makefile_append
+		device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
+		device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
+		device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
+		device="am335x-sancloud-bbe-uboot-univ.dtb" ; dtb_makefile_append
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -515,7 +515,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.9"
+	backport_tag="v5.12.11"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -531,7 +531,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.9"
+	backport_tag="v5.12.11"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -546,7 +546,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc5"
+	backport_tag="v5.13-rc6"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -576,7 +576,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc5"
+	backport_tag="v5.13-rc6"
 
 	subsystem="pru_rproc"
 	#regenerate="enable"
@@ -588,6 +588,24 @@ backports () {
 		cp -v ~/linux-src/include/linux/remoteproc.h ./include/linux/remoteproc.h
 		cp -rv ~/linux-src/include/linux/remoteproc/* ./include/linux/remoteproc/
 		cp -v ~/linux-src/include/linux/pruss_driver.h ./include/linux/pruss_driver.h
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.10.44"
+
+	subsystem="iio"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -rv ~/linux-src/include/linux/iio/* ./include/linux/iio/
+		cp -rv ~/linux-src/include/uapi/linux/iio/* ./include/uapi/linux/iio/
+		cp -rv ~/linux-src/drivers/iio/* ./drivers/iio/
+		cp -rv ~/linux-src/drivers/staging/iio/* ./drivers/staging/iio/
 
 		post_backports
 		exit 2
@@ -633,6 +651,7 @@ drivers () {
 	dir 'drivers/iio'
 	dir 'drivers/fb_ssd1306'
 	dir 'drivers/usb'
+	dir 'drivers/bluetooth'
 #	dir 'fixes'
 
 	dir 'drivers/stm32-rtc'
@@ -657,7 +676,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.42"
+		backport_tag="v5.10.44"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
