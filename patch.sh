@@ -611,7 +611,6 @@ drivers () {
 	dir 'drivers/greybus'
 	dir 'drivers/serdev'
 	dir 'drivers/fb_ssd1306'
-	dir 'drivers/usb'
 	dir 'drivers/bluetooth'
 
 	dir 'drivers/stm32-rtc'
@@ -634,7 +633,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.43"
+		backport_tag="v5.10.44"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
