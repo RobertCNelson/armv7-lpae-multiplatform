@@ -630,7 +630,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.10"
+	backport_tag="v5.12.12"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -646,7 +646,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.10"
+	backport_tag="v5.12.12"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -883,7 +883,7 @@ backports () {
 
 	dir 'cypress'
 
-	backport_tag="v5.4.125"
+	backport_tag="v5.4.127"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -934,9 +934,10 @@ drivers () {
 	dir 'drivers/ti/serial'
 	dir 'drivers/ti/tsc'
 	dir 'drivers/ti/gpio'
-	dir 'drivers/ti/mmc'
+#	dir 'drivers/ti/mmc'
 	dir 'drivers/greybus'
 	dir 'drivers/usb'
+	dir 'drivers/bluetooth'
 
 #	dir 'drivers/stm32-rtc'
 	dir 'drivers/stm32-dwmac'
@@ -961,7 +962,7 @@ soc
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.43"
+		backport_tag="v5.10.45"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
