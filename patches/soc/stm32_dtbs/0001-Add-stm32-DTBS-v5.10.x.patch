@@ -1,15 +1,15 @@
-From 4abbef24bace541037e6da09c0a90dfb23f78f82 Mon Sep 17 00:00:00 2001
+From 84a9645f02444206df4686b7d60aaaaeb1ecf8be Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 7 Jun 2021 16:45:11 -0500
+Date: Wed, 23 Jun 2021 18:05:20 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.10.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.10.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/0d93608ea98325cf580af914d1a9fa60f3d649ac
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/38080db1493ff525fc5cbaccbf7f862be2a966f2
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 136 ++++++++++++++++--
- arch/arm/boot/dts/stm32mp151.dtsi             |  26 +++-
+ arch/arm/boot/dts/stm32mp151.dtsi             |  28 +++-
  arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |   4 -
  arch/arm/boot/dts/stm32mp157c-dk2.dts         |  50 ++++++-
  arch/arm/boot/dts/stm32mp157c-ed1.dts         |  16 ++-
@@ -21,7 +21,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  39 ++++-
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  42 +++++-
  include/dt-bindings/rtc/rtc-stm32.h           |  13 ++
- 13 files changed, 423 insertions(+), 58 deletions(-)
+ 13 files changed, 425 insertions(+), 58 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -214,7 +214,7 @@ index dee4d32ab32c..8710138fa19b 100644
  		pins1 {
  			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 84757901cd8d..1edb60a9c0fa 100644
+index 84757901cd8d..0f3e58dccd74 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
 +++ b/arch/arm/boot/dts/stm32mp151.dtsi
 @@ -364,6 +364,7 @@ lptimer1: timer@40009000 {
@@ -290,7 +290,16 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x10153180>;
  			reg = <0x48004000 0x400>;
-@@ -1158,6 +1166,7 @@ lptimer2: timer@50021000 {
+@@ -1118,6 +1126,8 @@ reg11: reg11 {
+ 				regulator-name = "reg11";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++				regulator-boot-on;
+ 			};
+ 
+ 			reg18: reg18 {
+@@ -1158,6 +1168,7 @@ lptimer2: timer@50021000 {
  			reg = <0x50021000 0x400>;
  			clocks = <&rcc LPTIM2_K>;
  			clock-names = "mux";
@@ -298,7 +307,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			status = "disabled";
  
  			pwm {
-@@ -1185,6 +1194,7 @@ lptimer3: timer@50022000 {
+@@ -1185,6 +1196,7 @@ lptimer3: timer@50022000 {
  			reg = <0x50022000 0x400>;
  			clocks = <&rcc LPTIM3_K>;
  			clock-names = "mux";
@@ -306,7 +315,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			status = "disabled";
  
  			pwm {
-@@ -1205,6 +1215,7 @@ lptimer4: timer@50023000 {
+@@ -1205,6 +1217,7 @@ lptimer4: timer@50023000 {
  			reg = <0x50023000 0x400>;
  			clocks = <&rcc LPTIM4_K>;
  			clock-names = "mux";
@@ -314,7 +323,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			status = "disabled";
  
  			pwm {
-@@ -1219,6 +1230,7 @@ lptimer5: timer@50024000 {
+@@ -1219,6 +1232,7 @@ lptimer5: timer@50024000 {
  			reg = <0x50024000 0x400>;
  			clocks = <&rcc LPTIM5_K>;
  			clock-names = "mux";
@@ -322,7 +331,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			status = "disabled";
  
  			pwm {
-@@ -1358,7 +1370,7 @@ qspi: spi@58003000 {
+@@ -1358,7 +1372,7 @@ qspi: spi@58003000 {
  			status = "disabled";
  		};
  
@@ -331,7 +340,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x10153180>;
  			reg = <0x58005000 0x1000>;
-@@ -1373,7 +1385,7 @@ sdmmc1: sdmmc@58005000 {
+@@ -1373,7 +1387,7 @@ sdmmc1: sdmmc@58005000 {
  			status = "disabled";
  		};
  
@@ -340,7 +349,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x10153180>;
  			reg = <0x58007000 0x1000>;
-@@ -1426,7 +1438,7 @@ ethernet0: ethernet@5800a000 {
+@@ -1426,7 +1440,7 @@ ethernet0: ethernet@5800a000 {
  			status = "disabled";
  		};
  
@@ -349,7 +358,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			compatible = "generic-ohci";
  			reg = <0x5800c000 0x1000>;
  			clocks = <&rcc USBH>;
-@@ -1435,7 +1447,7 @@ usbh_ohci: usbh-ohci@5800c000 {
+@@ -1435,7 +1449,7 @@ usbh_ohci: usbh-ohci@5800c000 {
  			status = "disabled";
  		};
  
@@ -358,7 +367,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			compatible = "generic-ehci";
  			reg = <0x5800d000 0x1000>;
  			clocks = <&rcc USBH>;
-@@ -1472,10 +1484,13 @@ iwdg2: watchdog@5a002000 {
+@@ -1472,10 +1486,13 @@ iwdg2: watchdog@5a002000 {
  		usbphyc: usbphyc@5a006000 {
  			#address-cells = <1>;
  			#size-cells = <0>;
@@ -372,7 +381,7 @@ index 84757901cd8d..1edb60a9c0fa 100644
  			status = "disabled";
  
  			usbphyc_port0: usb-phy@0 {
-@@ -1494,6 +1509,7 @@ usart1: serial@5c000000 {
+@@ -1494,6 +1511,7 @@ usart1: serial@5c000000 {
  			reg = <0x5c000000 0x400>;
  			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
  			clocks = <&rcc USART1_K>;
