@@ -352,6 +352,10 @@ sancloud_next () {
 	dir 'dts/sancloud'
 }
 
+cleanup_dts_builds () {
+	rm ./arch/arm/boot/dts/*.dtb || true
+}
+
 dtb_makefile_append () {
 	sed -i -e 's:am335x-boneblack.dtb \\:am335x-boneblack.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
 }
@@ -438,6 +442,8 @@ stm32_dtbs () {
 			cd -
 		fi
 		cd ./KERNEL/
+
+		cleanup_dts_builds
 
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
