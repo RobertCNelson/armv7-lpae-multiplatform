@@ -1,15 +1,15 @@
-From 58a9ecb64fe5c0f826e1d497b49b91ac046471ca Mon Sep 17 00:00:00 2001
+From 5e1243c9eef1d6dfe88034452a7c13d6d4956a43 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 25 May 2021 16:48:19 -0500
+Date: Thu, 24 Jun 2021 09:49:10 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.11.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.11.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/2746f4ba2ca070fd3833f838b3e7fd6b94caaea1
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/c56cacaa58a2ffb202a2432c600da6646e50b55e
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 46 ++++++++++
- arch/arm/boot/dts/stm32mp151.dtsi             | 17 +++-
+ arch/arm/boot/dts/stm32mp151.dtsi             | 19 ++++-
  arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dts |  4 +
  arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |  4 -
  arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts  |  4 +
@@ -25,7 +25,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |  4 +
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  4 -
  include/dt-bindings/rtc/rtc-stm32.h           | 13 +++
- 17 files changed, 279 insertions(+), 49 deletions(-)
+ 17 files changed, 281 insertions(+), 49 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -107,7 +107,7 @@ index f10a740ca3c1..8710138fa19b 100644
  		pins1 {
  			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 3c75abacb374..6eea5a9c04f3 100644
+index 3c75abacb374..8253b77031d5 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
 +++ b/arch/arm/boot/dts/stm32mp151.dtsi
 @@ -454,6 +454,7 @@ usart2: serial@4000e000 {
@@ -175,7 +175,16 @@ index 3c75abacb374..6eea5a9c04f3 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x00253180>;
  			reg = <0x48004000 0x400>;
-@@ -1368,7 +1375,7 @@ qspi: spi@58003000 {
+@@ -1120,6 +1127,8 @@ reg11: reg11 {
+ 				regulator-name = "reg11";
+ 				regulator-min-microvolt = <1100000>;
+ 				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++				regulator-boot-on;
+ 			};
+ 
+ 			reg18: reg18 {
+@@ -1368,7 +1377,7 @@ qspi: spi@58003000 {
  			status = "disabled";
  		};
  
@@ -184,7 +193,7 @@ index 3c75abacb374..6eea5a9c04f3 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x00253180>;
  			reg = <0x58005000 0x1000>;
-@@ -1383,7 +1390,7 @@ sdmmc1: sdmmc@58005000 {
+@@ -1383,7 +1392,7 @@ sdmmc1: sdmmc@58005000 {
  			status = "disabled";
  		};
  
@@ -193,7 +202,7 @@ index 3c75abacb374..6eea5a9c04f3 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x00253180>;
  			reg = <0x58007000 0x1000>;
-@@ -1482,10 +1489,13 @@ iwdg2: watchdog@5a002000 {
+@@ -1482,10 +1491,13 @@ iwdg2: watchdog@5a002000 {
  		usbphyc: usbphyc@5a006000 {
  			#address-cells = <1>;
  			#size-cells = <0>;
@@ -207,7 +216,7 @@ index 3c75abacb374..6eea5a9c04f3 100644
  			status = "disabled";
  
  			usbphyc_port0: usb-phy@0 {
-@@ -1504,6 +1514,7 @@ usart1: serial@5c000000 {
+@@ -1504,6 +1516,7 @@ usart1: serial@5c000000 {
  			reg = <0x5c000000 0x400>;
  			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
  			clocks = <&rcc USART1_K>;
