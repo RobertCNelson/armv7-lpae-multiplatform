@@ -353,7 +353,9 @@ sancloud_next () {
 }
 
 cleanup_dts_builds () {
-	rm ./arch/arm/boot/dts/*.dtb || true
+	rm -rf arch/arm/boot/dts/.*cmd || true
+	rm -rf arch/arm/boot/dts/.*tmp || true
+	rm -rf arch/arm/boot/dts/*dtb || true
 }
 
 dtb_makefile_append () {
@@ -380,6 +382,9 @@ beagleboard_dtbs () {
 			cd -
 		fi
 		cd ./KERNEL/
+
+		cleanup_dts_builds
+		rm -rf arch/arm/boot/dts/overlays/ || true
 
 		mkdir -p arch/arm/boot/dts/overlays/
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
@@ -606,7 +611,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.45"
+		backport_tag="v5.10.46"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
