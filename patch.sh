@@ -449,6 +449,12 @@ ti_pm_firmware () {
 	dir 'drivers/ti/firmware'
 }
 
+cleanup_dts_builds () {
+	rm -rf arch/arm/boot/dts/.*cmd || true
+	rm -rf arch/arm/boot/dts/.*tmp || true
+	rm -rf arch/arm/boot/dts/*dtb || true
+}
+
 dtb_makefile_append_omap4 () {
 	sed -i -e 's:omap4-panda.dtb \\:omap4-panda.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
 }
@@ -481,6 +487,9 @@ beagleboard_dtbs () {
 			cd -
 		fi
 		cd ./KERNEL/
+
+		cleanup_dts_builds
+		rm -rf arch/arm/boot/dts/overlays/ || true
 
 		mkdir -p arch/arm/boot/dts/overlays/
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
@@ -547,6 +556,8 @@ stm32_dtbs () {
 			cd -
 		fi
 		cd ./KERNEL/
+
+		cleanup_dts_builds
 
 		#stm32 renamed a bunch...
 		rm -rfv ./arch/arm/boot/dts/stm32mp*
@@ -630,7 +641,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.12"
+	backport_tag="v5.12.16"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -646,7 +657,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.12"
+	backport_tag="v5.12.16"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -670,27 +681,6 @@ backports () {
 
 		cp -v ~/linux-src/drivers/staging/exfat/* ./drivers/staging/exfat/
 		sed -i -e 's:CONFIG_EXFAT_FS:CONFIG_STAGING_EXFAT_FS:g' ./drivers/staging/Makefile
-
-		post_backports
-		exit 2
-	else
-		patch_backports
-	fi
-
-	backport_tag="v5.5.19"
-
-	subsystem="counter"
-	#regenerate="enable"
-	if [ "x${regenerate}" = "xenable" ] ; then
-		pre_backports
-
-		cp -rv ~/linux-src/drivers/bus/* ./drivers/bus/
-		cp -rv ~/linux-src/drivers/counter/* ./drivers/counter/
-		cp -rv ~/linux-src/drivers/pwm/* ./drivers/pwm/
-		cp -v ~/linux-src/include/linux/counter.h ./include/linux/counter.h
-		cp -v ~/linux-src/include/linux/platform_data/ti-sysc.h ./include/linux/platform_data/ti-sysc.h
-		cp -v ~/linux-src/include/linux/mfd/stm32-timers.h ./include/linux/mfd/stm32-timers.h
-		rm -rf ./drivers/pwm/pwm-tipwmss.c || true
 
 		post_backports
 		exit 2
@@ -883,7 +873,7 @@ backports () {
 
 	dir 'cypress'
 
-	backport_tag="v5.4.127"
+	backport_tag="v5.4.131"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -895,10 +885,10 @@ backports () {
 		cp -rv ~/linux-src/drivers/iio/* ./drivers/iio/
 		cp -rv ~/linux-src/drivers/staging/iio/* ./drivers/staging/iio/
 
-		post_backports
-		exit 2
-	else
-		patch_backports
+	#	post_backports
+	#	exit 2
+	#else
+	#	patch_backports
 	fi
 }
 
@@ -936,7 +926,6 @@ drivers () {
 	dir 'drivers/ti/gpio'
 #	dir 'drivers/ti/mmc'
 	dir 'drivers/greybus'
-	dir 'drivers/usb'
 	dir 'drivers/bluetooth'
 
 #	dir 'drivers/stm32-rtc'
@@ -962,7 +951,7 @@ soc
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.45"
+		backport_tag="v5.10.49"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"

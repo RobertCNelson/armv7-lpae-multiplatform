@@ -1,11 +1,11 @@
-From a8fc7c51f5ff23d72987af401878cdb3348962b6 Mon Sep 17 00:00:00 2001
+From efc6cf970f99118ab58346fe94f9dfc48ad19a3d Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 10 Jun 2021 17:33:30 -0500
+Date: Mon, 12 Jul 2021 14:12:53 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.4.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.4.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/0d97a5e5c17e66a63e2992b3a2702a156fcb4868
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/4b6f9557bdae2770e3639c338f8b61ede0d99d13
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/Makefile                    |    1 +
