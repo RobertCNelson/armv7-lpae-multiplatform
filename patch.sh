@@ -348,6 +348,12 @@ ti_pm_firmware () {
 	dir 'drivers/ti/firmware'
 }
 
+cleanup_dts_builds () {
+	rm -rf arch/arm/boot/dts/.*cmd || true
+	rm -rf arch/arm/boot/dts/.*tmp || true
+	rm -rf arch/arm/boot/dts/*dtb || true
+}
+
 dtb_makefile_append () {
 	sed -i -e 's:am335x-boneblack.dtb \\:am335x-boneblack.dtb \\\n\t'$device' \\:g' arch/arm/boot/dts/Makefile
 }
@@ -372,6 +378,9 @@ beagleboard_dtbs () {
 			cd -
 		fi
 		cd ./KERNEL/
+
+		cleanup_dts_builds
+		rm -rf arch/arm/boot/dts/overlays/ || true
 
 		mkdir -p arch/arm/boot/dts/overlays/
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
@@ -434,6 +443,8 @@ stm32_dtbs () {
 			cd -
 		fi
 		cd ./KERNEL/
+
+		cleanup_dts_builds
 
 		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
@@ -516,7 +527,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.12.13"
+	backport_tag="v5.12.17"
 
 	subsystem="greybus"
 	#regenerate="enable"
@@ -532,7 +543,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.13"
+	backport_tag="v5.12.17"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -547,7 +558,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc7"
+	backport_tag="v5.13.2"
 
 	subsystem="spidev"
 	#regenerate="enable"
@@ -577,7 +588,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.13-rc7"
+	backport_tag="v5.13.2"
 
 	subsystem="pru_rproc"
 	#regenerate="enable"
@@ -596,7 +607,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.10.46"
+	backport_tag="v5.10.50"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -645,12 +656,12 @@ drivers () {
 	dir 'drivers/ti/cpsw'
 	dir 'drivers/ti/serial'
 	dir 'drivers/ti/tsc'
+	dir 'drivers/ti/gpio'
 	dir 'drivers/greybus'
 #	dir 'drivers/mikrobus'
 	dir 'drivers/serdev'
 	dir 'drivers/iio'
 	dir 'drivers/fb_ssd1306'
-	dir 'drivers/usb'
 	dir 'drivers/bluetooth'
 #	dir 'fixes'
 
@@ -676,7 +687,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.46"
+		backport_tag="v5.10.50"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
