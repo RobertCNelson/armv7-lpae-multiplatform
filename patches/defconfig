@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 5.14.0-rc1 Kernel Configuration
+# Linux/arm 5.14.0-rc2 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="arm-linux-gnueabi-gcc (GCC) 11.1.0"
 CONFIG_CC_IS_GCC=y
@@ -8383,8 +8383,6 @@ CONFIG_FONT_8x16=y
 # CONFIG_FONT_6x8 is not set
 CONFIG_SG_SPLIT=y
 CONFIG_SG_POOL=y
-CONFIG_STACKDEPOT=y
-CONFIG_STACK_HASH_ORDER=20
 CONFIG_SBITMAP=y
 # CONFIG_STRING_SELFTEST is not set
 # end of Library routines
