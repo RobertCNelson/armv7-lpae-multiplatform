@@ -403,7 +403,7 @@ beagleboard_dtbs () {
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
-		${git_bin} commit -a -m "Add BeagleBoard.org DTBS: $branch" -m "${https_repo}/tree/${branch}" -m "${https_repo}/commit/${git_hash}" -s
+		${git_bin} commit -a -m "Add BeagleBoard.org Device Tree Changes" -m "${https_repo}/tree/${branch}" -m "${https_repo}/commit/${git_hash}" -s
 		${git_bin} format-patch -1 -o ../patches/soc/ti/beagleboard_dtbs/
 		echo "BBDTBS: ${https_repo}/commit/${git_hash}" > ../patches/git/BBDTBS
 
@@ -413,7 +413,7 @@ beagleboard_dtbs () {
 
 		start_cleanup
 
-		${git} "${DIR}/patches/soc/ti/beagleboard_dtbs/0001-Add-BeagleBoard.org-DTBS-$branch.patch"
+		${git} "${DIR}/patches/soc/ti/beagleboard_dtbs/0001-Add-BeagleBoard.org-Device-Tree-Changes.patch"
 
 		wdir="soc/ti/beagleboard_dtbs"
 		number=1
@@ -457,7 +457,7 @@ stm32_dtbs () {
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
-		${git_bin} commit -a -m "Add stm32 DTBS: $branch" -m "${https_repo}/tree/${branch}" -m "${https_repo}/commit/${git_hash}" -s
+		${git_bin} commit -a -m "Add stm32 Device Tree Changes" -m "${https_repo}/tree/${branch}" -m "${https_repo}/commit/${git_hash}" -s
 		${git_bin} format-patch -1 -o ../patches/soc/stm32_dtbs/
 		echo "STM32DTBS: ${https_repo}/commit/${git_hash}" > ../patches/git/STM32DTBS
 
@@ -467,7 +467,7 @@ stm32_dtbs () {
 
 		start_cleanup
 
-		${git} "${DIR}/patches/soc/stm32_dtbs/0001-Add-stm32-DTBS-$branch.patch"
+		${git} "${DIR}/patches/soc/stm32_dtbs/0001-Add-stm32-Device-Tree-Changes.patch"
 
 		wdir="soc/stm32_dtbs"
 		number=1
@@ -596,7 +596,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.50"
+		backport_tag="v5.10.51"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"

@@ -1,7 +1,7 @@
-From 540efb8b841095d5c79a45896510af16ffd7889c Mon Sep 17 00:00:00 2001
+From 392cf2082e2bddf96ce924303354213802554cef Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 29 Jun 2021 14:47:15 -0500
-Subject: [PATCH] Add stm32 DTBS: v5.13.x
+Date: Mon, 19 Jul 2021 15:10:37 -0500
+Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.13.x
 
