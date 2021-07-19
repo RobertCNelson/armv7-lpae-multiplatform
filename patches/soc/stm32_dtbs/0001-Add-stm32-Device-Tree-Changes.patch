@@ -1,11 +1,11 @@
-From 779dd10a27b0d9744ab7127e9df62b75b409b960 Mon Sep 17 00:00:00 2001
+From 742931e5d65ab14526abcd820dd30372bf823015 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 15 Jun 2021 13:43:58 -0500
-Subject: [PATCH] Add stm32 DTBS: v5.12.x
+Date: Mon, 19 Jul 2021 16:37:34 -0500
+Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.12.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/84fbc5632f60a9a1c67d4760a29f964853b3676d
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/bf9c069ac3ece5f3cc9e606879517e69e08a0713
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  6 ++
