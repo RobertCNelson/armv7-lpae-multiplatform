@@ -348,10 +348,6 @@ ti_pm_firmware () {
 	dir 'drivers/ti/firmware'
 }
 
-sancloud_next () {
-	dir 'dts/sancloud'
-}
-
 cleanup_dts_builds () {
 	rm -rf arch/arm/boot/dts/.*cmd || true
 	rm -rf arch/arm/boot/dts/.*tmp || true
@@ -394,12 +390,6 @@ beagleboard_dtbs () {
 		device="am335x-sancloud-bbe-lite.dtb" ; dtb_makefile_append
 
 		device="am335x-boneblack-uboot.dtb" ; dtb_makefile_append
-		#device="am335x-sancloud-bbe-uboot.dtb" ; dtb_makefile_append
-
-		#device="am335x-bone-uboot-univ.dtb" ; dtb_makefile_append
-		#device="am335x-boneblack-uboot-univ.dtb" ; dtb_makefile_append
-		#device="am335x-bonegreen-wireless-uboot-univ.dtb" ; dtb_makefile_append
-		#device="am335x-sancloud-bbe-uboot-univ.dtb" ; dtb_makefile_append
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -488,7 +478,6 @@ wpanusb
 #rt
 wireless_regdb
 ti_pm_firmware
-sancloud_next
 beagleboard_dtbs
 stm32_dtbs
 #local_patch
@@ -596,7 +585,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.51"
+		backport_tag="v5.10.55"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
