@@ -1,6 +1,6 @@
-From 15f606ad66c9ea8db7f9db426c50165f9ae71d7f Mon Sep 17 00:00:00 2001
+From 5faf77752cd9cd6d7aaa4040c0922878b6ce595a Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 19 Jul 2021 21:55:50 -0500
+Date: Wed, 4 Aug 2021 14:26:12 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.10.x
@@ -17,11 +17,11 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts     |  15 +-
  .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  18 ++-
  arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |   4 -
- arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 117 ++++++++++++++-
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 123 ++++++++++++++--
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  39 ++++-
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  42 +++++-
  include/dt-bindings/rtc/rtc-stm32.h           |  13 ++
- 13 files changed, 425 insertions(+), 58 deletions(-)
+ 13 files changed, 424 insertions(+), 65 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -663,7 +663,7 @@ index 8456f172d4b1..5523f4138fd6 100644
 -	vdda1v8-supply = <&reg18>;
  };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
-index 2d027dafb7bc..d40c8db74c6f 100644
+index 27f19575fada..d40c8db74c6f 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 @@ -11,6 +11,7 @@
@@ -674,12 +674,27 @@ index 2d027dafb7bc..d40c8db74c6f 100644
  	};
  
  	memory@c0000000 {
-@@ -127,10 +128,106 @@ mdio0 {
+@@ -118,6 +119,7 @@ &ethernet0 {
+ 	max-speed = <100>;
+ 	phy-handle = <&phy0>;
+ 	st,eth-ref-clk-sel;
++	phy-reset-gpios = <&gpioh 3 GPIO_ACTIVE_LOW>;
+ 
+ 	mdio0 {
+ 		#address-cells = <1>;
+@@ -126,19 +128,106 @@ mdio0 {
  
  		phy0: ethernet-phy@1 {
  			reg = <1>;
-+			interrupt-parent = <&gpioi>;
-+			interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+-			/* LAN8710Ai */
+-			compatible = "ethernet-phy-id0007.c0f0",
+-				     "ethernet-phy-ieee802.3-c22";
+-			clocks = <&rcc ETHCK_K>;
+-			reset-gpios = <&gpioh 3 GPIO_ACTIVE_LOW>;
+-			reset-assert-us = <500>;
+-			reset-deassert-us = <500>;
+ 			interrupt-parent = <&gpioi>;
+ 			interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
  		};
  	};
  };
@@ -781,7 +796,7 @@ index 2d027dafb7bc..d40c8db74c6f 100644
  &i2c4 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&i2c4_pins_a>;
-@@ -349,20 +446,38 @@ &rtc {
+@@ -357,20 +446,38 @@ &rtc {
  };
  
  &sdmmc1 {
