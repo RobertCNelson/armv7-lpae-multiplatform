@@ -351,6 +351,7 @@ ti_pm_firmware () {
 next_dtbs () {
 	dir 'dts/omap'
 	dir 'dts/omap_pruss'
+	dir 'dts/omap_sancloud'
 }
 
 cleanup_dts_builds () {
@@ -594,7 +595,7 @@ dir 'le9'
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.55"
+		backport_tag="v5.10.57"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
