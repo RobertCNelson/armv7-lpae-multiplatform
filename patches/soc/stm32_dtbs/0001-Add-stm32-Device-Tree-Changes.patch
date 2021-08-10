@@ -1,6 +1,6 @@
-From 5faf77752cd9cd6d7aaa4040c0922878b6ce595a Mon Sep 17 00:00:00 2001
+From c4b67e0bd543c8cb7e57fea88cc7954724d10443 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Wed, 4 Aug 2021 14:26:12 -0500
+Date: Mon, 9 Aug 2021 18:58:29 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.10.x
@@ -9,19 +9,23 @@ https://github.com/RobertCNelson/stm32-DeviceTrees/commit/27f5f823450b1152b76eef
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 136 ++++++++++++++++--
- arch/arm/boot/dts/stm32mp151.dtsi             |  28 +++-
- arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |   4 -
+ arch/arm/boot/dts/stm32mp151.dtsi             |  40 ++++--
+ arch/arm/boot/dts/stm32mp157a-stinger96.dtsi  |  11 +-
  arch/arm/boot/dts/stm32mp157c-dk2.dts         |  50 ++++++-
  arch/arm/boot/dts/stm32mp157c-ed1.dts         |  16 ++-
  arch/arm/boot/dts/stm32mp157c-ev1.dts         |   1 +
  arch/arm/boot/dts/stm32mp157c-lxa-mc1.dts     |  15 +-
+ .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi |   7 +-
+ arch/arm/boot/dts/stm32mp157c-odyssey.dts     |   2 +-
  .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  18 ++-
- arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |   4 -
- arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 123 ++++++++++++++--
+ arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  11 +-
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 130 +++++++++++++++--
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  39 ++++-
+ arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |   2 +-
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  42 +++++-
+ arch/arm/boot/dts/stm32mp15xx-osd32.dtsi      |   7 +-
  include/dt-bindings/rtc/rtc-stm32.h           |  13 ++
- 13 files changed, 424 insertions(+), 65 deletions(-)
+ 17 files changed, 457 insertions(+), 83 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -214,7 +218,7 @@ index dee4d32ab32c..8710138fa19b 100644
  		pins1 {
  			pinmux = <STM32_PINMUX('Z', 0, AF5)>, /* SPI1_SCK */
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 84757901cd8d..0f3e58dccd74 100644
+index b479016fef00..0f3e58dccd74 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
 +++ b/arch/arm/boot/dts/stm32mp151.dtsi
 @@ -364,6 +364,7 @@ lptimer1: timer@40009000 {
@@ -349,8 +353,29 @@ index 84757901cd8d..0f3e58dccd74 100644
  			compatible = "arm,pl18x", "arm,primecell";
  			arm,primecell-periphid = <0x10153180>;
  			reg = <0x58007000 0x1000>;
-@@ -1426,7 +1440,7 @@ ethernet0: ethernet@5800a000 {
+@@ -1395,6 +1409,12 @@ crc1: crc@58009000 {
  			status = "disabled";
+ 		};
+ 
++		stmmac_axi_config_0: stmmac-axi-config {
++			snps,wr_osr_lmt = <0x7>;
++			snps,rd_osr_lmt = <0x7>;
++			snps,blen = <0 0 0 0 16 8 4>;
++		};
++
+ 		ethernet0: ethernet@5800a000 {
+ 			compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
+ 			reg = <0x5800a000 0x2000>;
+@@ -1418,15 +1438,9 @@ ethernet0: ethernet@5800a000 {
+ 			snps,axi-config = <&stmmac_axi_config_0>;
+ 			snps,tso;
+ 			status = "disabled";
+-
+-			stmmac_axi_config_0: stmmac-axi-config {
+-				snps,wr_osr_lmt = <0x7>;
+-				snps,rd_osr_lmt = <0x7>;
+-				snps,blen = <0 0 0 0 16 8 4>;
+-			};
  		};
  
 -		usbh_ohci: usbh-ohci@5800c000 {
@@ -390,10 +415,43 @@ index 84757901cd8d..0f3e58dccd74 100644
  		};
  
 diff --git a/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi b/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
-index 58275bcf9e26..113c48b2ef93 100644
+index 4dd138d691c7..113c48b2ef93 100644
 --- a/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
 +++ b/arch/arm/boot/dts/stm32mp157a-stinger96.dtsi
-@@ -331,12 +331,8 @@ &usbphyc {
+@@ -184,6 +184,8 @@ vtt_ddr: ldo3 {
+ 
+ 			vdd_usb: ldo4 {
+ 				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				interrupts = <IT_CURLIM_LDO4 0>;
+ 			};
+ 
+@@ -206,6 +208,7 @@ v1v8: ldo6 {
+ 			vref_ddr: vref_ddr {
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
++				regulator-over-current-protection;
+ 			};
+ 
+ 			bst_out: boost {
+@@ -216,13 +219,13 @@ bst_out: boost {
+ 			vbus_otg: pwr_sw1 {
+ 				regulator-name = "vbus_otg";
+ 				interrupts = <IT_OCP_OTG 0>;
+-				regulator-active-discharge = <1>;
++				regulator-active-discharge;
+ 			};
+ 
+ 			vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge = <1>;
++				regulator-active-discharge;
+ 			};
+ 		};
+ 
+@@ -328,12 +331,8 @@ &usbphyc {
  
  &usbphyc_port0 {
  	phy-supply = <&vdd_usb>;
@@ -594,6 +652,58 @@ index 1e5333fd437f..1e9bf7eea0f1 100644
  			label = "mc1:blue:rgb";
  			pwms = <&leds_pwm 3 1000000 0>;
  			max-brightness = <255>;
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+index 2d9461006810..6cf49a0a9e69 100644
+--- a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+@@ -173,6 +173,8 @@ vtt_ddr: ldo3 {
+ 
+ 			vdd_usb: ldo4 {
+ 				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				interrupts = <IT_CURLIM_LDO4 0>;
+ 			};
+ 
+@@ -195,6 +197,7 @@ v1v2_hdmi: ldo6 {
+ 			vref_ddr: vref_ddr {
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
++				regulator-over-current-protection;
+ 			};
+ 
+ 			 bst_out: boost {
+@@ -210,7 +213,7 @@ vbus_otg: pwr_sw1 {
+ 			 vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge = <1>;
++				regulator-active-discharge;
+ 			 };
+ 		};
+ 
+@@ -266,7 +269,7 @@ &sdmmc2 {
+ 	st,neg-edge;
+ 	bus-width = <8>;
+ 	vmmc-supply = <&v3v3>;
+-	vqmmc-supply = <&vdd>;
++	vqmmc-supply = <&v3v3>;
+ 	mmc-ddr-3_3v;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+index be1dd5e9e744..a7ffec8f1516 100644
+--- a/arch/arm/boot/dts/stm32mp157c-odyssey.dts
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+@@ -64,7 +64,7 @@ &sdmmc1 {
+ 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
+ 	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
+ 	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
+-	cd-gpios = <&gpioi 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
++	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+ 	disable-wp;
+ 	st,neg-edge;
+ 	bus-width = <4>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi
 index e4d287d99421..fb45c5aa878d 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi
@@ -646,10 +756,41 @@ index e4d287d99421..fb45c5aa878d 100644
 -	vdda1v8-supply = <&reg18>;
  };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
-index 8456f172d4b1..5523f4138fd6 100644
+index 59b3239bcd76..5523f4138fd6 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
-@@ -300,12 +300,8 @@ &usbphyc {
+@@ -34,6 +34,7 @@ display_bl: display-bl {
+ 
+ 	gpio-keys-polled {
+ 		compatible = "gpio-keys-polled";
++		#size-cells = <0>;
+ 		poll-interval = <20>;
+ 
+ 		/*
+@@ -59,6 +60,7 @@ button-2 {
+ 
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
++		#size-cells = <0>;
+ 
+ 		button-1 {
+ 			label = "TA2-GPIO-B";
+@@ -182,11 +184,12 @@ sgtl5000_rx_endpoint: endpoint@1 {
+ 
+ 	};
+ 
+-	touchscreen@38 {
+-		compatible = "edt,edt-ft5406";
++	polytouch@38 {
++		compatible = "edt,edt-ft5x06";
+ 		reg = <0x38>;
+ 		interrupt-parent = <&gpiog>;
+ 		interrupts = <2 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
++		linux,wakeup;
+ 	};
+ };
+ 
+@@ -297,12 +300,8 @@ &usbphyc {
  
  &usbphyc_port0 {
  	phy-supply = <&vdd_usb>;
@@ -663,7 +804,7 @@ index 8456f172d4b1..5523f4138fd6 100644
 -	vdda1v8-supply = <&reg18>;
  };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
-index 27f19575fada..d40c8db74c6f 100644
+index 8221bf69fefe..d40c8db74c6f 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 @@ -11,6 +11,7 @@
@@ -796,7 +937,42 @@ index 27f19575fada..d40c8db74c6f 100644
  &i2c4 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&i2c4_pins_a>;
-@@ -357,20 +446,38 @@ &rtc {
+@@ -234,6 +323,8 @@ vtt_ddr: ldo3 {
+ 
+ 			vdd_usb: ldo4 {
+ 				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				interrupts = <IT_CURLIM_LDO4 0>;
+ 			};
+ 
+@@ -255,6 +346,7 @@ v1v8: ldo6 {
+ 			vref_ddr: vref_ddr {
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
++				regulator-over-current-protection;
+ 			};
+ 
+ 			bst_out: boost {
+@@ -270,7 +362,7 @@ vbus_otg: pwr_sw1 {
+ 			vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge = <1>;
++				regulator-active-discharge;
+ 			};
+ 		};
+ 
+@@ -335,7 +427,7 @@ &qspi {
+ 	#size-cells = <0>;
+ 	status = "okay";
+ 
+-	flash0: flash@0 {
++	flash0: mx66l51235l@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-rx-bus-width = <4>;
+@@ -354,20 +446,38 @@ &rtc {
  };
  
  &sdmmc1 {
@@ -895,6 +1071,19 @@ index ec02cee1dd9b..64dca5b7f748 100644
 -	vdda1v1-supply = <&reg11>;
 -	vdda1v8-supply = <&reg18>;
  };
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
+index a9eb82b2f170..803eb8bc9c85 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
+@@ -194,7 +194,7 @@ &qspi {
+ 	#size-cells = <0>;
+ 	status = "okay";
+ 
+-	flash0: flash@0 {
++	flash0: spi-flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-rx-bus-width = <4>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
 index 93398cfae97e..59f18846cf5d 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dkx.dtsi
@@ -980,6 +1169,43 @@ index 93398cfae97e..59f18846cf5d 100644
  };
  
  &vrefbuf {
+diff --git a/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi b/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
+index 6706d8311a66..713485a95795 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
+@@ -146,6 +146,8 @@ vtt_ddr: ldo3 {
+ 
+ 			vdd_usb: ldo4 {
+ 				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
+ 				interrupts = <IT_CURLIM_LDO4 0>;
+ 			};
+ 
+@@ -169,6 +171,7 @@ v1v2_hdmi: ldo6 {
+ 			vref_ddr: vref_ddr {
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
++				regulator-over-current-protection;
+ 			};
+ 
+ 			bst_out: boost {
+@@ -179,13 +182,13 @@ bst_out: boost {
+ 			vbus_otg: pwr_sw1 {
+ 				regulator-name = "vbus_otg";
+ 				interrupts = <IT_OCP_OTG 0>;
+-				regulator-active-discharge = <1>;
++				regulator-active-discharge;
+ 			};
+ 
+ 			vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge = <1>;
++				regulator-active-discharge;
+ 			};
+ 		};
+ 
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
 index 000000000000..4373c4dea587
