@@ -1,11 +1,11 @@
-From a0bdae6db69c138d20aa26980bb38379e431a45e Mon Sep 17 00:00:00 2001
+From 19f5fb231a8dc27914e50a5ab4457fc0ed483a60 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Thu, 15 Jul 2021 14:06:45 -0500
+Date: Mon, 16 Aug 2021 11:08:29 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.14.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/8731cc8ee43b479004b170f49bea0a90da821b6c
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/888c2ba4d31425f398ced116d20d396a24754b7d
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi | 34 +++++++++
