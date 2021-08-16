@@ -1,30 +1,35 @@
-From 742931e5d65ab14526abcd820dd30372bf823015 Mon Sep 17 00:00:00 2001
+From 787354db424927359599dd06446df2d3813912ef Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 19 Jul 2021 16:37:34 -0500
+Date: Mon, 16 Aug 2021 15:54:04 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.12.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/bf9c069ac3ece5f3cc9e606879517e69e08a0713
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/257235060dd822ed1f43a8239f2fdfcef3b0e96b
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      |  6 ++
- arch/arm/boot/dts/stm32mp151.dtsi             |  8 +++
- arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dts |  4 ++
- arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts  |  4 ++
- .../boot/dts/stm32mp157c-dhcom-picoitx.dts    |  4 ++
- arch/arm/boot/dts/stm32mp157c-dk2.dts         | 46 ++++++++++++-
- .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi | 12 ++--
- .../boot/dts/stm32mp15xx-dhcom-picoitx.dtsi   | 12 ++--
- arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 64 +++++++++++++++++++
- .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi | 35 ++++++++++
- arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |  4 ++
- include/dt-bindings/rtc/rtc-stm32.h           | 13 ++++
- 12 files changed, 199 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 34 +++++++
+ arch/arm/boot/dts/stm32mp151.dtsi             |  8 ++
+ arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dts |  4 +
+ arch/arm/boot/dts/stm32mp157a-dk1.dts         | 49 ++++++++++
+ arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts  |  4 +
+ .../boot/dts/stm32mp157c-dhcom-picoitx.dts    |  4 +
+ arch/arm/boot/dts/stm32mp157c-dk2.dts         | 95 ++++++++++++++++++-
+ .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi |  4 +-
+ arch/arm/boot/dts/stm32mp157c-odyssey.dts     |  2 +-
+ .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi | 12 +--
+ arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi | 31 +++---
+ .../boot/dts/stm32mp15xx-dhcom-picoitx.dtsi   | 12 +--
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 78 +++++++++++++--
+ .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi | 35 +++++++
+ arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |  6 +-
+ arch/arm/boot/dts/stm32mp15xx-osd32.dtsi      |  4 +-
+ include/dt-bindings/rtc/rtc-stm32.h           | 13 +++
+ 17 files changed, 354 insertions(+), 41 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
-index 060baa8b7e9d..8710138fa19b 100644
+index 060baa8b7e9d..420462dcec1f 100644
 --- a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
 @@ -1106,6 +1106,12 @@ pins {
@@ -40,6 +45,41 @@ index 060baa8b7e9d..8710138fa19b 100644
  	sai2a_pins_a: sai2a-0 {
  		pins {
  			pinmux = <STM32_PINMUX('I', 5, AF10)>, /* SAI2_SCK_A */
+@@ -1683,6 +1689,34 @@ pins2 {
+ 		};
+ 	};
+ 
++	spi4_pins_b: spi4-0 {
++		pins {
++			pinmux = <STM32_PINMUX('E', 12, AF5)>, /* SPI4_SCK */
++				 <STM32_PINMUX('E', 14, AF5)>; /* SPI4_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('E', 13, AF5)>; /* SPI4_MISO */
++			bias-disable;
++		};
++	};
++
++	spi5_pins_a: spi5-0 {
++		pins {
++			pinmux = <STM32_PINMUX('F', 7, AF5)>, /* SPI5_SCK */
++				 <STM32_PINMUX('F', 9, AF5)>; /* SPI5_MOSI */
++			bias-disable;
++			drive-push-pull;
++			slew-rate = <1>;
++		};
++		pins2 {
++			pinmux = <STM32_PINMUX('F', 8, AF5)>; /* SPI5_MISO */
++			bias-disable;
++		};
++	};
++
+ 	stusb1600_pins_a: stusb1600-0 {
+ 		pins {
+ 			pinmux = <STM32_PINMUX('I', 11, ANALOG)>;
 diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
 index 4b8031782555..6eea5a9c04f3 100644
 --- a/arch/arm/boot/dts/stm32mp151.dtsi
@@ -123,6 +163,69 @@ index 02a39132958e..b4e504f026ce 100644
  &m_can1 {
  	pinctrl-names = "default", "sleep";
  	pinctrl-0 = <&m_can1_pins_a>;
+diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+index 4c8be9c8eb20..2390feff7690 100644
+--- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
++++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+@@ -20,9 +20,58 @@ aliases {
+ 		serial0 = &uart4;
+ 		serial1 = &usart3;
+ 		serial2 = &uart7;
++		spi0 = &spi4;
++		spi1 = &spi5;
+ 	};
+ 
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ };
++
++&i2c5 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c5_pins_a>;
++	pinctrl-1 = <&i2c5_sleep_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
++	/* spare dmas for other usage */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "okay";
++};
++
++&spi4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi4_pins_b>;
++	cs-gpios = <&gpioe 11 GPIO_ACTIVE_HIGH>;
++	/* Use PIO Mode */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "okay";
++
++	spidev@0 {
++		compatible = "spidev";
++		reg = <0>;
++		spi-max-frequency = <4000000>;
++		st,spi-midi-ns = <4000>;
++	};
++};
++
++&spi5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi5_pins_a>;
++	cs-gpios = <&gpiof 6 GPIO_ACTIVE_HIGH>;
++	/* Use PIO Mode */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "okay";
++
++	spidev@0 {
++		compatible = "spidev";
++		reg = <0>;
++		spi-max-frequency = <4000000>;
++		st,spi-midi-ns = <4000>;
++	};
++};
 diff --git a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts b/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
 index d3b81382f97c..6dd8216c235e 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dhcom-pdk2.dts
@@ -154,7 +257,7 @@ index cfb8f8a0c82d..7067a860aaff 100644
  	pinctrl-names = "default", "sleep";
  	pinctrl-0 = <&m_can1_pins_a>;
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 2bc92ef3aeb9..f230d9e37323 100644
+index 2bc92ef3aeb9..0df4008dacb5 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
 @@ -11,6 +11,7 @@
@@ -165,7 +268,14 @@ index 2bc92ef3aeb9..f230d9e37323 100644
  
  / {
  	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
-@@ -27,6 +28,11 @@ aliases {
+@@ -22,11 +23,18 @@ aliases {
+ 		serial1 = &usart3;
+ 		serial2 = &uart7;
+ 		serial3 = &usart2;
++		spi0 = &spi4;
++		spi1 = &spi5;
+ 	};
+ 
  	chosen {
  		stdout-path = "serial0:115200n8";
  	};
@@ -177,7 +287,7 @@ index 2bc92ef3aeb9..f230d9e37323 100644
  };
  
  &cryp1 {
-@@ -92,10 +98,48 @@ ltdc_ep1_out: endpoint@1 {
+@@ -92,10 +100,95 @@ ltdc_ep1_out: endpoint@1 {
  	};
  };
  
@@ -226,7 +336,89 @@ index 2bc92ef3aeb9..f230d9e37323 100644
 +		vbat-supply = <&v3v3>;
 +		vddio-supply = <&v3v3>;
 +	};
++};
++
++&i2c5 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c5_pins_a>;
++	pinctrl-1 = <&i2c5_sleep_pins_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
++	/* spare dmas for other usage */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "okay";
++};
++
++&spi4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi4_pins_b>;
++	cs-gpios = <&gpioe 11 GPIO_ACTIVE_HIGH>;
++	/* Use PIO Mode */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "okay";
++
++	spidev@0 {
++		compatible = "spidev";
++		reg = <0>;
++		spi-max-frequency = <4000000>;
++		st,spi-midi-ns = <4000>;
++	};
++};
++
++&spi5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi5_pins_a>;
++	cs-gpios = <&gpiof 6 GPIO_ACTIVE_HIGH>;
++	/* Use PIO Mode */
++	/delete-property/dmas;
++	/delete-property/dma-names;
++	status = "okay";
++
++	spidev@0 {
++		compatible = "spidev";
++		reg = <0>;
++		spi-max-frequency = <4000000>;
++		st,spi-midi-ns = <4000>;
++	};
  };
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+index 6cf49a0a9e69..6c37e659b8e3 100644
+--- a/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey-som.dtsi
+@@ -213,7 +213,7 @@ vbus_otg: pwr_sw1 {
+ 			 vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge;
++				regulator-active-discharge = <1>;
+ 			 };
+ 		};
+ 
+@@ -269,7 +269,7 @@ &sdmmc2 {
+ 	st,neg-edge;
+ 	bus-width = <8>;
+ 	vmmc-supply = <&v3v3>;
+-	vqmmc-supply = <&v3v3>;
++	vqmmc-supply = <&vdd>;
+ 	mmc-ddr-3_3v;
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+index a7ffec8f1516..be1dd5e9e744 100644
+--- a/arch/arm/boot/dts/stm32mp157c-odyssey.dts
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+@@ -64,7 +64,7 @@ &sdmmc1 {
+ 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
+ 	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
+ 	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
+-	cd-gpios = <&gpiob 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
++	cd-gpios = <&gpioi 3 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+ 	disable-wp;
+ 	st,neg-edge;
+ 	bus-width = <4>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi
 index fad23d6f69b8..fb45c5aa878d 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi
@@ -253,6 +445,80 @@ index fad23d6f69b8..fb45c5aa878d 100644
  			  "", "", "", "";
  
  	/*
+diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
+index 5523f4138fd6..6cf1c8b4c6e2 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
+@@ -34,11 +34,10 @@ display_bl: display-bl {
+ 
+ 	gpio-keys-polled {
+ 		compatible = "gpio-keys-polled";
+-		#size-cells = <0>;
+ 		poll-interval = <20>;
+ 
+ 		/*
+-		 * The EXTi IRQ line 3 is shared with touchscreen and ethernet,
++		 * The EXTi IRQ line 3 is shared with ethernet,
+ 		 * so mark this as polled GPIO key.
+ 		 */
+ 		button-0 {
+@@ -47,6 +46,16 @@ button-0 {
+ 			gpios = <&gpiof 3 GPIO_ACTIVE_LOW>;
+ 		};
+ 
++		/*
++		 * The EXTi IRQ line 6 is shared with touchscreen,
++		 * so mark this as polled GPIO key.
++		 */
++		button-1 {
++			label = "TA2-GPIO-B";
++			linux,code = <KEY_B>;
++			gpios = <&gpiod 6 GPIO_ACTIVE_LOW>;
++		};
++
+ 		/*
+ 		 * The EXTi IRQ line 0 is shared with PMIC,
+ 		 * so mark this as polled GPIO key.
+@@ -60,14 +69,6 @@ button-2 {
+ 
+ 	gpio-keys {
+ 		compatible = "gpio-keys";
+-		#size-cells = <0>;
+-
+-		button-1 {
+-			label = "TA2-GPIO-B";
+-			linux,code = <KEY_B>;
+-			gpios = <&gpiod 6 GPIO_ACTIVE_LOW>;
+-			wakeup-source;
+-		};
+ 
+ 		button-3 {
+ 			label = "TA4-GPIO-D";
+@@ -84,6 +85,7 @@ led-0 {
+ 			label = "green:led5";
+ 			gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
++			status = "disabled";
+ 		};
+ 
+ 		led-1 {
+@@ -184,12 +186,11 @@ sgtl5000_rx_endpoint: endpoint@1 {
+ 
+ 	};
+ 
+-	polytouch@38 {
+-		compatible = "edt,edt-ft5x06";
++	touchscreen@38 {
++		compatible = "edt,edt-ft5406";
+ 		reg = <0x38>;
+-		interrupt-parent = <&gpiog>;
+-		interrupts = <2 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
+-		linux,wakeup;
++		interrupt-parent = <&gpioc>;
++		interrupts = <6 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
+ 	};
+ };
+ 
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi
 index cd3a1798ca68..ba816ef8b9b2 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-picoitx.dtsi
@@ -287,10 +553,19 @@ index cd3a1798ca68..ba816ef8b9b2 100644
  };
  
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
-index 2617815e42a6..272a1a67a9ad 100644
+index 30e4d990c5a3..8c41f819f776 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
-@@ -92,6 +92,10 @@ adc2: adc@100 {
+@@ -12,6 +12,8 @@ / {
+ 	aliases {
+ 		ethernet0 = &ethernet0;
+ 		ethernet1 = &ksz8851;
++		rtc0 = &hwrtc;
++		rtc1 = &rtc;
+ 	};
+ 
+ 	memory@c0000000 {
+@@ -92,6 +94,10 @@ adc2: adc@100 {
  	};
  };
  
@@ -301,7 +576,24 @@ index 2617815e42a6..272a1a67a9ad 100644
  &dac {
  	pinctrl-names = "default";
  	pinctrl-0 = <&dac_ch1_pins_a &dac_ch2_pins_a>;
-@@ -164,10 +168,70 @@ ksz8851: ks8851mll@1,0 {
+@@ -134,6 +140,7 @@ phy0: ethernet-phy@1 {
+ 			reset-gpios = <&gpioh 3 GPIO_ACTIVE_LOW>;
+ 			reset-assert-us = <500>;
+ 			reset-deassert-us = <500>;
++			smsc,disable-energy-detect;
+ 			interrupt-parent = <&gpioi>;
+ 			interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+ 		};
+@@ -146,7 +153,7 @@ &fmc {
+ 	pinctrl-1 = <&fmc_sleep_pins_b>;
+ 	status = "okay";
+ 
+-	ksz8851: ks8851mll@1,0 {
++	ksz8851: ethernet@1,0 {
+ 		compatible = "micrel,ks8851-mll";
+ 		reg = <1 0x0 0x2>, <1 0x2 0x20000>;
+ 		interrupt-parent = <&gpioc>;
+@@ -170,10 +177,70 @@ ksz8851: ks8851mll@1,0 {
  	};
  };
  
@@ -372,6 +664,50 @@ index 2617815e42a6..272a1a67a9ad 100644
  &i2c4 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&i2c4_pins_a>;
+@@ -184,7 +251,7 @@ &i2c4 {
+ 	/delete-property/dmas;
+ 	/delete-property/dma-names;
+ 
+-	rtc@32 {
++	hwrtc: rtc@32 {
+ 		compatible = "microcrystal,rv8803";
+ 		reg = <0x32>;
+ 	};
+@@ -269,8 +336,6 @@ vtt_ddr: ldo3 {
+ 
+ 			vdd_usb: ldo4 {
+ 				regulator-name = "vdd_usb";
+-				regulator-min-microvolt = <3300000>;
+-				regulator-max-microvolt = <3300000>;
+ 				interrupts = <IT_CURLIM_LDO4 0>;
+ 			};
+ 
+@@ -292,7 +357,6 @@ v1v8: ldo6 {
+ 			vref_ddr: vref_ddr {
+ 				regulator-name = "vref_ddr";
+ 				regulator-always-on;
+-				regulator-over-current-protection;
+ 			};
+ 
+ 			bst_out: boost {
+@@ -308,7 +372,7 @@ vbus_otg: pwr_sw1 {
+ 			vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge;
++				regulator-active-discharge = <1>;
+ 			};
+ 		};
+ 
+@@ -373,7 +437,7 @@ &qspi {
+ 	#size-cells = <0>;
+ 	status = "okay";
+ 
+-	flash0: mx66l51235l@0 {
++	flash0: flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-rx-bus-width = <4>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
 index b09e87fe901a..64dca5b7f748 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcor-avenger96.dtsi
@@ -419,7 +755,7 @@ index b09e87fe901a..64dca5b7f748 100644
  	pinctrl-names = "default";
  	pinctrl-0 = <&i2c1_pins_b>;
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
-index 803eb8bc9c85..013ae369791d 100644
+index 803eb8bc9c85..2b0ac605549d 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi
 @@ -21,6 +21,10 @@ memory@c0000000 {
@@ -433,6 +769,35 @@ index 803eb8bc9c85..013ae369791d 100644
  &dts {
  	status = "okay";
  };
+@@ -194,7 +198,7 @@ &qspi {
+ 	#size-cells = <0>;
+ 	status = "okay";
+ 
+-	flash0: spi-flash@0 {
++	flash0: flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-rx-bus-width = <4>;
+diff --git a/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi b/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
+index 713485a95795..b094348e54f0 100644
+--- a/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
++++ b/arch/arm/boot/dts/stm32mp15xx-osd32.dtsi
+@@ -182,13 +182,13 @@ bst_out: boost {
+ 			vbus_otg: pwr_sw1 {
+ 				regulator-name = "vbus_otg";
+ 				interrupts = <IT_OCP_OTG 0>;
+-				regulator-active-discharge;
++				regulator-active-discharge = <1>;
+ 			};
+ 
+ 			vbus_sw: pwr_sw2 {
+ 				regulator-name = "vbus_sw";
+ 				interrupts = <IT_OCP_SWOUT 0>;
+-				regulator-active-discharge;
++				regulator-active-discharge = <1>;
+ 			};
+ 		};
+ 
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
 index 000000000000..4373c4dea587
