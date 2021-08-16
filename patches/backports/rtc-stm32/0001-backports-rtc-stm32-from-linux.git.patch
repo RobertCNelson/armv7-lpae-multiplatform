@@ -1,16 +1,16 @@
-From b9e1d4c2483dccb51acc6695e0d753033ad1fdb8 Mon Sep 17 00:00:00 2001
+From 727a4543678f9b5944287be9e3e5e551d5693a5e Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 1 Jun 2021 13:56:36 -0500
+Date: Mon, 16 Aug 2021 16:22:01 -0500
 Subject: [PATCH] backports: rtc-stm32: from: linux.git
 
-Reference: v5.12.8
+Reference: v5.12.19
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- drivers/rtc/rtc-stm32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-stm32.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
-index d774aa18f57a..75a8924ba12b 100644
+index d774aa18f57a..ac9e228b56d0 100644
 --- a/drivers/rtc/rtc-stm32.c
 +++ b/drivers/rtc/rtc-stm32.c
 @@ -209,7 +209,7 @@ static irqreturn_t stm32_rtc_alarm_irq(int irq, void *dev_id)
@@ -31,6 +31,29 @@ index d774aa18f57a..75a8924ba12b 100644
  
  	return IRQ_HANDLED;
  }
+@@ -754,7 +754,7 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+ 
+ 	ret = clk_prepare_enable(rtc->rtc_ck);
+ 	if (ret)
+-		goto err;
++		goto err_no_rtc_ck;
+ 
+ 	if (rtc->data->need_dbp)
+ 		regmap_update_bits(rtc->dbp, rtc->dbp_reg,
+@@ -830,10 +830,12 @@ static int stm32_rtc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	return 0;
++
+ err:
++	clk_disable_unprepare(rtc->rtc_ck);
++err_no_rtc_ck:
+ 	if (rtc->data->has_pclk)
+ 		clk_disable_unprepare(rtc->pclk);
+-	clk_disable_unprepare(rtc->rtc_ck);
+ 
+ 	if (rtc->data->need_dbp)
+ 		regmap_update_bits(rtc->dbp, rtc->dbp_reg, rtc->dbp_mask, 0);
 -- 
 2.30.2
 
