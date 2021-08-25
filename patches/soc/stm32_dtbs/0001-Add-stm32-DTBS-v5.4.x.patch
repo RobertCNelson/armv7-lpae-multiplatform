@@ -1,6 +1,6 @@
-From efc6cf970f99118ab58346fe94f9dfc48ad19a3d Mon Sep 17 00:00:00 2001
+From c507223d35d12c3936457a9ba03406b500ee9a92 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 12 Jul 2021 14:12:53 -0500
+Date: Wed, 25 Aug 2021 10:38:55 -0500
 Subject: [PATCH] Add stm32 DTBS: v5.4.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.4.x
@@ -10,7 +10,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/Makefile                    |    1 +
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi      | 1284 +++++++++++++++++
- .../dts/{stm32mp157c.dtsi => stm32mp151.dtsi} |  332 ++++-
+ .../dts/{stm32mp157c.dtsi => stm32mp151.dtsi} |  344 ++++-
  arch/arm/boot/dts/stm32mp153.dtsi             |   46 +
  arch/arm/boot/dts/stm32mp157-pinctrl.dtsi     |  925 ------------
  arch/arm/boot/dts/stm32mp157.dtsi             |   31 +
@@ -31,7 +31,7 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  arch/arm/boot/dts/stm32mp15xxac-pinctrl.dtsi  |   73 +
  arch/arm/boot/dts/stm32mp15xxad-pinctrl.dtsi  |   57 +
  include/dt-bindings/rtc/rtc-stm32.h           |   13 +
- 23 files changed, 3005 insertions(+), 1771 deletions(-)
+ 23 files changed, 3011 insertions(+), 1777 deletions(-)
  create mode 100644 arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
  rename arch/arm/boot/dts/{stm32mp157c.dtsi => stm32mp151.dtsi} (85%)
  create mode 100644 arch/arm/boot/dts/stm32mp153.dtsi
@@ -1356,7 +1356,7 @@ diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp151.d
 similarity index 85%
 rename from arch/arm/boot/dts/stm32mp157c.dtsi
 rename to arch/arm/boot/dts/stm32mp151.dtsi
-index f98e0370c0bc..01f826db1313 100644
+index eca469a64a97..01f826db1313 100644
 --- a/arch/arm/boot/dts/stm32mp157c.dtsi
 +++ b/arch/arm/boot/dts/stm32mp151.dtsi
 @@ -17,15 +17,10 @@
@@ -1670,7 +1670,20 @@ index f98e0370c0bc..01f826db1313 100644
  		};
  
  		crc1: crc@58009000 {
-@@ -1336,6 +1389,7 @@
+@@ -1311,6 +1364,12 @@
+ 			status = "disabled";
+ 		};
+ 
++		stmmac_axi_config_0: stmmac-axi-config {
++			snps,wr_osr_lmt = <0x7>;
++			snps,rd_osr_lmt = <0x7>;
++			snps,blen = <0 0 0 0 16 8 4>;
++		};
++
+ 		ethernet0: ethernet@5800a000 {
+ 			compatible = "st,stm32mp1-dwmac", "snps,dwmac-4.20a";
+ 			reg = <0x5800a000 0x2000>;
+@@ -1330,15 +1389,10 @@
  			st,syscon = <&syscfg 0x4>;
  			snps,mixed-burst;
  			snps,pbl = <2>;
@@ -1678,6 +1691,15 @@ index f98e0370c0bc..01f826db1313 100644
  			snps,axi-config = <&stmmac_axi_config_0>;
  			snps,tso;
  			status = "disabled";
+-
+-			stmmac_axi_config_0: stmmac-axi-config {
+-				snps,wr_osr_lmt = <0x7>;
+-				snps,rd_osr_lmt = <0x7>;
+-				snps,blen = <0 0 0 0 16 8 4>;
+-			};
+ 		};
+ 
+ 		usbh_ohci: usbh-ohci@5800c000 {
 @@ -1360,26 +1414,6 @@
  			status = "disabled";
  		};
