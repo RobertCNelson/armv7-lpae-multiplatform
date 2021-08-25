@@ -1,6 +1,6 @@
-From e633ea7c2fa48a391aeaf761cea26612b53bda7c Mon Sep 17 00:00:00 2001
+From 01992e76bde9a0ae0d1cd6ee3aca2919f09328a3 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 16 Aug 2021 16:46:29 -0500
+Date: Tue, 24 Aug 2021 20:43:59 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.10.x
@@ -18,14 +18,14 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  .../arm/boot/dts/stm32mp157c-odyssey-som.dtsi |   7 +-
  arch/arm/boot/dts/stm32mp157c-odyssey.dts     |   2 +-
  .../arm/boot/dts/stm32mp15xx-dhcom-drc02.dtsi |  18 ++-
- arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  11 +-
- arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 130 +++++++++++++++--
+ arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi |  35 ++---
+ arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi  | 131 +++++++++++++++--
  .../boot/dts/stm32mp15xx-dhcor-avenger96.dtsi |  39 ++++-
  arch/arm/boot/dts/stm32mp15xx-dhcor-som.dtsi  |   2 +-
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi        |  42 +++++-
  arch/arm/boot/dts/stm32mp15xx-osd32.dtsi      |   7 +-
  include/dt-bindings/rtc/rtc-stm32.h           |  13 ++
- 17 files changed, 457 insertions(+), 83 deletions(-)
+ 17 files changed, 467 insertions(+), 98 deletions(-)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -756,10 +756,10 @@ index e4d287d99421..fb45c5aa878d 100644
 -	vdda1v8-supply = <&reg18>;
  };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
-index 59b3239bcd76..5523f4138fd6 100644
+index 633079245601..5523f4138fd6 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-pdk2.dtsi
-@@ -34,6 +34,7 @@ display_bl: display-bl {
+@@ -34,10 +34,11 @@ display_bl: display-bl {
  
  	gpio-keys-polled {
  		compatible = "gpio-keys-polled";
@@ -767,15 +767,52 @@ index 59b3239bcd76..5523f4138fd6 100644
  		poll-interval = <20>;
  
  		/*
-@@ -59,6 +60,7 @@ button-2 {
+-		 * The EXTi IRQ line 3 is shared with ethernet,
++		 * The EXTi IRQ line 3 is shared with touchscreen and ethernet,
+ 		 * so mark this as polled GPIO key.
+ 		 */
+ 		button-0 {
+@@ -46,16 +47,6 @@ button-0 {
+ 			gpios = <&gpiof 3 GPIO_ACTIVE_LOW>;
+ 		};
+ 
+-		/*
+-		 * The EXTi IRQ line 6 is shared with touchscreen,
+-		 * so mark this as polled GPIO key.
+-		 */
+-		button-1 {
+-			label = "TA2-GPIO-B";
+-			linux,code = <KEY_B>;
+-			gpios = <&gpiod 6 GPIO_ACTIVE_LOW>;
+-		};
+-
+ 		/*
+ 		 * The EXTi IRQ line 0 is shared with PMIC,
+ 		 * so mark this as polled GPIO key.
+@@ -69,6 +60,14 @@ button-2 {
  
  	gpio-keys {
  		compatible = "gpio-keys";
 +		#size-cells = <0>;
++
++		button-1 {
++			label = "TA2-GPIO-B";
++			linux,code = <KEY_B>;
++			gpios = <&gpiod 6 GPIO_ACTIVE_LOW>;
++			wakeup-source;
++		};
  
- 		button-1 {
- 			label = "TA2-GPIO-B";
-@@ -182,11 +184,12 @@ sgtl5000_rx_endpoint: endpoint@1 {
+ 		button-3 {
+ 			label = "TA4-GPIO-D";
+@@ -85,7 +84,6 @@ led-0 {
+ 			label = "green:led5";
+ 			gpios = <&gpioc 6 GPIO_ACTIVE_HIGH>;
+ 			default-state = "off";
+-			status = "disabled";
+ 		};
+ 
+ 		led-1 {
+@@ -186,11 +184,12 @@ sgtl5000_rx_endpoint: endpoint@1 {
  
  	};
  
@@ -784,13 +821,15 @@ index 59b3239bcd76..5523f4138fd6 100644
 +	polytouch@38 {
 +		compatible = "edt,edt-ft5x06";
  		reg = <0x38>;
- 		interrupt-parent = <&gpiog>;
- 		interrupts = <2 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
+-		interrupt-parent = <&gpioc>;
+-		interrupts = <6 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
++		interrupt-parent = <&gpiog>;
++		interrupts = <2 IRQ_TYPE_EDGE_FALLING>; /* GPIO E */
 +		linux,wakeup;
  	};
  };
  
-@@ -297,12 +300,8 @@ &usbphyc {
+@@ -301,12 +300,8 @@ &usbphyc {
  
  &usbphyc_port0 {
  	phy-supply = <&vdd_usb>;
@@ -804,7 +843,7 @@ index 59b3239bcd76..5523f4138fd6 100644
 -	vdda1v8-supply = <&reg18>;
  };
 diff --git a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
-index 8221bf69fefe..d40c8db74c6f 100644
+index 000af7177701..d40c8db74c6f 100644
 --- a/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 +++ b/arch/arm/boot/dts/stm32mp15xx-dhcom-som.dtsi
 @@ -11,6 +11,7 @@
@@ -823,7 +862,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
  
  	mdio0 {
  		#address-cells = <1>;
-@@ -126,19 +128,106 @@ mdio0 {
+@@ -126,20 +128,106 @@ mdio0 {
  
  		phy0: ethernet-phy@1 {
  			reg = <1>;
@@ -834,6 +873,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
 -			reset-gpios = <&gpioh 3 GPIO_ACTIVE_LOW>;
 -			reset-assert-us = <500>;
 -			reset-deassert-us = <500>;
+-			smsc,disable-energy-detect;
  			interrupt-parent = <&gpioi>;
  			interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
  		};
@@ -937,7 +977,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
  &i2c4 {
  	pinctrl-names = "default";
  	pinctrl-0 = <&i2c4_pins_a>;
-@@ -234,6 +323,8 @@ vtt_ddr: ldo3 {
+@@ -235,6 +323,8 @@ vtt_ddr: ldo3 {
  
  			vdd_usb: ldo4 {
  				regulator-name = "vdd_usb";
@@ -946,7 +986,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
  				interrupts = <IT_CURLIM_LDO4 0>;
  			};
  
-@@ -255,6 +346,7 @@ v1v8: ldo6 {
+@@ -256,6 +346,7 @@ v1v8: ldo6 {
  			vref_ddr: vref_ddr {
  				regulator-name = "vref_ddr";
  				regulator-always-on;
@@ -954,7 +994,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
  			};
  
  			bst_out: boost {
-@@ -270,7 +362,7 @@ vbus_otg: pwr_sw1 {
+@@ -271,7 +362,7 @@ vbus_otg: pwr_sw1 {
  			vbus_sw: pwr_sw2 {
  				regulator-name = "vbus_sw";
  				interrupts = <IT_OCP_SWOUT 0>;
@@ -963,7 +1003,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
  			};
  		};
  
-@@ -335,7 +427,7 @@ &qspi {
+@@ -336,7 +427,7 @@ &qspi {
  	#size-cells = <0>;
  	status = "okay";
  
@@ -972,7 +1012,7 @@ index 8221bf69fefe..d40c8db74c6f 100644
  		compatible = "jedec,spi-nor";
  		reg = <0>;
  		spi-rx-bus-width = <4>;
-@@ -354,20 +446,38 @@ &rtc {
+@@ -355,20 +446,38 @@ &rtc {
  };
  
  &sdmmc1 {
