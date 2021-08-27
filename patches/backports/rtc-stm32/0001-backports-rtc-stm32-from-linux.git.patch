@@ -1,6 +1,6 @@
-From 374b1c8f4cd955b8f4edb927758d7b6abd74f539 Mon Sep 17 00:00:00 2001
+From 24930b5a516ca69d3bdaad308edc5de6003d40f8 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Tue, 24 Aug 2021 20:44:45 -0500
+Date: Fri, 27 Aug 2021 12:09:32 -0500
 Subject: [PATCH] backports: rtc-stm32: from: linux.git
 
 Reference: v5.12.19
