@@ -1,6 +1,6 @@
-From 4f9eadb3fc2936e2dc8c088513b0adb3e75eb62a Mon Sep 17 00:00:00 2001
+From ea4df2cfe31d8193b2c0df541d3e3b291d29ff03 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Fri, 27 Aug 2021 10:04:54 -0500
+Date: Tue, 7 Sep 2021 20:20:14 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.13.x
