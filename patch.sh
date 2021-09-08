@@ -450,6 +450,7 @@ ti_pm_firmware () {
 }
 
 cleanup_dts_builds () {
+	rm -rf arch/arm/boot/dts/modules.order || true
 	rm -rf arch/arm/boot/dts/.*cmd || true
 	rm -rf arch/arm/boot/dts/.*tmp || true
 	rm -rf arch/arm/boot/dts/*dtb || true
@@ -873,7 +874,7 @@ backports () {
 
 	dir 'cypress'
 
-	backport_tag="v5.4.142"
+	backport_tag="v5.4.144"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -887,8 +888,8 @@ backports () {
 
 		post_backports
 		exit 2
-	else
-		patch_backports
+#	else
+#		patch_backports
 	fi
 }
 
@@ -933,25 +934,21 @@ drivers () {
 }
 
 soc () {
-#	dir 'soc/imx/udoo'
-#	dir 'soc/imx/wandboard'
 	dir 'soc/imx/imx7'
-
-#	dir 'soc/ti/panda'
 	dir 'bootup_hacks'
 	dir 'fixes'
 }
 
 ###
 backports
-reverts
+#reverts
 drivers
 soc
 
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.60"
+		backport_tag="v5.10.63"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
