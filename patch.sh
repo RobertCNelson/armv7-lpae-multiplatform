@@ -542,7 +542,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.19"
+	backport_tag="v5.13.18"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -572,14 +572,14 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.19"
+	backport_tag="v5.10.75"
 
-	subsystem="rtc-stm32"
+	subsystem="musb"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		pre_backports
 
-		cp -v ~/linux-src/drivers/rtc/rtc-stm32.c ./drivers/rtc/rtc-stm32.c
+		cp -rv ~/linux-src/drivers/usb/musb/musb_* ./drivers/usb/musb/
 
 		post_backports
 		exit 2
@@ -587,7 +587,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.10.74"
+	backport_tag="v5.10.75"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -600,8 +600,23 @@ backports () {
 		cp -rv ~/linux-src/drivers/staging/iio/* ./drivers/staging/iio/
 
 		post_backports
-	#	exit 2
-	#else
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.12.19"
+
+	subsystem="rtc-stm32"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -v ~/linux-src/drivers/rtc/rtc-stm32.c ./drivers/rtc/rtc-stm32.c
+
+		post_backports
+		exit 2
+	else
 		patch_backports
 	fi
 }
@@ -663,7 +678,7 @@ soc
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.74"
+		backport_tag="v5.10.75"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
