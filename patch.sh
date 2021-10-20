@@ -658,7 +658,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.19"
+	backport_tag="v5.13.19"
 
 	subsystem="wlcore"
 	#regenerate="enable"
@@ -874,7 +874,22 @@ backports () {
 
 	dir 'cypress'
 
-	backport_tag="v5.4.147"
+	backport_tag="v5.4.155"
+
+	subsystem="musb"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -rv ~/linux-src/drivers/usb/musb/musb_* ./drivers/usb/musb/
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.4.155"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -888,8 +903,8 @@ backports () {
 
 		post_backports
 		exit 2
-#	else
-#		patch_backports
+	else
+		patch_backports
 	fi
 }
 
@@ -936,7 +951,7 @@ drivers () {
 soc () {
 	dir 'soc/imx/imx7'
 	dir 'bootup_hacks'
-	dir 'fixes'
+	#dir 'fixes'
 }
 
 ###
@@ -948,7 +963,7 @@ soc
 packaging () {
 	do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.10.66"
+		backport_tag="v5.10.75"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
