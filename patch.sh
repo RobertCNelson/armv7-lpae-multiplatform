@@ -585,11 +585,16 @@ soc () {
 	dir 'bootup_hacks'
 }
 
+fixes () {
+	dir 'fixes/gcc'
+}
+
 ###
 #backports
 #reverts
 drivers
 soc
+fixes
 
 packaging () {
 	#do_backport="enable"
