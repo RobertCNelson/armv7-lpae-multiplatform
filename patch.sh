@@ -677,6 +677,7 @@ soc () {
 	dir 'soc/imx/imx7'
 	dir 'bootup_hacks'
 	dir 'fixes'
+	dir 'fixes/gcc'
 }
 
 ###
