@@ -534,7 +534,7 @@ bcfserial
 #rt
 wireless_regdb
 ti_pm_firmware
-#beagleboard_dtbs
+beagleboard_dtbs
 #stm32_dtbs
 #local_patch
 
@@ -644,7 +644,7 @@ fixes
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.15.15"
+		backport_tag="v5.16.3"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
