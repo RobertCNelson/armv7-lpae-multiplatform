@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 5.16.10 Kernel Configuration
+# Linux/arm 5.16.11 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="arm-linux-gnueabi-gcc (GCC) 11.1.0"
 CONFIG_CC_IS_GCC=y
@@ -6859,7 +6859,7 @@ CONFIG_IMX_REMOTEPROC=m
 # CONFIG_IMX_DSP_REMOTEPROC is not set
 CONFIG_OMAP_REMOTEPROC=m
 CONFIG_OMAP_REMOTEPROC_WATCHDOG=y
-CONFIG_PRU_REMOTEPROC=y
+CONFIG_PRU_REMOTEPROC=m
 CONFIG_STM32_RPROC=m
 # end of Remoteproc drivers
 
