@@ -497,6 +497,7 @@ stm32_dtbs () {
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
 
 		device="stm32mp157c-seeed-npi.dtb" ; dtb_makefile_append_stm
+		device="stm32mp157c-odyssey.dtb" ; dtb_makefile_append_stm
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
@@ -573,6 +574,21 @@ patch_backports (){
 backports () {
 	backport_tag="v5.12.16"
 
+	subsystem="dwmac-stm32"
+	#regenerate="enable"
+	if [ "x${regenerate}" = "xenable" ] ; then
+		pre_backports
+
+		cp -rv ~/linux-src/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c ./drivers/net/ethernet/stmicro/stmmac/
+
+		post_backports
+		exit 2
+	else
+		patch_backports
+	fi
+
+	backport_tag="v5.12.16"
+
 	subsystem="greybus"
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
@@ -602,7 +618,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.12.10"
+	backport_tag="v5.12.16"
 
 	subsystem="rtc-stm32"
 	#regenerate="enable"
@@ -857,7 +873,7 @@ drivers () {
 	dir 'drivers/bluetooth'
 
 	dir 'drivers/stm32-rtc'
-	dir 'drivers/stm32-dwmac'
+#	dir 'drivers/stm32-dwmac'
 }
 
 soc () {

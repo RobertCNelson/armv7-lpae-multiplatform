@@ -1,37 +1,40 @@
-From d76059dadad220250e7a8114de27d81627c96a5c Mon Sep 17 00:00:00 2001
+From fb4aab3933ad0a4bcd821968f79ba11e3cadec74 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Fri, 11 Jun 2021 09:33:17 -0500
+Date: Wed, 9 Mar 2022 15:56:06 -0600
 Subject: [PATCH] Add stm32 DTBS: v5.6.x
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.6.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/c7a0811c7ea4450711010b73c9c2aec784fc79cc
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/8ef3a8ca92335bd130cd549be92381b6923d185d
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/stm32mp15-pinctrl.dtsi    | 200 +++++++++++++-
+ arch/arm/boot/dts/Makefile                  |   2 +
+ arch/arm/boot/dts/stm32mp15-pinctrl.dtsi    | 200 ++++++++++++-
  arch/arm/boot/dts/stm32mp151.dtsi           |  16 +-
  arch/arm/boot/dts/stm32mp153.dtsi           |   1 +
  arch/arm/boot/dts/stm32mp157a-avenger96.dts |  14 +-
  arch/arm/boot/dts/stm32mp157c-dk2.dts       |  34 +++
  arch/arm/boot/dts/stm32mp157c-ed1.dts       |  16 +-
  arch/arm/boot/dts/stm32mp157c-ev1.dts       |  13 +-
- arch/arm/boot/dts/stm32mp157c-seeed-npi.dts | 285 ++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-odyssey.dts   | 296 ++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-seeed-npi.dts | 285 +++++++++++++++++++
  arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      |  13 +-
  include/dt-bindings/rtc/rtc-stm32.h         |  13 +
  include/uapi/linux/input-event-codes.h      |   2 +-
- 12 files changed, 576 insertions(+), 32 deletions(-)
+ 13 files changed, 873 insertions(+), 32 deletions(-)
+ create mode 100644 arch/arm/boot/dts/stm32mp157c-odyssey.dts
  create mode 100644 arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8ef6603e57b6..b1f63e17dd83 100644
+index 8ef6603e57b6..c44f681bb0d4 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -1025,6 +1025,7 @@ dtb-$(CONFIG_ARCH_STM32) += \
+@@ -1025,6 +1025,8 @@ dtb-$(CONFIG_ARCH_STM32) += \
  	stm32mp157a-avenger96.dtb \
  	stm32mp157a-dk1.dtb \
  	stm32mp157c-dk2.dtb \
++	stm32mp157c-odyssey.dtb \
 +	stm32mp157c-seeed-npi.dtb \
  	stm32mp157c-ed1.dtb \
  	stm32mp157c-ev1.dtb
@@ -689,6 +692,308 @@ index 228e35e16884..8a4c7ff31a92 100644
  	phys = <&usbphyc_port1 0>;
  	phy-names = "usb2-phy";
  	status = "okay";
+diff --git a/arch/arm/boot/dts/stm32mp157c-odyssey.dts b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+new file mode 100644
+index 000000000000..8a07d2b5c6ca
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32mp157c-odyssey.dts
+@@ -0,0 +1,296 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
++/*
++ * Copyright (C) 2020 Marcin Sloniewski <marcin.sloniewski@gmail.com>.
++ */
++
++/dts-v1/;
++
++#include "stm32mp157.dtsi"
++#include "stm32mp15xc.dtsi"
++#include "stm32mp15-pinctrl.dtsi"
++#include "stm32mp15xxac-pinctrl.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/rtc/rtc-stm32.h>
++#include <dt-bindings/mfd/st,stpmic1.h>
++
++/ {
++	model = "Seeed Studio Odyssey-STM32MP157C Board";
++	compatible = "seeed,stm32mp157c-odyssey",
++		     "seeed,stm32mp157c-odyssey-som", "st,stm32mp157";
++
++	aliases {
++		ethernet0 = &ethernet0;
++		serial0 = &uart4;
++		serial1 = &usart1;
++		serial2 = &usart2;
++		mmc0    = &sdmmc1;
++		mmc1    = &sdmmc2;
++		mmc2    = &sdmmc3;
++		i2c0	= &i2c2;
++		i2c1	= &i2c4;	/* RPi compatible */
++		i2c2	= &i2c1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&i2c2_pins_a>;
++	pinctrl-1 = <&i2c2_pins_sleep_a>;
++	i2c-scl-rising-time-ns = <185>;
++	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
++	status = "okay";
++	/delete-property/dmas;
++	/delete-property/dma-names;
++
++	pmic: stpmic@33 {
++		compatible = "st,stpmic1";
++		reg = <0x33>;
++		interrupts-extended = <&gpioa 0 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		status = "okay";
++
++		st,main-control-register = <0x04>;
++		st,vin-control-register = <0xc0>;
++		st,usb-control-register = <0x20>;
++
++		regulators {
++			compatible = "st,stpmic1-regulators";
++			ldo1-supply = <&v3v3>;
++			ldo3-supply = <&vdd_ddr>;
++			ldo6-supply = <&v3v3>;
++			pwr_sw1-supply = <&bst_out>;
++			pwr_sw2-supply = <&bst_out>;
++
++			vddcore: buck1 {
++				regulator-name = "vddcore";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd_ddr: buck2 {
++				regulator-name = "vdd_ddr";
++				regulator-min-microvolt = <1350000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			vdd: buck3 {
++				regulator-name = "vdd";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				st,mask-reset;
++				regulator-initial-mode = <0>;
++				regulator-over-current-protection;
++			};
++
++			v3v3: buck4 {
++				regulator-name = "v3v3";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++				regulator-initial-mode = <0>;
++			};
++
++			v1v8_audio: ldo1 {
++				regulator-name = "v1v8_audio";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO1 0>;
++			};
++
++			v3v3_hdmi: ldo2 {
++				regulator-name = "v3v3_hdmi";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO2 0>;
++
++			};
++
++			vtt_ddr: ldo3 {
++				regulator-name = "vtt_ddr";
++				regulator-min-microvolt = <500000>;
++				regulator-max-microvolt = <750000>;
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			vdd_usb: ldo4 {
++				regulator-name = "vdd_usb";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++				interrupts = <IT_CURLIM_LDO4 0>;
++			};
++
++			vdda: ldo5 {
++				regulator-name = "vdda";
++				regulator-min-microvolt = <2900000>;
++				regulator-max-microvolt = <2900000>;
++				interrupts = <IT_CURLIM_LDO5 0>;
++				regulator-boot-on;
++			};
++
++			v1v2_hdmi: ldo6 {
++				regulator-name = "v1v2_hdmi";
++				regulator-min-microvolt = <1200000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-always-on;
++				interrupts = <IT_CURLIM_LDO6 0>;
++
++			};
++
++			vref_ddr: vref_ddr {
++				regulator-name = "vref_ddr";
++				regulator-always-on;
++				regulator-over-current-protection;
++			};
++
++			bst_out: boost {
++				regulator-name = "bst_out";
++				interrupts = <IT_OCP_BOOST 0>;
++			};
++
++			vbus_otg: pwr_sw1 {
++				regulator-name = "vbus_otg";
++				interrupts = <IT_OCP_OTG 0>;
++				regulator-active-discharge;
++			};
++
++			vbus_sw: pwr_sw2 {
++				regulator-name = "vbus_sw";
++				interrupts = <IT_OCP_SWOUT 0>;
++				regulator-active-discharge;
++			};
++		};
++
++		onkey {
++			compatible = "st,stpmic1-onkey";
++			interrupts = <IT_PONKEY_F 0>, <IT_PONKEY_R 1>;
++			interrupt-names = "onkey-falling", "onkey-rising";
++			power-off-time-sec = <5>;
++			st,onkey-clear-cc-flag;
++			status = "okay";
++		};
++
++		watchdog {
++			compatible = "st,stpmic1-wdt";
++			status = "disabled";
++		};
++	};
++};
++
++&sdmmc1 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc1_b4_pins_a>;
++	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
++&sdmmc2 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc2_b4_pins_a &sdmmc2_d47_pins_s>;
++	pinctrl-1 = <&sdmmc2_b4_od_pins_a &sdmmc2_d47_pins_s>;
++	pinctrl-2 = <&sdmmc2_b4_sleep_pins_a &sdmmc2_d47_sleep_pins_s>;
++	non-removable;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <8>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
++&usbh_ehci {
++	phys = <&usbphyc_port0>, <&usbphyc_port1 1>;
++	phy-names = "usb", "usb2";
++	status = "okay";
++};
++
++&usbphyc {
++	status = "okay";
++};
++
++&usbphyc_port0 {
++	phy-supply = <&vdd_usb>;
++	vdda1v1-supply = <&reg11>;
++	vdda1v8-supply = <&reg18>;
++};
++
++&usbphyc_port1 {
++	phy-supply = <&vdd_usb>;
++	vdda1v1-supply = <&reg11>;
++	vdda1v8-supply = <&reg18>;
++};
++
++&ethernet0 {
++	status = "okay";
++	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
++	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
++	pinctrl-names = "default", "sleep";
++	clock-names = "stmmaceth",
++		      "mac-clk-tx",
++		      "mac-clk-rx",
++		      "eth-ck",
++		      "ethstp";
++	clocks = <&rcc ETHMAC>,
++		 <&rcc ETHTX>,
++		 <&rcc ETHRX>,
++		 <&rcc ETHCK_K>,
++		 <&rcc ETHSTP>;
++	assigned-clocks = <&rcc ETHCK_K>;
++	assigned-clock-parents = <&rcc PLL4_P>;
++	assigned-clock-rates = <125000000>;
++	phy-mode = "rgmii";
++	max-speed = <1000>;
++	phy-handle = <&phy0>;
++	phy-reset-gpios = <&gpiog 0 GPIO_ACTIVE_LOW>;
++	st,eth-clk-sel;
++
++	mdio0 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,dwmac-mdio";
++		phy0: ethernet-phy@7 { /* KSZ9031RN */
++			reg = <7>;
++		};
++	};
++};
++
++&sdmmc1 {
++	pinctrl-names = "default", "opendrain", "sleep";
++	pinctrl-0 = <&sdmmc1_b4_pins_a>;
++	pinctrl-1 = <&sdmmc1_b4_od_pins_a>;
++	pinctrl-2 = <&sdmmc1_b4_sleep_pins_a>;
++	broken-cd;
++	st,neg-edge;
++	bus-width = <4>;
++	vmmc-supply = <&v3v3>;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default", "sleep", "idle", "no_console_suspend";
++	pinctrl-0 = <&uart4_pins_a>;
++	pinctrl-1 = <&uart4_sleep_pins_a>;
++	pinctrl-2 = <&uart4_idle_pins_a>;
++	pinctrl-3 = <&uart4_pins_a>;
++	status = "okay";
++};
 diff --git a/arch/arm/boot/dts/stm32mp157c-seeed-npi.dts b/arch/arm/boot/dts/stm32mp157c-seeed-npi.dts
 new file mode 100644
 index 000000000000..39823237f23e
