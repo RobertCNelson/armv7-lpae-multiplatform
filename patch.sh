@@ -497,6 +497,7 @@ stm32_dtbs () {
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
 
 		device="stm32mp157c-seeed-npi.dtb" ; dtb_makefile_append_stm
+		device="stm32mp157c-odyssey.dtb" ; dtb_makefile_append_stm
 
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
