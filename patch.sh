@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2009-2021 Robert Nelson <robertcnelson@gmail.com>
+# Copyright (c) 2009-2022 Robert Nelson <robertcnelson@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -399,12 +399,6 @@ ti_pm_firmware () {
 	dir 'drivers/ti/firmware'
 }
 
-next_dtbs () {
-	dir 'dts/omap'
-	dir 'dts/omap_pruss'
-	dir 'dts/omap_sancloud'
-}
-
 cleanup_dts_builds () {
 	rm -rf arch/arm/boot/dts/modules.order || true
 	rm -rf arch/arm/boot/dts/.*cmd || true
@@ -540,7 +534,6 @@ bcfserial
 #rt
 wireless_regdb
 ti_pm_firmware
-#next_dtbs
 beagleboard_dtbs
 #stm32_dtbs
 #local_patch
@@ -626,6 +619,7 @@ drivers () {
 	dir 'drivers/ti/serial'
 	dir 'drivers/ti/tsc'
 	dir 'drivers/ti/gpio'
+	#dir 'drivers/ti/uio'
 	dir 'drivers/greybus'
 	dir 'drivers/serdev'
 	dir 'drivers/fb_ssd1306'
@@ -650,7 +644,7 @@ fixes
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.16.12"
+		backport_tag="v5.16.15"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
