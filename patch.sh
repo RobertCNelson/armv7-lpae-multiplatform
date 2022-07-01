@@ -575,7 +575,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.10.120"
+	backport_tag="v5.10.127"
 
 	subsystem="uio"
 	#regenerate="enable"
@@ -591,7 +591,7 @@ backports () {
 		dir 'drivers/ti/uio'
 	fi
 
-	backport_tag="v5.15.45"
+	backport_tag="v5.15.51"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -604,8 +604,8 @@ backports () {
 		cp -rv ~/linux-src/drivers/staging/iio/* ./drivers/staging/iio/
 
 		post_backports
-	#	exit 2
-	#else
+		exit 2
+	else
 		patch_backports
 	fi
 }
@@ -663,7 +663,7 @@ fixes
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.17.13"
+		backport_tag="v5.18.8"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
