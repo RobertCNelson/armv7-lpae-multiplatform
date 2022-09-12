@@ -573,7 +573,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.10.139"
+	backport_tag="v5.10.142"
 
 	subsystem="uio"
 	#regenerate="enable"
@@ -589,7 +589,7 @@ backports () {
 		dir 'drivers/ti/uio'
 	fi
 
-	backport_tag="v6.0-rc3"
+	backport_tag="v6.0-rc5"
 
 	subsystem="it66121"
 	#regenerate="enable"
@@ -645,7 +645,6 @@ soc () {
 
 fixes () {
 	dir 'fixes/gcc'
-	dir 'fixes/clk'
 }
 
 ###
@@ -658,7 +657,7 @@ fixes
 packaging () {
 	#do_backport="enable"
 	if [ "x${do_backport}" = "xenable" ] ; then
-		backport_tag="v5.19.5"
+		backport_tag="v5.19.8"
 
 		subsystem="bindeb-pkg"
 		#regenerate="enable"
