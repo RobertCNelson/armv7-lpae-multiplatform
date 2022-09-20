@@ -575,7 +575,7 @@ patch_backports (){
 }
 
 backports () {
-	backport_tag="v5.10.142"
+	backport_tag="v5.10.144"
 
 	subsystem="uio"
 	#regenerate="enable"
@@ -591,7 +591,7 @@ backports () {
 		dir 'drivers/ti/uio'
 	fi
 
-	backport_tag="v5.15.67"
+	backport_tag="v5.15.69"
 
 	subsystem="iio"
 	#regenerate="enable"
@@ -609,7 +609,7 @@ backports () {
 		patch_backports
 	fi
 
-	backport_tag="v5.19.8"
+	backport_tag="v5.19.10"
 
 	subsystem="it66121"
 	#regenerate="enable"
