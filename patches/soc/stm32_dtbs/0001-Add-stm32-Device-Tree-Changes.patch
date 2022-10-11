@@ -1,17 +1,17 @@
-From 8659ef0ab194dbab719d5c1f591d1a88750b3388 Mon Sep 17 00:00:00 2001
+From a20196f38b8d39fe383199ff9c43ffe20d230369 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 10 Oct 2022 19:35:37 -0500
+Date: Mon, 10 Oct 2022 19:44:11 -0500
 Subject: [PATCH] Add stm32 Device Tree Changes
 
 https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v5.15.x
 
-https://github.com/RobertCNelson/stm32-DeviceTrees/commit/ee0256dec47da108b69fdd29cd7e1c55d7b785d0
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/b2373acecc3bb5b22ce8deb70e7f87c2a7f96819
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  arch/arm/boot/dts/stm32mp15-pinctrl.dtsi |  6 ++++++
- arch/arm/boot/dts/stm32mp157c-dk2.dts    | 13 +++++++++++++
+ arch/arm/boot/dts/stm32mp157c-dk2.dts    | 23 +++++++++++++++++++++++
  include/dt-bindings/rtc/rtc-stm32.h      | 13 +++++++++++++
- 3 files changed, 32 insertions(+)
+ 3 files changed, 42 insertions(+)
  create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
 
 diff --git a/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi b/arch/arm/boot/dts/stm32mp15-pinctrl.dtsi
@@ -32,10 +32,10 @@ index 2ebafe27a865..dcd0083745c5 100644
  		pins {
  			pinmux = <STM32_PINMUX('I', 5, AF10)>, /* SAI2_SCK_A */
 diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 2bc92ef3aeb9..6d5b48fc9372 100644
+index 2bc92ef3aeb9..b0e55506610a 100644
 --- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
 +++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-@@ -99,3 +99,16 @@ &usart2 {
+@@ -99,3 +99,26 @@ &usart2 {
  	pinctrl-2 = <&usart2_idle_pins_c>;
  	status = "disabled";
  };
@@ -51,6 +51,16 @@ index 2bc92ef3aeb9..6d5b48fc9372 100644
 +	/delete-property/dmas;
 +	/delete-property/dma-names;
 +	status = "okay";
++
++	hts221@5f {
++		compatible = "st,hts221";
++		reg = <0x5f>;
++	};
++
++	lsm6dso@6b {
++		compatible = "st,lsm6dso";
++		reg = <0x6b>;
++	};
 +};
 diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
 new file mode 100644
