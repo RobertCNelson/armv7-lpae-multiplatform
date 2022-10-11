@@ -475,7 +475,7 @@ dtb_makefile_append_stm () {
 }
 
 stm32_dtbs () {
-	branch="v5.14.x"
+	branch="v5.15.x"
 	https_repo="https://github.com/RobertCNelson/stm32-DeviceTrees"
 	work_dir="stm32-DeviceTrees"
 	#regenerate="enable"
@@ -537,7 +537,7 @@ bcfserial
 wireless_regdb
 ti_pm_firmware
 beagleboard_dtbs
-#stm32_dtbs
+stm32_dtbs
 #local_patch
 
 pre_backports () {
