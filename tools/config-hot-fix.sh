@@ -146,7 +146,7 @@ config="CONFIG_USB_CONFIGFS_F_UVC" ; config_enable
 config="CONFIG_USB_CONFIGFS_F_PRINTER" ; config_enable
 
 #2022.03.01 fix W1, needs to be a module now...
-config="CONFIG_W1" ; config_enable
+config="CONFIG_W1" ; config_module
 config="CONFIG_W1_MASTER_GPIO" ; config_module
 config="CONFIG_W1_SLAVE_DS2430" ; config_module
 config="CONFIG_W1_SLAVE_DS2433_CRC" ; config_enable
@@ -154,5 +154,10 @@ config="CONFIG_W1_SLAVE_DS2433_CRC" ; config_enable
 #2022.03.18 Re-Enable UIO PRUSS
 config="CONFIG_UIO_PDRV_GENIRQ" ; config_module
 config="CONFIG_UIO_PRUSS" ; config_module
+
+#2023.07.10
+config="CONFIG_KERNEL_LZO" ; config_disable
+config="CONFIG_KERNEL_LZ4" ; config_enable
+config="CONFIG_GCC_PLUGINS" ; config_disable
 
 cd ${DIR}/
