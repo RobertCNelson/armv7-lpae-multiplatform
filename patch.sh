@@ -422,7 +422,7 @@ local_patch () {
 #bcfserial
 #rt
 wireless_regdb
-ti_pm_firmware
+#ti_pm_firmware
 #beagleboard_dtbs
 #stm32_dtbs
 #local_patch
