@@ -146,7 +146,7 @@ config="CONFIG_USB_CONFIGFS_F_UVC" ; config_enable
 config="CONFIG_USB_CONFIGFS_F_PRINTER" ; config_enable
 
 #2022.03.01 fix W1, needs to be a module now...
-config="CONFIG_W1" ; config_module
+config="CONFIG_W1" ; config_enable
 config="CONFIG_W1_MASTER_GPIO" ; config_module
 config="CONFIG_W1_SLAVE_DS2430" ; config_module
 config="CONFIG_W1_SLAVE_DS2433_CRC" ; config_enable
@@ -205,5 +205,12 @@ config="CONFIG_USB_TI_CPPI41_DMA" ; config_disable
 
 #removed in 6.7-rc1
 ./scripts/config --disable CONFIG_DEV_APPLETALK
+
+#20240305: regression on discord, some systemd can no longer load *.xz modules...
+./scripts/config --disable CONFIG_MODULE_DECOMPRESS
+
+#enable CONFIG_DYNAMIC_FTRACE
+./scripts/config --enable CONFIG_FUNCTION_TRACER
+./scripts/config --enable CONFIG_DYNAMIC_FTRACE
 
 cd ${DIR}/
