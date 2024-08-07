@@ -547,20 +547,18 @@ backports () {
 }
 
 drivers () {
-#	dir 'branding/boris'
+	dir 'branding/boris'
 
 #	dir 'drivers/ar1021_i2c'
 #	dir 'drivers/ti/serial'
 #	dir 'drivers/ti/tsc'
 #	dir 'drivers/fb_ssd1306'
-
-	dir 'drivers/sdhci-omap'
 }
 
 ###
 dtc_overlays
 backports
-drivers
+#drivers
 
 packaging () {
 	echo "Update: package scripts"
