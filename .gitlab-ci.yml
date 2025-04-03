@@ -9,7 +9,7 @@ before_script:
   - cd /opt/linux-src/ ; git pull ; cd -
 
 cache:
-  key: "$CI_PROJECT_NAME-v6.6.x"
+  key: "$CI_PROJECT_NAME-v6.12.x"
   paths:
     - ccache.tar.lz4
 
@@ -37,6 +37,6 @@ build:
 #  artifacts:
 #    expire_in: 28 days
 #    when: on_success
-#    name: "$CI_PROJECT_NAME-v6.6.x-$CI_JOB_ID"
+#    name: "$CI_PROJECT_NAME-v6.12.x-$CI_JOB_ID"
 #    paths:
 #      - "deploy/linux-image-*.deb"

@@ -8,7 +8,7 @@ build_prefix="-armv7-lpae-x"
 branch_prefix="v"
 branch_postfix=".x"
 
-#https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/process/changes.rst?h=v6.6-rc1
+#https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/process/changes.rst?h=v6.12-rc1
 #arm
 KERNEL_ARCH=arm
 DEBARCH=armhf
@@ -19,8 +19,8 @@ DEBARCH=armhf
 #toolchain="gcc_10_arm"
 #toolchain="gcc_11_arm"
 #toolchain="gcc_12_arm"
-toolchain="gcc_13_arm"
-#toolchain="gcc_14_arm"
+#toolchain="gcc_13_arm"
+toolchain="gcc_14_arm"
 #arm64
 #KERNEL_ARCH=arm64
 #DEBARCH=arm64
@@ -49,12 +49,12 @@ toolchain="gcc_13_arm"
 linux_repo="https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux.git"
 linux_stable_repo="https://kernel.googlesource.com/pub/scm/linux/kernel/git/stable/linux.git"
 #
-KERNEL_REL=6.6
-KERNEL_TAG=${KERNEL_REL}.77
-#https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/6.6/
-kernel_rt=".77-rt50"
+KERNEL_REL=6.12
+KERNEL_TAG=${KERNEL_REL}.16
+#https://mirrors.edge.kernel.org/pub/linux/kernel/projects/rt/6.12/
+kernel_rt=".16-rt9"
 #Kernel Build
-BUILD=${build_prefix}23
+BUILD=${build_prefix}0.1
 
 #v6.X-rcX + upto SHA
 #prev_KERNEL_SHA=""

@@ -1,16 +1,16 @@
-From 4eab655f6a92ae9fb736e5ce0ec51167e892c6c8 Mon Sep 17 00:00:00 2001
+From 953d9f6c3b6a50b00cb6f4312fb5878e24064465 Mon Sep 17 00:00:00 2001
 From: Robert Nelson <robertcnelson@gmail.com>
-Date: Mon, 17 Feb 2025 12:59:25 -0600
+Date: Wed, 26 Feb 2025 15:38:44 -0600
 Subject: [PATCH] backports: edt-ft5x06: from: linux.git
 
-Reference: rpi-6.6.y
+Reference: rpi-6.12.y
 Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
 ---
  drivers/input/touchscreen/edt-ft5x06.c | 124 ++++++++++++++++++++++---
  1 file changed, 109 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index a365577a1994..b590bc18dde6 100644
+index 85c6d8ce003f..3bd31c0c8ab3 100644
 --- a/drivers/input/touchscreen/edt-ft5x06.c
 +++ b/drivers/input/touchscreen/edt-ft5x06.c
 @@ -69,6 +69,7 @@
@@ -155,7 +155,7 @@ index a365577a1994..b590bc18dde6 100644
  struct edt_ft5x06_attribute {
  	struct device_attribute dattr;
  	size_t field_offset;
-@@ -865,6 +938,9 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
+@@ -862,6 +935,9 @@ static int edt_ft5x06_ts_identify(struct i2c_client *client,
  	char *model_name = tsdata->name;
  	char *fw_version = tsdata->fw_version;
  
@@ -165,7 +165,7 @@ index a365577a1994..b590bc18dde6 100644
  	/* see what we find if we assume it is a M06 *
  	 * if we get less than EDT_NAME_LEN, we don't want
  	 * to have garbage in there
-@@ -1053,20 +1129,23 @@ static void edt_ft5x06_ts_get_parameters(struct edt_ft5x06_ts_data *tsdata)
+@@ -1050,20 +1126,23 @@ static void edt_ft5x06_ts_get_parameters(struct edt_ft5x06_ts_data *tsdata)
  static void edt_ft5x06_ts_set_tdata_parameters(struct edt_ft5x06_ts_data *tsdata)
  {
  	int crclen;
@@ -190,7 +190,7 @@ index a365577a1994..b590bc18dde6 100644
  		tsdata->tdata_offset + crclen;
  }
  
-@@ -1261,7 +1340,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client)
+@@ -1258,7 +1337,7 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client)
  	if (tsdata->reset_gpio) {
  		usleep_range(5000, 6000);
  		gpiod_set_value_cansleep(tsdata->reset_gpio, 0);
@@ -199,7 +199,7 @@ index a365577a1994..b590bc18dde6 100644
  	}
  
  	input = devm_input_allocate_device(&client->dev);
-@@ -1335,17 +1414,28 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client)
+@@ -1332,17 +1411,28 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client)
  		return error;
  	}
  
@@ -237,8 +237,8 @@ index a365577a1994..b590bc18dde6 100644
 +		add_timer(&tsdata->timer);
  	}
  
- 	error = devm_device_add_group(&client->dev, &edt_ft5x06_attr_group);
-@@ -1371,6 +1461,10 @@ static void edt_ft5x06_ts_remove(struct i2c_client *client)
+ 	error = input_register_device(input);
+@@ -1364,6 +1454,10 @@ static void edt_ft5x06_ts_remove(struct i2c_client *client)
  {
  	struct edt_ft5x06_ts_data *tsdata = i2c_get_clientdata(client);
  
