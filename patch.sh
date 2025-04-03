@@ -339,7 +339,7 @@ dtb_makefile_append_stm () {
 }
 
 stm32_dtbs () {
-	branch="v5.10.x"
+	branch="v6.12.x"
 	https_repo="https://github.com/RobertCNelson/stm32-DeviceTrees"
 	work_dir="stm32-DeviceTrees"
 	#regenerate="enable"
@@ -358,7 +358,8 @@ stm32_dtbs () {
 
 		cleanup_dts_builds
 
-		cp -vr ../${work_dir}/src/arm/* arch/arm/boot/dts/
+		cp -v ../${work_dir}/src/arm/st/*.dts arch/arm/boot/dts/st/
+		cp -v ../${work_dir}/src/arm/st/*.dtsi arch/arm/boot/dts/st/
 		cp -vr ../${work_dir}/include/dt-bindings/* ./include/dt-bindings/
 
 		#device="stm32mp157c-seeed-npi.dtb" ; dtb_makefile_append_stm
@@ -366,8 +367,8 @@ stm32_dtbs () {
 		${git_bin} add -f arch/arm/boot/dts/
 		${git_bin} add -f include/dt-bindings/
 		${git_bin} commit -a -m "Add stm32 Device Tree Changes" -m "${https_repo}/tree/${branch}" -m "${https_repo}/commit/${git_hash}" -s
-		${git_bin} format-patch -1 -o ../patches/soc/stm32_dtbs/
-		echo "STM32DTBS: ${https_repo}/commit/${git_hash}" > ../patches/git/STM32DTBS
+		${git_bin} format-patch -1 -o ../patches/external/stm32/
+		echo "STM32DTBS: ${https_repo}/commit/${git_hash}" > ../patches/external/git/STM32DTBS
 
 		rm -rf ../${work_dir}/ || true
 
@@ -375,14 +376,14 @@ stm32_dtbs () {
 
 		start_cleanup
 
-		${git} "${DIR}/patches/soc/stm32_dtbs/0001-Add-stm32-Device-Tree-Changes.patch"
+		${git} "${DIR}/patches/external/stm32/0001-Add-stm32-Device-Tree-Changes.patch"
 
-		wdir="soc/stm32_dtbs"
+		wdir="external/stm32"
 		number=1
 		cleanup
 	fi
 
-	dir 'soc/stm32_dtbs'
+	dir 'external/stm32'
 }
 
 local_patch () {
@@ -395,7 +396,7 @@ local_patch () {
 rt
 wireless_regdb
 beagleboard_dtbs
-#stm32_dtbs
+stm32_dtbs
 #local_patch
 
 pre_backports () {

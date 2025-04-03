@@ -1,0 +1,50 @@
+From 599c0e9a0a9f801717ac88d15d3430aa6500b933 Mon Sep 17 00:00:00 2001
+From: Robert Nelson <robertcnelson@gmail.com>
+Date: Thu, 3 Apr 2025 14:59:55 -0500
+Subject: [PATCH] Add stm32 Device Tree Changes
+
+https://github.com/RobertCNelson/stm32-DeviceTrees/tree/v6.12.x
+
+https://github.com/RobertCNelson/stm32-DeviceTrees/commit/263f880c3b3a4546c2115bae054b8d915df101e5
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+---
+ arch/arm/boot/dts/st/stm32mp151.dtsi |  2 +-
+ include/dt-bindings/rtc/rtc-stm32.h  | 13 +++++++++++++
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/rtc/rtc-stm32.h
+
+diff --git a/arch/arm/boot/dts/st/stm32mp151.dtsi b/arch/arm/boot/dts/st/stm32mp151.dtsi
+index fdc42a89bd37..4f878ec102c1 100644
+--- a/arch/arm/boot/dts/st/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/st/stm32mp151.dtsi
+@@ -129,7 +129,7 @@ ipcc: mailbox@4c001000 {
+ 			reg = <0x4c001000 0x400>;
+ 			st,proc-id = <0>;
+ 			interrupts-extended =
+-				<&exti 61 IRQ_TYPE_LEVEL_HIGH>,
++				<&exti 61 1>,
+ 				<&intc GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "rx", "tx";
+ 			clocks = <&rcc IPCC>;
+diff --git a/include/dt-bindings/rtc/rtc-stm32.h b/include/dt-bindings/rtc/rtc-stm32.h
+new file mode 100644
+index 000000000000..4373c4dea587
+--- /dev/null
++++ b/include/dt-bindings/rtc/rtc-stm32.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This header provides constants for STM32_RTC bindings.
++ */
++
++#ifndef _DT_BINDINGS_RTC_RTC_STM32_H
++#define _DT_BINDINGS_RTC_RTC_STM32_H
++
++#define RTC_OUT1	0
++#define RTC_OUT2	1
++#define RTC_OUT2_RMP	2
++
++#endif
+-- 
+2.47.2
+
