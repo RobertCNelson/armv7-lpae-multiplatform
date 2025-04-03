@@ -332,6 +332,7 @@ config="CONFIG_USB_TI_CPPI41_DMA" ; config_disable
 
 #BeagleBoard.org
 ./scripts/config --enable CONFIG_MSPM0_I2C
+./scripts/config --module CONFIG_SEG_LED_GPIO
 
 #Drop SUNXI
 ./scripts/config --disable CONFIG_ARCH_SUNXI
