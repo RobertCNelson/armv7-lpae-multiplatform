@@ -317,8 +317,9 @@ cd ${DIR}/KERNEL/
 #Regressions:
 ./scripts/config --enable CONFIG_MMC_BLOCK
 
-#Drop SUNXI
+#Drop SUNXI/ROCKCHIP
 ./scripts/config --disable CONFIG_ARCH_SUNXI
+./scripts/config --disable CONFIG_ARCH_ROCKCHIP
 
 #STM32MP1
 ./scripts/config --module CONFIG_TEE
