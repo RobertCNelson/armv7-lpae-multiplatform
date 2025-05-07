@@ -1,6 +1,6 @@
 #!/bin/bash -e
 #
-# Copyright (c) 2009-2024 Robert Nelson <robertcnelson@gmail.com>
+# Copyright (c) 2009-2025 Robert Nelson <robertcnelson@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -354,6 +354,7 @@ beagleboard_dtbs () {
 		device="PB-MIKROBUS-1" ; arm_dtbo_makefile_append
 
 		device="am335x-boneblack-uboot.dtb" ; arm_dtb_makefile_append
+		device="am335x-boneblack-revd.dtb" ; arm_dtb_makefile_append
 
 		#device="am335x-sancloud-bbe-uboot.dtb" ; arm_dtb_makefile_append
 		#device="am335x-sancloud-bbe-lite-uboot.dtb" ; arm_dtb_makefile_append
@@ -546,23 +547,9 @@ backports () {
 	fi
 }
 
-drivers () {
-#	dir 'branding/boris'
-
-#	dir 'drivers/ar1021_i2c'
-#	dir 'drivers/ti/serial'
-#	dir 'drivers/ti/tsc'
-#	dir 'drivers/fb_ssd1306'
-
-	#git revert --no-edit -s 3edf588e7fe00e90d1dc7fb9e599861b2c2cf442
-	#Breaking Kingston eMMC on new BBB's..
-	dir 'drivers/fixes/mmc'
-}
-
 ###
 dtc_overlays
 backports
-drivers
 
 packaging () {
 	echo "Update: package scripts"
