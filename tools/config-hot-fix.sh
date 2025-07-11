@@ -53,6 +53,147 @@ cd ${DIR}/KERNEL/
 ./scripts/config --disable CONFIG_ARCH_MMP
 ./scripts/config --disable CONFIG_ARCH_MVEBU
 
+./scripts/config --disable CONFIG_ARCH_ROCKCHIP
+./scripts/config --disable CONFIG_ARCH_INTEL_SOCFPGA
+
+./scripts/config --disable CONFIG_ARCH_SUNXI
+./scripts/config --disable CONFIG_ARCH_TEGRA
+./scripts/config --disable CONFIG_ARCH_VEXPRESS
+./scripts/config --disable CONFIG_ARCH_WM8850
+
+#
+# Power management options
+#
+./scripts/config --enable CONFIG_PM_AUTOSLEEP
+./scripts/config --enable CONFIG_PM_WAKELOCKS
+
+#
+# CPU Frequency scaling
+#
+./scripts/config --enable CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE
+
+# end of General architecture-dependent options
+./scripts/config --disable CONFIG_MODULE_SIG
+./scripts/config --disable CONFIG_MODULE_DECOMPRESS
+./scripts/config --enable CONFIG_BLK_CGROUP_IOPRIO
+
+# end of Slab allocator options
+./scripts/config --enable CONFIG_IDLE_PAGE_TRACKING
+./scripts/config --enable CONFIG_ANON_VMA_NAME
+
+#
+# Networking options
+#
+./scripts/config --enable CONFIG_IP_PNP
+./scripts/config --enable CONFIG_IP_PNP_DHCP
+./scripts/config --enable CONFIG_IP_PNP_BOOTP
+./scripts/config --enable CONFIG_IP_PNP_RARP
+./scripts/config --enable CONFIG_NET_IP_TUNNEL
+./scripts/config --enable CONFIG_NET_UDP_TUNNEL
+
+#
+# Core Netfilter Configuration
+#
+./scripts/config --enable CONFIG_NETFILTER_XTABLES
+
+#
+# IP: Netfilter Configuration
+#
+./scripts/config --enable CONFIG_IP_NF_IPTABLES
+
+./scripts/config --disable CONFIG_NET_DSA
+
+#
+# Classification
+#
+./scripts/config --enable CONFIG_NET_CLS_CGROUP
+./scripts/config --enable CONFIG_DNS_RESOLVER
+
+#
+# Bluetooth device drivers
+#
+./scripts/config --disable CONFIG_BT_HCIBTUSB_AUTOSUSPEND
+
+# end of Bluetooth device drivers
+./scripts/config --disable CONFIG_CFG80211_DEFAULT_PS
+./scripts/config --enable CONFIG_RFKILL
+./scripts/config --enable CONFIG_RFKILL_GPIO
+
+#
+# Device Drivers
+#
+./scripts/config --disable CONFIG_PCI
+
+#
+# Generic Driver Options
+#
+./scripts/config --enable CONFIG_DEVTMPFS_MOUNT
+
+#
+# Firmware loader
+#
+./scripts/config --enable CONFIG_FW_LOADER_SYSFS
+./scripts/config --set-str CONFIG_EXTRA_FIRMWARE "regulatory.db regulatory.db.p7s"
+./scripts/config --set-str CONFIG_EXTRA_FIRMWARE_DIR "firmware"
+./scripts/config --enable CONFIG_FW_LOADER_USER_HELPER
+./scripts/config --disable CONFIG_FW_LOADER_USER_HELPER_FALLBACK
+./scripts/config --enable CONFIG_FW_UPLOAD
+
+# end of LPDDR & LPDDR2 PCM memory drivers
+./scripts/config --enable CONFIG_OF_OVERLAY
+./scripts/config --disable CONFIG_PARPORT
+./scripts/config --enable CONFIG_ZRAM_BACKEND_LZO
+
+#
+# NVME Support
+#
+./scripts/config --disable CONFIG_NVME_KEYRING
+./scripts/config --disable CONFIG_NVME_CORE
+./scripts/config --disable CONFIG_NVME_MULTIPATH
+./scripts/config --disable CONFIG_NVME_HWMON
+./scripts/config --disable CONFIG_NVME_FABRICS
+./scripts/config --disable CONFIG_NVME_RDMA
+./scripts/config --disable CONFIG_NVME_FC
+./scripts/config --disable CONFIG_NVME_TCP
+./scripts/config --disable CONFIG_NVME_HOST_AUTH
+./scripts/config --disable CONFIG_NVME_TARGET
+
+#
+# Misc devices
+#
+./scripts/config --enable CONFIG_RPMB
+./scripts/config --disable CONFIG_ENCLOSURE_SERVICES
+./scripts/config --module CONFIG_NTSYNC
+./scripts/config --module CONFIG_NSM
+./scripts/config --disable CONFIG_C2PORT
+
+#
+# EEPROM support
+#
+./scripts/config --module CONFIG_EEPROM_93XX46
+
+# end of EEPROM support
+./scripts/config --disable CONFIG_SENSORS_LIS3_I2C
+./scripts/config --disable CONFIG_ALTERA_STAPL
+./scripts/config --disable CONFIG_MISC_RTSX_USB
+
+# end of SCSI device support
+./scripts/config --disable CONFIG_ATA
+
+./scripts/config --disable CONFIG_MD_RAID456
+./scripts/config --disable CONFIG_DM_CLONE
+./scripts/config --disable CONFIG_DM_RAID
+
+./scripts/config --enable CONFIG_MII
+./scripts/config --enable CONFIG_IPVLAN
+./scripts/config --enable CONFIG_VXLAN
+
+./scripts/config --disable CONFIG_NET_VENDOR_ALACRITECH
+./scripts/config --disable CONFIG_NET_VENDOR_AMAZON
+./scripts/config --disable CONFIG_NET_VENDOR_AQUANTIA
+./scripts/config --disable CONFIG_NET_VENDOR_BROADCOM
+./scripts/config --disable CONFIG_NET_VENDOR_CADENCE
+
 #Nuke DSA SubSystem: 2020.02.20
 ./scripts/config --disable CONFIG_HAVE_NET_DSA
 ./scripts/config --disable CONFIG_NET_DSA
