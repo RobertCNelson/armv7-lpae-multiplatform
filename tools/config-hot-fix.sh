@@ -4,6 +4,55 @@ DIR=$PWD
 
 cd ${DIR}/KERNEL/
 
+#
+# Timers subsystem
+#
+./scripts/config --enable CONFIG_NO_HZ_IDLE
+./scripts/config --enable CONFIG_CONTEXT_TRACKING_USER_FORCE
+
+#
+# BPF subsystem
+#
+./scripts/config --enable CONFIG_BPF_PRELOAD
+./scripts/config --enable CONFIG_BPF_JIT_ALWAYS_ON
+./scripts/config --enable CONFIG_BPF_PRELOAD_UMD
+
+# end of BPF subsystem
+./scripts/config --enable CONFIG_PREEMPT
+
+#
+# CPU/Task time and stats accounting
+#
+./scripts/config --enable CONFIG_PSI_DEFAULT_DISABLED
+
+# end of RCU Subsystem
+./scripts/config --enable CONFIG_IKCONFIG
+./scripts/config --enable CONFIG_IKCONFIG_PROC
+./scripts/config --module CONFIG_IKHEADERS
+./scripts/config --enable CONFIG_PRINTK_INDEX
+
+# end of Scheduler features
+./scripts/config --enable CONFIG_MEMCG_V1
+./scripts/config --enable CONFIG_CGROUP_DMEM
+./scripts/config --enable CONFIG_KALLSYMS_ALL
+
+#
+# Kexec and crash features
+#
+./scripts/config --disable CONFIG_KEXEC
+
+#
+# CPU Core family selection
+#
+./scripts/config --disable CONFIG_ARCH_VIRT
+./scripts/config --disable CONFIG_ARCH_ASPEED
+./scripts/config --disable CONFIG_ARCH_BCM
+./scripts/config --disable CONFIG_ARCH_EXYNOS
+./scripts/config --disable CONFIG_ARCH_HIGHBANK
+./scripts/config --disable CONFIG_ARCH_MESON
+./scripts/config --disable CONFIG_ARCH_MMP
+./scripts/config --disable CONFIG_ARCH_MVEBU
+
 #Nuke DSA SubSystem: 2020.02.20
 ./scripts/config --disable CONFIG_HAVE_NET_DSA
 ./scripts/config --disable CONFIG_NET_DSA
