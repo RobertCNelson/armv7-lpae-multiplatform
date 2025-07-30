@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/arm 6.12.36 Kernel Configuration
+# Linux/arm 6.12.40 Kernel Configuration
 #
 CONFIG_CC_VERSION_TEXT="arm-linux-gnueabi-gcc (GCC) 14.3.0"
 CONFIG_CC_IS_GCC=y
@@ -7936,7 +7936,7 @@ CONFIG_PWM_GPIO=m
 CONFIG_PWM_IMX27=m
 # CONFIG_PWM_IMX_TPM is not set
 CONFIG_PWM_OMAP_DMTIMER=y
-# CONFIG_PWM_PCA9685 is not set
+CONFIG_PWM_PCA9685=m
 CONFIG_PWM_STM32=m
 CONFIG_PWM_STM32_LP=m
 CONFIG_PWM_STMPE=y
