@@ -208,7 +208,7 @@ rt () {
 }
 
 wireless_regdb () {
-	#https://kernel.googlesource.com/pub/scm/linux/kernel/git/wens/wireless-regdb.git
+	#https://mirrors.edge.kernel.org/pub/software/network/wireless-regdb/
 	#regenerate="enable"
 	if [ "x${regenerate}" = "xenable" ] ; then
 		cd ../
@@ -216,21 +216,25 @@ wireless_regdb () {
 			rm -rf ./src || true
 		fi
 
-		${git_bin} clone https://kernel.googlesource.com/pub/scm/linux/kernel/git/wens/wireless-regdb.git --depth=1 ./src/
-		cd ./src
-			wireless_regdb_hash=$(git rev-parse HEAD)
-		cd -
+		wget -c https://mirrors.edge.kernel.org/pub/software/network/wireless-regdb/wireless-regdb-${WIRELESS_REGDB}.tar.xz
+		mkdir ./src/
+		tar xf wireless-regdb-${WIRELESS_REGDB}.tar.xz -C ./src/
+		sync
+		rm -rf wireless-regdb-${WIRELESS_REGDB}.tar.xz
 
 		cd ./KERNEL/
 
 		mkdir -p ./firmware/ || true
-		cp -v ../src/regulatory.db ./firmware/
-		cp -v ../src/regulatory.db.p7s ./firmware/
+		cp -v ../src/wireless-regdb-${WIRELESS_REGDB}/regulatory.db ./firmware/
+		cp -v ../src/wireless-regdb-${WIRELESS_REGDB}/regulatory.db.p7s ./firmware/
 		${git_bin} add -f ./firmware/regulatory.*
-		${git_bin} commit -a -m 'Add wireless-regdb regulatory database file' -m "https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/commit/?id=${wireless_regdb_hash}" -s
+
+		commit_regdb=$(echo "$WIRELESS_REGDB" | sed 's/\./-/g')
+
+		${git_bin} commit -a -m 'Add wireless-regdb regulatory database file' -m "https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/tag/?h=master-${commit_regdb}" -s
 
 		${git_bin} format-patch -1 -o ../patches/external/wireless_regdb/
-		echo "WIRELESS_REGDB: https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/commit/?id=${wireless_regdb_hash}" > ../patches/external/git/WIRELESS_REGDB
+		echo "WIRELESS_REGDB: https://git.kernel.org/pub/scm/linux/kernel/git/wens/wireless-regdb.git/tag/?h=master-${commit_regdb}" > ../patches/external/git/WIRELESS_REGDB
 
 		rm -rf ../src/ || true
 
@@ -336,6 +340,7 @@ beagleboard_dtbs () {
 		device="BB-EHRPWM1-P9_14-P9_16" ; arm_dtbo_makefile_append
 		device="BB-EHRPWM2-P8_13-P8_19" ; arm_dtbo_makefile_append
 		device="BB-HDMI-IT66121-00A0" ; arm_dtbo_makefile_append
+		device="BB-HDMI-IT66122-00A0" ; arm_dtbo_makefile_append
 		device="BB-HDMI-TDA998x-00A0" ; arm_dtbo_makefile_append
 		device="BB-I2C1-MCP7940X-00A0" ; arm_dtbo_makefile_append
 		device="BB-I2C1-RTC-DS3231" ; arm_dtbo_makefile_append
@@ -344,6 +349,7 @@ beagleboard_dtbs () {
 		device="BB-I2C2-MPU6050" ; arm_dtbo_makefile_append
 		device="BB-LCD-ADAFRUIT-24-SPI1-00A0" ; arm_dtbo_makefile_append
 		device="BB-NHDMI-IT66121-00A0" ; arm_dtbo_makefile_append
+		device="BB-NHDMI-IT66122-00A0" ; arm_dtbo_makefile_append
 		device="BB-NHDMI-TDA998x-00A0" ; arm_dtbo_makefile_append
 		device="BBORG_COMMS-00A2" ; arm_dtbo_makefile_append
 		device="BBORG_FAN-A000" ; arm_dtbo_makefile_append
@@ -355,6 +361,8 @@ beagleboard_dtbs () {
 		device="BB-UART4-00A0" ; arm_dtbo_makefile_append
 		device="BB-W1-P9.12-00A0" ; arm_dtbo_makefile_append
 		device="BONE-ADC" ; arm_dtbo_makefile_append
+		device="BONE-LED-P8-37" ; arm_dtbo_makefile_append
+		device="BONE-LED-P9-19" ; arm_dtbo_makefile_append
 		device="BONE-LED-P9-42" ; arm_dtbo_makefile_append
 		device="M-BB-BBG-00A0" ; arm_dtbo_makefile_append
 		device="M-BB-BBGG-00A0" ; arm_dtbo_makefile_append
